@@ -29,11 +29,11 @@ Terminate the last batch job with "CTRL + C", then simply start the project with
 symfony server:start
 ```
 
-### Todo list: 
+### Todo list (To be updated): 
 
 - [ ] Modify main page (CSS)
-- [ ] Users
-- [ ] Login
+- [ ] Users (Admin / User)
+- [ ] Authentification
 - [ ] Register
 - [ ] Certifications Creation / Modify / Delete
 - [ ] Certifications Enroll
