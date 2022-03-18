@@ -1,19 +1,229 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<html lang="en-gb" dir="ltr">
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="https://via.placeholder.com/16x16/c50000/c50000/" >
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+		
+        {% if page == 'register' or page == 'login' or page == 'newarticle' %}
+            <link rel="stylesheet" href="{{ asset('css/form.css') }}" />
+            <link rel="stylesheet" href="{{ asset('css/registration.css') }}" />
+        {% else %}
+            {% if page == "account" %}
+                <link rel="stylesheet" href="{{ asset('css/form.css') }}" />
+            {% elseif page == "profile" %}
+                <link rel="stylesheet" href="{{ asset('css/tables.css') }}" />
+            {% elseif page == "article" or page == 'main page' %}
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            {% endif %}
+
+            <script src = "{{ asset('js/awesomplete.js') }}"></script>
+            <script src = "{{ asset('js/uikit.js') }}"></script>
+        {% endif %}
+
+        <title>{% block title %}{% endblock title %}</title>
+</head>
+
+<body class = "uk-section-grey">
+
+{% if page == "main page" %}
+	<header id="header" class="uk-background-primary uk-background-norepeat uk-background-cover 
+	uk-background-center-center uk-background-fixed uk-background-blend-overlay" 
+	style="background-image: url(imgs/home.jpg);">
+		<div class="uk-navbar-wrapper" data-uk-sticky="animation: uk-animation-slide-top; sel-target: .uk-navbar-container; 
+		cls-active: uk-navbar-sticky; cls-inactive: uk-navbar-transparent; top: #header; media: @m">
+			{% include 'components/navcontent.html.twig' %}
+		</div>
+
+		<div>
+			<div class="uk-section uk-section-large uk-section-hero uk-position-relative uk-light"  
+				data-uk-scrollspy="cls: uk-animation-slide-bottom-medium">
+				<div class="uk-container uk-margin-large-top uk-margin-small-bottom">
+					<div class="uk-child-width-1-2@m uk-grid-large" data-uk-grid>
+						<div class="uk-flex uk-flex-bottom">
+							<h1 class="uk-heading-medium">How can we help you today?</h1>
+						</div>
+						<div class="uk-flex uk-flex-bottom">
+							<div class="uk-position-relative uk-width-1-1">
+								<form class="uk-search uk-search-default uk-width-1-1" name="search-hero" onsubmit="return false;">
+									<span class="uk-search-icon-flip" data-uk-search-icon="ratio: 1.6"></span>
+									<input id="search-hero" class="uk-search-input uk-form-large" type="search"
+										placeholder="Search for answers" autocomplete="off" data-minchars="1" data-maxitems="30">
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+{% endif %}
+
+{% block body %}{% endblock body%}
+
+<div id="offcanvas-categoriess" data-uk-offcanvas="overlay: true">
+  <div class="uk-offcanvas-bar">
+    <span class="uk-logo">Categories</span>
+    <button class="uk-offcanvas-close" type="button" data-uk-close></button>
+    <h4 class="uk-margin-small-bottom uk-margin-medium-top">Payments & Prices</h4>
+    <ul class="uk-nav uk-nav-default">
+      <li><a href="category.html">Credit Card Charges</a></li>
+      <li class="uk-active"><a href="category.html">Prices Sales Tax</a></li>
+      <li><a href="category.html">Denied Payments</a></li>
+      <li><a href="category.html">Gift Certificates</a></li>
+      <li><a href="category.html">Currency Options</a></li>
+    </ul>
+    <h4 class="uk-margin-small-bottom uk-margin-medium-top">Shipping Info</h4>
+    <ul class="uk-nav uk-nav-default">
+      <li><a href="category.html">Shipping & Minimum Purchase</a></li>
+      <li><a href="category.html">US Shipping Rates</a></li>
+      <li><a href="category.html">International Shipping Rates</a></li>
+    </ul>
+    <h4 class="uk-margin-small-bottom uk-margin-medium-top">Return Items</h4>
+    <ul class="uk-nav uk-nav-default">
+      <li><a href="category.html">Store Refunds & Exchanges</a></li>
+      <li><a href="category.html">Online Refunds</a></li>
+      <li><a href="category.html">Final Sale Items</a></li>
+    </ul>
+  </div>
+</div>
+
+<div id="offcanvas" data-uk-offcanvas="flip: true; overlay: true">
+  <div class="uk-offcanvas-bar">
+    <button class="uk-offcanvas-close" type="button" data-uk-close></button>
+    <ul class="uk-nav uk-nav-primary uk-nav-offcanvas uk-margin-top uk-text-center uk-text-500">
+      <li class="uk-active"><a href="index.html">Home</a></li>
+      <li ><a href="category.html">Category</a></li>
+      <li ><a href="article.php">Article</a></li>
+      <li>
+        <div class="uk-navbar-item"><a class="uk-button uk-button-primary" href="contact.html">Contact</a></div>
+      </li>
+    </ul>
+    <div class="uk-margin-top uk-text-center">
+      <div data-uk-grid class="uk-child-width-auto uk-grid-small uk-flex-center">
+        <div>
+          <a href="https://twitter.com/" data-uk-icon="icon: twitter" class="uk-icon-link" target="_blank"></a>
+        </div>
+        <div>
+          <a href="https://www.facebook.com/" data-uk-icon="icon: facebook" class="uk-icon-link" target="_blank"></a>
+        </div>
+        <div>
+          <a href="https://www.instagram.com/" data-uk-icon="icon: instagram" class="uk-icon-link" target="_blank"></a>
+        </div>
+        <div>
+          <a href="https://vimeo.com/" data-uk-icon="icon: vimeo" class="uk-icon-link" target="_blank"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if page == "account" or page == "profile" %}
+	<footer class="uk-section uk-section-transparent uk-section-large">
+		<div class="uk-container uk-container-xsmall">
+			<div class="uk-text-center">
+				<h3 class="uk-h2 uk-margin-remove"><span class = "uk-link">Fear of missing out?</span></h3>
+				<p class="uk-margin-remove-bottom uk-margin-xsmall-top">Be the first to know about the latest deals, style updates & more!</p>
+			</div>
+			<div class="uk-margin-top">
+				<div data-uk-scrollspy="cls: uk-animation-slide-bottom; repeat: true">
+				<form>
+					<div class="uk-grid-small" data-uk-grid>
+					<div class="uk-width-1-1 uk-width-expand@s">
+						<input type="email" placeholder="Email Address" class="uk-input uk-form-large uk-width-1-1">
+					</div>
+					<div class="uk-width-1-1 uk-width-auto@s">
+						<input type="submit" value="Subscribe" class="button uk-button uk-button-large uk-button-secondary">
+					</div>
+					</div>
+				</form>
+				</div>
+			</div>
+		</div>
+	{% else %}
+		<footer class="uk-section uk-section-transparent uk-padding-top-cancel">
+	{% endif %}
+
+
+	<div class="uk-container uk-text-muted uk-margin-xlarge-top">
+		<div class="uk-child-width-1-2@s uk-child-width-1-5@m" data-uk-grid>
+			<div>
+				<h5>About</h5>
+				<ul class="uk-list uk-text-small">
+					<li><a class="uk-link-muted" href="#">About Us</a></li>
+					<li><a class="uk-link-muted" href="#">Terms of Use</a></li>
+					<li><a class="uk-link-muted" href="#">Privacy Policy</a></li>
+				</ul>
+			</div>
+			<div>
+				<h5>Community</h5>
+				<ul class="uk-list uk-text-small">
+					<li><a class="uk-link-muted" href="#">Webinars</a></li>
+					<li><a class="uk-link-muted" href="#">Developers</a></li>
+					<li><a class="uk-link-muted" href="#">Platforms</a></li>
+					<li><a class="uk-link-muted" href="#">Workshops</a></li>
+					<li><a class="uk-link-muted" href="#">Local Meetups</a></li>
+				</ul>
+			</div>
+			<div>
+				<h5>Join Us</h5>
+				<ul class="uk-list uk-text-small">
+					<li><a class="uk-link-muted" href="#">Our Initiatives</a></li>
+					<li><a class="uk-link-muted" href="#">Jobs</a></li>
+					<li><a class="uk-link-muted" href="#">Experts</a></li>
+				</ul>
+			</div>
+			<div>
+				<h5>Contact</h5>
+				<ul class="uk-list uk-text-small">
+					<li><a class="uk-link-muted" href="#">Contact Us</a></li>
+					<li><a class="uk-link-muted" href="#">LinkedIn</a></li>
+					<li><a class="uk-link-muted" href="#">Facebook</a></li>
+					<li><a class="uk-link-muted" href="#">Instagram</a></li>
+				</ul>
+			</div>
+			<div>
+				<div class="uk-margin">
+					<a href="#" class="uk-logo">X04wiki</a>
+				</div>
+				<div class="uk-margin uk-text-small">				
+					<p>Made by <a href="https://unbound.studio/" target="_blank">a random kid</a> in Tunisia.</p>
+				</div>
+				<div class="uk-margin">
+					<div data-uk-grid class="uk-child-width-auto uk-grid-collapse">
+						<div class="uk-margin-small-right">
+							<a href="#" data-uk-icon="icon: facebook" class="uk-icon-link uk-icon"
+								target="_blank"></a>
+						</div>
+						<div class="uk-margin-small-right">
+							<a href="#" data-uk-icon="icon: instagram" class="uk-icon-link uk-icon"
+								target="_blank"></a>
+						</div>
+						<div class="uk-margin-small-right">
+							<a href="#" data-uk-icon="icon: twitter" class="uk-icon-link uk-icon"
+								target="_blank"></a>
+						</div>
+						<div class="uk-margin-small-right">
+							<a href="#" data-uk-icon="icon: youtube" class="uk-icon-link uk-icon"
+								target="_blank"></a>
+						</div>
+						<div class="uk-margin-small-right">
+							<a href="#" data-uk-icon="icon: vimeo" class="uk-icon-link uk-icon"
+								target="_blank"></a>
+						</div>
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</footer>
+
+</div>
+
+</body>
 </html>

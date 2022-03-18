@@ -1,0 +1,170 @@
+display-flex,
+.display-flex,
+.display-flex-center {
+	display: flex;
+	display: -webkit-flex
+}
+
+list-type-ulli {
+	list-style-type: none;
+	margin: 0;
+	padding: 0
+}
+
+a:focus, a:active {
+	text-decoration: none;
+	outline: none;
+	transition: all 300ms ease 0s;
+	-moz-transition: all 300ms ease 0s;
+	-webkit-transition: all 300ms ease 0s;
+	-o-transition: all 300ms ease 0s;
+	-ms-transition: all 300ms ease 0s
+}
+
+img {
+	max-width: 100%;
+	height: auto
+}
+
+figure {
+	margin: 0
+}
+
+p {
+	margin-bottom: 0;
+	font-size: 15px;
+	color: #777
+}
+
+.clear {
+	clear: both
+}
+
+.uk-section-grey {
+	font-size: 14px;
+	line-height: 1.8;
+	color: #222;
+	font-weight: 400;
+	padding: 50px 0
+}
+
+.container {
+	width: 660px;
+	position: relative;
+	margin: 0 auto
+}
+
+.display-flex {
+	justify-content: space-between;
+	-moz-justify-content: space-between;
+	-webkit-justify-content: space-between;
+	-o-justify-content: space-between;
+	-ms-justify-content: space-between;
+	align-items: center;
+	-moz-align-items: center;
+	-webkit-align-items: center;
+	-o-align-items: center;
+	-ms-align-items: center
+}
+
+.display-flex-center {
+	justify-content: center;
+	-moz-justify-content: center;
+	-webkit-justify-content: center;
+	-o-justify-content: center;
+	-ms-justify-content: center;
+	align-items: center;
+	-moz-align-items: center;
+	-webkit-align-items: center;
+	-o-align-items: center;
+	-ms-align-items: center
+}
+
+.label-agree-term {
+	font-size: 12.5px;
+	font-weight: 600;
+	color: #555
+}
+
+.term-service {
+	color: #555
+}
+
+.loginhere, .registerhere {
+	color: #555;
+	font-weight: 500;
+	text-align: center;
+	margin-top: 40px;
+	margin-bottom: 5px
+}
+
+.uk-link-bright {
+    color:rgb(216, 34, 34);
+}
+
+.uk-link-bright:hover {
+    color:rgb(175, 20, 20);
+}
+
+.loginhere-link, .registerhere-link {
+	font-weight: 700;
+}
+
+.field-icon {
+	float: right;
+	margin-right: 17px;
+	margin-top: -32px;
+	position: relative;
+	z-index: 2;
+	color: #555
+}
+
+.signup-content, .signin-content {
+	background: rgba(255, 255, 255, 0.8);
+	padding: 50px 85px;
+}
+
+@media screen and (max-width:768px) {
+	.container {
+		width: calc(100% - 40px);
+		max-width: 100%;
+	}
+
+	.signup-content, .signin-content {
+		padding: 5px 5px;
+	}
+
+	.uk-section-grey {
+		padding: 0;
+	}
+}
+
+@media screen and (max-width:480px) {
+	.signup-content, .signin-content {
+		padding: 5px 5px;
+	}
+	
+	.container {
+		width:100%;
+	}
+
+	.uk-section-grey {
+		padding: 0;
+	}
+}
+@media screen and (min-width:1000px) {
+	.position-center {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		-moz-transform: translate(-50%, -50%);
+		-webkit-transform: translate(-50%, -50%);
+		-o-transform: translate(-50%, -50%);
+		-ms-transform: translate(-50%, -50%);
+	}
+}
+
+.shadow_container {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
