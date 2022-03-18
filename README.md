@@ -28,3 +28,12 @@ Terminate the last batch job with "CTRL + C", then simply start the project with
 ```
 symfony server:start
 ```
+
+### Solar System Exploration, 1950s – 1960s
+
+- [ ] Modify main page (CSS)
+- [ ] Users
+- [ ] Login
+- [ ] Register
+- [ ] Certifications Creation / Modify / Delete
+- [ ] Certifications Enroll
