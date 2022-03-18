@@ -22,3 +22,9 @@ yarn add webpack-notifier --dev
 
 yarn encore dev
 ```
+
+Terminate the last batch job with "CTRL + C", then simply start the project with
+
+```
+symfony server:start
+```
