@@ -23,17 +23,24 @@ yarn add webpack-notifier --dev
 yarn encore dev
 ```
 
+
 Terminate the last batch job with "CTRL + C", then simply start the project with
 
 ```
 symfony server:start
 ```
 
+Generate database schema
+
+```
+php bin/console doctrine:migrations:migrate
+```
+
 ### Todo list (To be updated): 
 
 - [ ] Modify main page (CSS)
-- [ ] Users (Admin / User)
-- [ ] Authentification
-- [ ] Register
+- [X] Users (Admin / User)
+- [X] Authentification
+- [X] Register
 - [ ] Certifications Creation / Modify / Delete
 - [ ] Certifications Enroll
