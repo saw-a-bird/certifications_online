@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -31,7 +33,7 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(type="string", unique=true)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message = "This field is required.")
      */
     private $username;
 
@@ -39,8 +41,8 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(type="string", unique=true)
-     * @Assert\NotBlank()
-     * @Assert\Email()
+     * @Assert\NotBlank(message = "This field is required.")
+     * @Assert\Email(message = "Choose a valid email.")
      */
     private $email;
 
@@ -48,7 +50,7 @@ class User implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(type="string")
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message = "This field is required.")
      */
     private $password;
 
@@ -72,19 +74,39 @@ class User implements UserInterface, \Serializable
      */
     private $created_at;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isBanned = false;
+
+    /**
+     * @ORM\Column(type="string", length=100))
+     */
+    private $avatar_path = "imgs/avatars/default1.png";
+
+    /**
+     * @ORM\Column(type="string", length=125)
+     */
+    private $biography = "";
+
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $specialty = "";
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Category::class)
+     */
+    private $selected_tags;
+
+    public function __construct()
+    {
+        $this->selected_tags = new ArrayCollection();
+    }
+
     public function getId(): int
     {
         return $this->id;
-    }
-
-    public function setFullName(string $fullName): void
-    {
-        $this->fullName = $fullName;
-    }
-
-    public function getFullName(): ?string
-    {
-        return $this->fullName;
     }
 
     public function getUsername(): ?string
@@ -173,11 +195,82 @@ class User implements UserInterface, \Serializable
         $this->created_at = $created_at;
     }
 
+    public function getIsBanned(): ?bool
+    {
+        return $this->isBanned;
+    }
+
+    public function setIsBanned(bool $isBanned): self
+    {
+        $this->isBanned = $isBanned;
+
+        return $this;
+    }
+
+    public function getAvatarPath(): ?string
+    {
+        return $this->avatar_path;
+    }
+
+    public function setAvatarPath(string $avatar_path): self
+    {
+        $this->avatar_path = $avatar_path;
+
+        return $this;
+    }
+
+    public function getBiography(): ?string
+    {
+        return $this->biography;
+    }
+
+    public function setBiography(string $biography): self
+    {
+        $this->biography = $biography;
+
+        return $this;
+    }
+
+    public function getSpecialty(): ?string
+    {
+        return $this->specialty;
+    }
+
+    public function setSpecialty(string $specialty): self
+    {
+        $this->specialty = $specialty;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Category[]
+     */
+    public function getSelectedTags(): Collection
+    {
+        return $this->selected_tags;
+    }
+
+    public function addSelectedTag(Category $selectedTag): self
+    {
+        if (!$this->selected_tags->contains($selectedTag)) {
+            $this->selected_tags[] = $selectedTag;
+        }
+
+        return $this;
+    }
+
+    public function removeSelectedTag(Category $selectedTag): self
+    {
+        $this->selected_tags->removeElement($selectedTag);
+
+        return $this;
+    }
+
     /**
      * @ORM\PrePersist
      */
-    public function onPrePersist()
-    {
+    public function onPrePersist(){
         $this->created_at = new Datetime();
     }
 }

@@ -1,40 +1,44 @@
-{# security/index.html.twig #}
-{% extends 'base.html.twig' %}
+
+{% set page = "register" %}
+{% extends "base.html.twig" %}
+
+{% block title %}Register{% endblock %}
+
 {% block body %}
-    <div class="row">
-    {{ form_start(form) }}
-    <div class="col-md-offset-2 col-md-8">
-        <div class="panel-group">
-            <div class="panel panel-default">
 
-                <div class="panel-heading text-center">
-                    Register
-                </div>
-
-                <div class="panel-body">
+<div class="position-center">
+    <section class="signup">
+        <div class="container shadow_container">
+            <div class="signup-content">
+                {{ form_start(form) }}
+                <form method="POST" id="signup-form" class="signup-form">
+                    <input type="hidden" name="action" value="register" />
+                    <h2 class="form-title uk-link-bright">Create account</h2>
+                    
                     {{ form_row(form.username) }}
                     {{ form_row(form.email) }}
                     {{ form_row(form.password.first) }}
                     {{ form_row(form.password.second) }}
-                </div>
 
-                <div class="panel-footer">
-                    <button type="submit" class="btn btn-primary center-block"> Submit </button>
-                </div>
-
+                    <div class="form-group">
+                        <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" onclick = "agree_terms()">
+                        <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in <a href="#" class="term-service">Terms of service</a></label>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" name="submit" id="submit" class="form-submit red_shade" value="Sign up" disabled>
+                    </div>
+                    <script>
+                        var submitButton = document.getElementById("submit");
+                        function agree_terms() {
+                            submitButton.disabled = !submitButton.disabled;
+                        }
+                    </script>
+                {{ form_end(form) }}
+                <p class="loginhere">
+                Have already an account ? <a href="{{ path('security_login') }}" class="loginhere-link uk-link-bright">Login here</a>
+                </p>
             </div>
-    </div>
-    {{ form_end(form) }}
-
-    </div>
-
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <style>
-        .panel-body {
-            padding: 30px;
-        }
-    </style>
+        </div>
+    </section>
+</div>
 {% endblock %}

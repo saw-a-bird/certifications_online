@@ -1,35 +1,72 @@
-{# base.html.twig #}
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %} {{ app_name }} {% endblock %}</title>
+<html lang="en-gb" dir="ltr">
 
-        {% block stylesheets %}
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-            <link rel="stylesheet" href="{{ asset('build/app.css') }}">
-        {% endblock %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="https://via.placeholder.com/16x16/c50000/c50000/" >
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
-    </head>
-    <body>
-        <div id="navigation">
-            {% include 'partials/navigation.html.twig' %}
-        </div>
+		
+        {% if page == 'register' or page == 'login' or page == 'newarticle' %}
+            <link rel="stylesheet" href="{{ asset('css/form.css') }}" />
+            <link rel="stylesheet" href="{{ asset('css/registration.css') }}" />
+        {% else %}
+            {% if page == "account" %}
+                <link rel="stylesheet" href="{{ asset('css/form.css') }}" />
+            {% elseif page == "profile" %}
+                <link rel="stylesheet" href="{{ asset('css/tables.css') }}" />
+            {% elseif page == "article" or page == 'main page' %}
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            {% endif %}
 
-        <div class="container">
-            {% include 'partials/flash.html.twig' %}
-            {% block body %}{% endblock %}
-        </div>
+            <script src = "{{ asset('js/awesomplete.js') }}"></script>
+            <script src = "{{ asset('js/uikit.js') }}"></script>
+        {% endif %}
 
-        <div id="footer">
-            {% include 'partials/footer.html.twig' %}
-        </div>
-    </body>
+        <title>{% block title %}{% endblock title %}</title>
+</head>
 
-    {% block javascripts %}
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    {% endblock %}
+<body class = "uk-section-grey">
 
+{% if page == "main page" %}
+	<header id="header" class="uk-background-primary uk-background-norepeat uk-background-cover 
+	uk-background-center-center uk-background-fixed uk-background-blend-overlay" 
+	style="background-image: url(imgs/home.jpg);">
+		<div class="uk-navbar-wrapper" data-uk-sticky="animation: uk-animation-slide-top; sel-target: .uk-navbar-container; 
+		cls-active: uk-navbar-sticky; cls-inactive: uk-navbar-transparent; top: #header; media: @m">
+			{% include 'components/navigation.html.twig' %}
+		</div>
+
+		<div>
+			<div class="uk-section uk-section-large uk-section-hero uk-position-relative uk-light"  
+				data-uk-scrollspy="cls: uk-animation-slide-bottom-medium">
+				<div class="uk-container uk-margin-large-top uk-margin-small-bottom">
+					<div class="uk-child-width-1-2@m uk-grid-large" data-uk-grid>
+						<div class="uk-flex uk-flex-bottom">
+							<h1 class="uk-heading-medium">How can we help you today?</h1>
+						</div>
+						<div class="uk-flex uk-flex-bottom">
+							<div class="uk-position-relative uk-width-1-1">
+								<form class="uk-search uk-search-default uk-width-1-1" name="search-hero" onsubmit="return false;">
+									<span class="uk-search-icon-flip" data-uk-search-icon="ratio: 1.6"></span>
+									<input id="search-hero" class="uk-search-input uk-form-large" type="search"
+										placeholder="Search for answers" autocomplete="off" data-minchars="1" data-maxitems="30">
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+{% endif %}
+
+{% block body %}{% endblock body%}
+
+</div>
+
+</body>
 </html>

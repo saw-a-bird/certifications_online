@@ -1,54 +1,50 @@
-{# security/index.html.twig #}
-{% extends 'base.html.twig' %}
+
+
+{% set page = "login" %}
+{% extends "base.html.twig" %}
+
+{% block title %}Login{% endblock %}
+
 {% block body %}
 
-    {% if error %}
-            <div class="alert alert-danger">
-                {{ error.messageKey }}
-            </div>
-    {% endif %}
+<div class="position-center">
+    <section class="signin">
+        <div class="container shadow_container">
+            <div class="signin-content">
+                <form method="POST" id="signin-form" action="{{ path('security_login') }}" method="post" autocomplete="on">
+                    <h2 class="form-title uk-link-bright">Login</h2>
 
-        <div class="row">
-            <form class="form-horizontal" action="{{ path('security_login') }}" method="post" autocomplete="on">
-                <div class="col-md-offset-2 col-md-8 text-center">
-                    <div class="panel-group">
-                        <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Login
-                        </div>
+                    {% if error %}
+                        <span class = 'form-alert-red'>
+                            {{ error.messageKey }}
+                        </span><br>
+                    {% endif %}
+                    
+                    <div class="form-group">
+                        <input type="email" class="form-input" name="_username" placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-input" name="_password" placeholder="Password">
+                        <span toggle="#password" class="zmdi zmdi-eye field-icon toggle-password"></span>
+                    </div>
 
-                        <div class="panel-body">
-
-                            <div class="form-group">
-                                <label class="control-label col-sm-2" for="_email">Email:</label>
-                                <div class="col-sm-10">
-                                    <input type="email" class="form-control" name="_username" placeholder="Enter email">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-sm-2" for="_password">Password:</label>
-                                <div class="col-sm-10">
-                                    <input type="password" class="form-control" name="_password" placeholder="Enter password">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="checkbox">
-                                    <label for="_remember_me"><input id="_remember_me" type="checkbox" checked name="_remember_me"> Remember me</label>
-                                </div>
-                            </div>
-
-                        </div>
-
-                            <div class="panel-footer">
-                                <button type="submit" class="btn btn-primary center-block">Submit</button>
-                            </div>  
-                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label for="_remember_me"><input id="_remember_me" type="checkbox" checked name="_remember_me"> Remember me</label>
                         </div>
                     </div>
-                </div>
-            </form>
-        </div>
 
+                    <div class="form-group">
+                        <input type="submit" class="form-submit red_shade" value="Sign in">
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
+                </form>
+                <p class="registerhere">
+                    Don't have an account yet? <a href="{{ path('security_registration') }}" class="registerhere-link uk-link-bright">Register here</a>
+                </p>
+            </div>
+        </div>
+    </section>
+</div>
 {% endblock %}

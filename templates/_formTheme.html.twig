@@ -29,3 +29,13 @@
         <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
     {% endif %}
 {%- endblock form_widget_simple %}
+
+{% block form_errors -%}
+    {% if errors|length > 0 -%}
+    {% if form is not rootform %}<span class="help-block">{% else %}<div class="alert alert-danger">{% endif %}
+        {%- for error in errors -%}
+            <span class = 'input-alert-red'> {{ error.message }} </span>
+        {%- endfor -%}
+    {% if form is not rootform %}</span>{% else %}</div>{% endif %}
+    {%- endif %}
+{%- endblock form_errors %}
