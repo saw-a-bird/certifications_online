@@ -1,0 +1,86 @@
+<nav class="uk-navbar-container">
+    <div class="uk-container uk-navbar-transparent uk-light">
+        <div data-uk-navbar>
+        <div class="uk-navbar-left">
+            <a class="uk-navbar-item uk-logo uk-visible@m" href="index.php">X04wiki</a>
+            <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas-categoriess" data-uk-toggle><span
+            data-uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Categories</span></a>
+        </div>
+        <div class="uk-navbar-center uk-hidden@m">
+            <a class="uk-navbar-item uk-logo" href="index.php">X04wiki</a>
+        </div>
+        <div class="uk-navbar-right">
+            <div>
+            <a id="search-navbar-toggle" class="uk-navbar-toggle" data-uk-search-icon="ratio: 1.1" href="#"></a>
+            <div data-uk-drop="mode: click; pos: left-center; offset: 0">
+                <form class="uk-search uk-search-navbar uk-width-1-1" onsubmit="return false;">
+                <input id="search-navbar" class="uk-search-input" type="search" placeholder="Search for answers"
+                    autofocus autocomplete="off" data-minchars="1" data-maxitems="30">
+                </form>
+            </div>
+            </div>        
+            <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas" data-uk-toggle><span
+            data-uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Menu</span></a>
+            <ul class="uk-navbar-nav uk-visible@m">
+            <li class="uk-active"><a href="index.php">Home</a></li>
+            <li>
+                <a href="#">Join Us</a>
+                <div class="uk-navbar-dropdown">
+                    <ul class="uk-navbar-dropdown-nav uk-nav-parent-icon" data-uk-nav>
+                        <li><a href="#">Write an article</a></li>
+                        <li><a href="contact.php">Suggest an article</a></li>           
+                    </ul>
+                </div>            
+            </li>
+            <li>
+                <a>Contact</a>
+                <div class="uk-navbar-dropdown">
+                    <ul class="uk-navbar-dropdown-nav uk-nav-parent-icon" data-uk-nav>
+                        <li><a href="contact.php">Report an issue</a></li>
+                        <li><a href="contact.php">Send a suggestion</a></li>           
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="#">Explore</a>
+                <div class="uk-navbar-dropdown">
+                    <ul class="uk-navbar-dropdown-nav uk-nav-parent-icon" data-uk-nav>
+                        <li><a href="#">Page one</a></li>
+                        <li><a href="#">Page two</a></li>
+                        <li><a href="#">Page three</a></li>
+                        <li class="uk-parent">
+                        <a href="#">Parent</a>
+                        <ul class="uk-nav-sub">
+                            <li><a href="#">Sub item</a></li>
+                            <li><a href="#">Sub item</a></li>
+                        </ul>
+                        </li>                
+                    </ul>
+                </div>            
+            </li>
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('IS_AUTHENTICATED_FULLY') %}
+                <li>
+                    <a href="#"> <img class="g-size-45 uk-border-circle avatar_border_white" src = "app.user.avatar_path"></a>
+                    <div class="uk-navbar-dropdown">
+                        <ul class="uk-navbar-dropdown-nav uk-nav-parent-icon" data-uk-nav>
+                            <li>Signed in as <br> {{ app.user.username }}</li>
+                            <hr class = "uk-hr">
+                            {# <li><a href="article.php?page=new">Write a new certification</a></li> #}
+                            <li><a href="{{ path('user_profile') }}">Personal Space</a></li>
+                            <hr class = "uk-hr">
+                            <li><a href="{{ path('edit_profile') }}">Edit Profile</a></li>
+                            <li><a href="{{ path('edit_account') }}">Account Settings</a></li>
+                            <hr class = "uk-hr">
+                            <li><a href="{{ path('security_logout') }}">Sign Out</a></li>
+                        </ul>
+                    </div>
+                </li>
+            {% else %}
+                <li><div class='uk-navbar-item'><a class='uk-button uk-button-small uk-button-primary-outline' href='{{ path('security_login') }}'>Login</a></div></li>
+            {% endif %}
+
+            </ul>
+        </div>
+        </div>
+    </div>
+</nav>
