@@ -1,41 +1,40 @@
-# Symfony 4 Auth
+# projectSymfony
 
-[![Build Status](https://travis-ci.com/fidanf/symfony4-auth.svg?branch=master)](https://travis-ci.com/fidanf/symfony4-auth)
 
-This project is a "proof of concept" to demonstrate how to build an authentication system with Symfony 4 using no dependencies (such as FOSUserBundle).
+After installing the project with
 
-It covers the following features :
-
-- User registration, automatically logging the user and redirecting him to home page with a flash message
-- User login with email
-- Remember me option available on the login form
-- Automatically sets up the user's created_at timestamp upon registration using Doctrine Lifecycle events
-- Listener to prevent the user to go back to anonymous pages when logged in
-- Listener to automatically update user's last login timestamp upon every successful authentication
-- Assets management with [@symfony/webpack-encore](https://symfony.com/doc/current/frontend.html) 
-
-## Requirements 
-
-- PHP >=7.3
-
-## Setting up
-
-Install dependencies
-
-```bash
-composer install
-npm install # or yarn install
-npm run dev
+```
+git clone https://github.com/pokerfce/projectSymfony.git
 ```
 
-Generate database schema
-```bash
-php bin/console doctrine:migrations:migrate
+You'll have to run the command to ensure that all of the needed vendor libraries are downloaded
+
+```
+composer install 
 ```
 
-### Live demo
+To generate the manifest.json file, execute the below commands:
 
-<https://symfony4-auth.frank-fidanza.fr/>
+```
+yarn add --dev @symfony/webpack-encore
 
+yarn add webpack-notifier --dev
 
+yarn encore dev
+```
 
+Terminate the last batch job with "CTRL + C", then simply start the project with
+
+```
+symfony server:start
+```
+
+### Todo list (To be updated): 
+
+- [X] Users (Roles, Authentification, Register, Edit Information)
+- [ ] Categories (List / Creation / Modify / Delete)
+- [ ] Certifications (List / Creation / Modify / Delete)
+
+- [ ] Certif-User Enroll
+- [ ] Certif-User Comment
+- [ ] Certif-User Stars

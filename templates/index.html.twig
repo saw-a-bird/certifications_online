@@ -8,6 +8,36 @@
 
 {% block body %}
 
+<header id="header" class="uk-background-primary uk-background-norepeat uk-background-cover 
+	uk-background-center-center uk-background-fixed uk-background-blend-overlay" 
+	style="background-image: url(imgs/home.jpg);">
+	<div class="uk-navbar-wrapper" data-uk-sticky="animation: uk-animation-slide-top; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; cls-inactive: uk-navbar-transparent; top: #header; media: @m">
+		{% include 'components/navigation.html.twig' %}
+	</div>
+
+	<div>
+		<div class="uk-section uk-section-large uk-section-hero uk-position-relative uk-light"  
+			data-uk-scrollspy="cls: uk-animation-slide-bottom-medium">
+			<div class="uk-container uk-margin-large-top uk-margin-small-bottom">
+				<div class="uk-child-width-1-2@m uk-grid-large" data-uk-grid>
+					<div class="uk-flex uk-flex-bottom">
+						<h1 class="uk-heading-medium">How can we help you today?</h1>
+					</div>
+					<div class="uk-flex uk-flex-bottom">
+						<div class="uk-position-relative uk-width-1-1">
+							<form class="uk-search uk-search-default uk-width-1-1" name="search-hero" onsubmit="return false;">
+								<span class="uk-search-icon-flip" data-uk-search-icon="ratio: 1.6"></span>
+								<input id="search-hero" class="uk-search-input uk-form-large" type="search"
+									placeholder="Search for answers" autocomplete="off" data-minchars="1" data-maxitems="30">
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+
 <div class = "uk-section-transparent">
 	{# {% include 'components/categoriesPills.php' %} #}
 	
@@ -137,7 +167,7 @@
   <div class="uk-offcanvas-bar">
     <button class="uk-offcanvas-close" type="button" data-uk-close></button>
     <ul class="uk-nav uk-nav-primary uk-nav-offcanvas uk-margin-top uk-text-center uk-text-500">
-      <li class="uk-active"><a href="index.html">Home</a></li>
+      <li class="uk-active"><a href="{{ path("index") }}">Home</a></li>
       <li ><a href="category.html">Category</a></li>
       <li ><a href="article.php">Article</a></li>
       <li>

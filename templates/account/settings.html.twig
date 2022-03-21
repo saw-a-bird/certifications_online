@@ -1,0 +1,64 @@
+
+{% extends "account.html.twig" %}
+
+{% block page %}
+
+    <b><span class = "uk-account-bread">/ Account Settings</span></b>
+    <br> 
+    <i>Update your username and manage your account</i>
+    </div>
+</div>
+<div class="uk-grid-large uk-grid uk-grid-stack uk-padding-top-large" data-uk-grid>
+    <div class="uk-width-1-5@m uk-first-column uk-navbar-sidebar-nav">
+    <ul class="uk-nav-parent-icon" data-uk-nav>
+            <li><a href="{{ path("account_information") }}">Edit Profile</a></li>
+            <li><a href="#"><b>Account Settings</b></a></li>
+            <li><a href="{{ path("account_password") }}">Password</a></li>
+            <li><a href="#">Email Notifications</a></li>
+            <li><a href="#">Sessions</a></li>
+        </ul>
+    </div>
+    <div class="uk-width-expand@m uk-grid-margin uk-first-column">
+        <div class="uk-article-content">
+           {% for message in app.flashes('success') %}
+                <span class = 'uk-classic-italic form-alert-green'>
+                    {{ message }}
+                </span><br><br>
+            {% endfor %}
+
+            {{ form_start(form, { 'attr': {'class': 'uk-form-stacked'}}) }}
+                
+                <div class="uk-margin-bottom">
+                    {{ form_label(form.username, "Username", {'label_attr': {'class': 'uk-form-label'}}) }}
+                    <div class="uk-form-controls">
+                        {{ form_widget(form.username, {'attr': {'class': 'uk-input form-control', 'value': app.user.username }}) }}
+                    </div>
+                    <i class = "uk-classic-italic">Your account URL: https://X04wiki.com/name </i>
+                    {% for message in app.flashes('usernameError') %}
+                        <i class = "uk-classic-italic form-alert-red">
+                            {{ message }}
+                        </i>
+                    {% endfor %}
+                    <br>
+                </div>
+                <div class="uk-margin-bottom">
+                    {{ form_label(form.email, "Email", {'label_attr': {'class': 'uk-form-label'}}) }}
+                    <div class="uk-form-controls">
+                        {{ form_widget(form.email, {'attr': {'class': 'uk-input form-control', 'value': app.user.email }}) }}
+                        <i class = "uk-classic-italic">Choose a valid email</i>
+                        {% for message in app.flashes('emailError') %}
+                            <i class = "uk-classic-italic form-alert-red">
+                                {{ message }}
+                            </i>
+                        {% endfor %}
+                        <br>
+                    </div>
+                </div>
+                <div class="uk-margin-medium-top">
+                    {{ form_widget(form.submit, {'attr': {'class': 'uk-button uk-button-secondary uk-button-large', 'value': 'Save Changes' }}) }}
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock page %}

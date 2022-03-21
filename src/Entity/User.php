@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
-
 use DateTime;
 
 /**
@@ -80,7 +79,7 @@ class User implements UserInterface, \Serializable
     private $isBanned = false;
 
     /**
-     * @ORM\Column(type="string", length=100))
+     * @ORM\Column(type="string", length=255)
      */
     private $avatar_path = "imgs/avatars/default1.png";
 
@@ -98,6 +97,11 @@ class User implements UserInterface, \Serializable
      * @ORM\ManyToMany(targetEntity=Category::class)
      */
     private $selected_tags;
+
+    /**
+     * @ORM\Column(type="string", length=25)
+     */
+    private $rank = "user";
 
     public function __construct()
     {
@@ -207,15 +211,16 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    public function getAvatarPath(): ?string
-    {
+    public function getAvatar() {
         return $this->avatar_path;
     }
 
-    public function setAvatarPath(string $avatar_path): self
-    {
-        $this->avatar_path = $avatar_path;
+    public function getAvatarPath() {
+        return "imgs/avatars/". $this->avatar_path;
+    }
 
+    public function setAvatarPath($avatar_path): self {
+        $this->avatar_path = $avatar_path;
         return $this;
     }
 
@@ -263,6 +268,18 @@ class User implements UserInterface, \Serializable
     public function removeSelectedTag(Category $selectedTag): self
     {
         $this->selected_tags->removeElement($selectedTag);
+
+        return $this;
+    }
+
+    public function getRank(): ?string
+    {
+        return $this->rank;
+    }
+
+    public function setRank(string $rank): self
+    {
+        $this->rank = $rank;
 
         return $this;
     }

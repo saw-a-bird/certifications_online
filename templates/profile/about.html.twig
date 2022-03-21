@@ -1,0 +1,27 @@
+
+{% extends "profile.html.twig" %}
+
+{% block page %}
+<nav class="uk-navbar-nocolor uk-navbar-container">
+    <div class="uk-container uk-navbar-transparent">
+        <div data-uk-navbar>
+
+            <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas" data-uk-toggle><span
+            data-uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Menu</span></a>
+            <ul class="uk-navbar-nav uk-visible@m">
+                <li class="uk-active"><a href="{{ path("user_certifs", {name: unknown.username}) }}">Articles</a></li>
+                <li class="uk-active"><a href="{{ path("user_favs", {name: unknown.username}) }}">Favourites</a></li>
+                <li><a href="#"><b>About</b></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<hr class = "uk-hr uk-margin-horizontal-none" style = "border-color: #b1b1b1;">
+
+<div class = "uk-container-tight uk-section-medium">
+    <h4>Biography:</h4>{{ unknown.biography}}
+    <h4>Specialty:</h4>{{ unknown.specialty}}
+    <h5>Member since {{ unknown.getCreatedAt()|date("m/d/Y")}} </h5>
+</div>
+{% endblock page %}

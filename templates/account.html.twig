@@ -1,0 +1,24 @@
+{% set page = "account" %}
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+<div class="uk-navbar-wrapper" data-uk-sticky="animation: uk-animation-slide-top; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; top: 200; media: @m">
+    {% include 'components/navigation.html.twig' %}
+</div>
+
+<div class = "uk-section-transparent">
+    <div class="uk-section uk-section-large uk-padding-bottom-large">
+        <div class="uk-container-tight">
+            <div class="uk-profile-meta uk-flex uk-flex-middle">
+              <img class="uk-border-circle uk-avatar" src="{{ asset(app.user.getAvatarPath()) }}" alt="Sara Galen" loading="lazy" width="50" height="50" style="max-width: 50px">
+                <div>
+                    <b><a class = "uk-link">{{ app.user.username }}</a></b>
+                    {% block page %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

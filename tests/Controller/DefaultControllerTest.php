@@ -43,6 +43,7 @@ class DefaultControllerTest extends WebTestCase
     public function getSecureUrls()
     {
         yield ['/profile'];
+        yield ['/account'];
     }
 
     public function getPublicUrls()
