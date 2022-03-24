@@ -2,14 +2,19 @@
 {% set page = "register" %}
 {% extends "base.html.twig" %}
 
+{% block spreadsheets %}
+    <link rel="stylesheet" href="{{ asset('css/form.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/registration.css') }}" />
+{% endblock %}
+
 {% block title %}Register{% endblock %}
 
 {% block body %}
 
 <div class="position-center">
-    <section class="signup">
+    <section>
         <div class="container shadow_container">
-            <div class="signup-content">
+            <div class="container-content">
                 {{ form_start(form) }}
                 <form method="POST" id="signup-form" class="signup-form">
                     <input type="hidden" name="action" value="register" />

@@ -3,14 +3,19 @@
 {% set page = "login" %}
 {% extends "base.html.twig" %}
 
+{% block spreadsheets %}
+    <link rel="stylesheet" href="{{ asset('css/form.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/registration.css') }}" />
+{% endblock %}
+
 {% block title %}Login{% endblock %}
 
 {% block body %}
 
 <div class="position-center">
-    <section class="signin">
+    <section>
         <div class="container shadow_container">
-            <div class="signin-content">
+            <div class="container-content">
                 <form method="POST" id="signin-form" action="{{ path('security_login') }}" method="post" autocomplete="on">
                     <h2 class="form-title uk-link-bright">Login</h2>
 

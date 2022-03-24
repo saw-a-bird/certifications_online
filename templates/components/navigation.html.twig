@@ -22,7 +22,7 @@
             <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas" data-uk-toggle><span
             data-uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Menu</span></a>
             <ul class="uk-navbar-nav uk-visible@m">
-            <li class="uk-active"><a href="index.php">Home</a></li>
+            <li class="uk-active"><a href="{{ path("index")}}">Home</a></li>
             <li>
                 <a href="#">Join Us</a>
                 <div class="uk-navbar-dropdown">
@@ -67,6 +67,13 @@
                             <hr class = "uk-hr">
                             {# <li><a href="article.php?page=new">Write a new certification</a></li> #}
                             <li><a href="{{ path('user_about', {name: app.user.username}) }}">Personal Space</a></li>
+                            {% if app.user.rank == "admin" %}
+                                <hr class = "uk-hr">
+                                <u><i class = "uk-classic-italic"> Administation : </i></u>
+                                <li class = "uk-classic-italic"><a href="{{ path('providers_index') }}"> - Fournisseurs</a></li>
+                                <li class = "uk-classic-italic"><a href="#"> - Certifications</a></li>
+                                <li class = "uk-classic-italic"><a href="#"> - Examens</a></li>
+                            {% endif %}
                             <hr class = "uk-hr">
                             <li><a href="{{ path('account_information') }}">Edit Profile</a></li>
                             <li><a href="{{ path('account_settings') }}">Account Settings</a></li>

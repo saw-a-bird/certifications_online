@@ -1,6 +1,11 @@
 {% set page = "profile" %}
 {% extends "base.html.twig" %}
 
+{% block spreadsheets %}
+    <link rel="stylesheet" href="{{ asset('css/tables.css') }}" />
+    {{ parent() }}
+{% endblock %}
+
 {% block body %}
 
 <div class="uk-navbar-wrapper" data-uk-sticky="animation: uk-animation-slide-top; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; top: 200; media: @m">
@@ -11,7 +16,7 @@
         <div class="uk-section uk-section-large uk-padding-bottom-large">
             <div class="uk-container">
                 <div class="uk-profile-meta uk-flex uk-flex-center">
-                    <img class="uk-border-circle uk-avatar" src="{{ asset(unknown.getAvatarPath() ) }}" alt="Sara Galen" loading="lazy" width="100" height="100" style="max-width: 100px">
+                    <img class="uk-border-circle uk-avatar" src="{{ asset(unknown.getAvatarPath() ) }}" alt="Sara Galen" loading="lazy" style="width: 100px; height: 100px">
                     {% if app.user.id == unknown.id %}
                         <div class = 'uk-text-center'>
                             <a class = 'uk-text-bold uk-link uk-font-size-20'>{{ app.user.username }}</a> <a href = '{{ path("account_settings") }}' class='uk-display-block uk-button uk-button-secondary uk-margin-top uk-margin-vertical-10'>Edit Profile</a>

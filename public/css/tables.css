@@ -36,3 +36,74 @@ th {
     vertical-align: top;
     border-top: 1px solid #dee2e6;
 }
+
+.flr {
+	float: right
+}
+
+.fix {
+	clear: both;
+	list-style: none;
+}
+
+.fix:after {
+	display: block;
+	clear: both;
+	height: 0;
+	overflow: hidden;
+	visibility: hidden;
+	content: "."
+}
+
+.prlist01 {
+	float: left;
+	width: 740px
+}
+
+.prlist01 h3 {
+	color: #000;
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 40px;
+	text-transform: uppercase
+}
+
+.prlistcon,
+.prlist01 {
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+	padding: 19px 29px;
+	border: 1px solid #c6ddee;
+	background-color: #fff;
+	line-height: 32px
+}
+
+.prlistcon {
+	margin-bottom: 10px;
+	padding: 19px 29px;
+	border: 1px solid #c6ddee;
+	background-color: #fff;
+	line-height: 32px
+}
+
+.prlistcon .flr {
+	color: #999;
+	font-weight: 400;
+	font-size: 12px
+}
+
+.prlistcon h3 {
+	padding: 6px 0;
+	font-size: 18px;
+	font-weight: 700;
+	color: #a25a5a;
+	text-transform: uppercase;
+	line-height: 20px
+}
+
+.prlistcon li {
+	float: left;
+	width: 25%;
+	text-align: left;
+	line-height: 30px
+}
+

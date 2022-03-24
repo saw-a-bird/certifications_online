@@ -566,6 +566,10 @@ template {
   --uk-breakpoint-xl: 1600px;
 }
 
+.visible{
+  display: block !important;
+}
+
 /* ========================================================================
    Component: Link
  ========================================================================== */
@@ -2970,9 +2974,9 @@ select.uk-form-width-xsmall {
  * Default
  */
 /* Horizontal */
-.uk-grid {
+/* .uk-grid {
   margin-left: -30px;
-}
+} */
 
 .uk-grid > * {
   padding-left: 30px;
@@ -2988,9 +2992,9 @@ select.uk-form-width-xsmall {
 /* Desktop and bigger */
 @media (min-width: 1200px) {
   /* Horizontal */
-  .uk-grid {
+  /* .uk-grid {
     margin-left: -40px;
-  }
+  } */
   .uk-grid > * {
     /* padding-left: 40px; */
   }
@@ -4363,7 +4367,6 @@ select.uk-form-width-xsmall {
 .uk-search-default .uk-search-input {
   height: 40px;
   padding-left: 6px;
-  padding-right: 6px;
   background: transparent;
   border: 1px solid #000;
 }
@@ -4386,6 +4389,12 @@ select.uk-form-width-xsmall {
 
 .uk-search-default .uk-search-icon-flip ~ .uk-search-input {
   padding-right: 46px;
+}
+
+
+.uk-search-icon-flip svg{
+  padding: 0 !important;
+  cursor: pointer;
 }
 
 /* Navbar modifier
@@ -5236,8 +5245,6 @@ ul.uk-nav-sub {
   display: flex;
   /* 1 */
   flex-wrap: wrap;
-  /* 2 */
-  margin-left: -20px;
   /* 3 */
   padding: 0;
   list-style: none;
@@ -5252,7 +5259,6 @@ ul.uk-nav-sub {
   /* 1 */
   flex: none;
   /* 2 */
-  padding-left: 20px;
   /* 3 */
   position: relative;
 }
@@ -5323,13 +5329,13 @@ ul.uk-nav-sub {
 /* Hover + Focus */
 .uk-subnav-pill > * > a:hover,
 .uk-subnav-pill > * > a:focus {
-  background-color: #f8f8f8;
+  /* background-color: #f8f8f8; */
   color: #000;
 }
 
 /* OnClick */
 .uk-subnav-pill > * > a:active {
-  background-color: #f8f8f8;
+  /* background-color: #f8f8f8; */
   color: #000;
 }
 
@@ -5509,14 +5515,14 @@ ul.uk-nav-sub {
   position: relative;
 }
 
-.uk-tab::before {
+/* .uk-tab::before {
   content: "";
   position: absolute;
   bottom: 0;
   left: 20px;
   right: 0;
   border-bottom: 1px solid #000;
-}
+} */
 
 /*
  * 1. Space is allocated solely based on content dimensions: 0 0 auto
@@ -5545,7 +5551,7 @@ ul.uk-nav-sub {
   text-align: center;
   /* 2 */
   padding: 5px 10px;
-  color: #555;
+  /* color: #555; */
   border-bottom: 1px solid transparent;
   font-size: 0.875rem;
   text-transform: uppercase;
@@ -5555,7 +5561,7 @@ ul.uk-nav-sub {
 /* Hover + Focus */
 .uk-tab > * > a:hover,
 .uk-tab > * > a:focus {
-  color: #000;
+  /* color: #000; */
   text-decoration: none;
 }
 
@@ -7452,6 +7458,8 @@ ul.uk-nav-sub {
 /*
  * Fade
  */
+
+
 .uk-animation-fade {
   animation-name: uk-fade;
   animation-duration: 0.8s;
@@ -7538,7 +7546,7 @@ ul.uk-nav-sub {
  * Shake
  */
 .uk-animation-shake {
-  animation-name: uk-shake;
+  animation-name: uk-shake !important;
 }
 
 /*
@@ -9480,6 +9488,14 @@ iframe.uk-cover {
   box-shadow: 0 28px 50px rgba(0, 0, 0, 0.16);
 }
 
+.uk-box-shadow-vertical-small {
+  box-shadow:  rgb(0 0 0 / 0.16) 0px 4px 3px, 0px -4px 3px rgba(0, 0, 0, 0.16);
+}
+
+.uk-box-shadow-bottom-small {
+  box-shadow:  rgb(0 0 0 / 0.16) 0px 4px 3px;
+}
+
 /*
  * Hover
  */
@@ -9833,10 +9849,6 @@ iframe.uk-cover {
   z-index: 990;
 }
 
-.uk-margin-xsmall-top {
-  margin-top: 6px;
-}
-
 /* ========================================================================
    Component: Flex
  ========================================================================== */
@@ -10130,14 +10142,36 @@ iframe.uk-cover {
  * Default
  */
 
-.uk-margin-horizontal-none {
+.uk-margin-horizontal-10 {
+  margin-left: 10px !important;
+  margin-right: 10px !important;
+}
+
+.uk-margin-vertical-none {
   margin-top: 0px;
   margin-bottom: 0px;
 }
 
-.uk-margin-vertical-10 {
-  margin-left: 10px !important;
-  margin-right: 10px !important;
+.uk-margin-vertical-small {
+  margin-top: 20px !important;
+  margin-bottom: 20px !important;
+}
+
+.uk-margin-bottom-none {
+  margin-bottom: 0 !important;
+}
+
+.uk-margin-bottom-xsmall {
+  margin-bottom: 10px !important;
+}
+
+.uk-margin-bottom-small {
+  margin-bottom: 20px !important;
+}
+
+.uk-margin-vertical-medium {
+  margin-top: 40px !important;
+  margin-bottom: 40px !important;
 }
 
 .uk-margin {
@@ -10166,12 +10200,18 @@ iframe.uk-cover {
 
 /* Small
  ========================================================================== */
+
+ 
 .uk-margin-small {
   margin-bottom: 10px;
 }
 
 * + .uk-margin-small {
   margin-top: 10px !important;
+}
+
+.uk-margin-xsmall-top {
+  margin-top: 6px;
 }
 
 .uk-margin-small-top {
@@ -12245,10 +12285,10 @@ iframe.uk-cover {
 .uk-light .uk-pagination > .uk-disabled > *, .uk-section-primary:not(.uk-preserve-color) .uk-pagination > .uk-disabled > *, .uk-section-secondary:not(.uk-preserve-color) .uk-pagination > .uk-disabled > *, .uk-tile-primary:not(.uk-preserve-color) .uk-pagination > .uk-disabled > *, .uk-tile-secondary:not(.uk-preserve-color) .uk-pagination > .uk-disabled > *, .uk-card-primary.uk-card-body .uk-pagination > .uk-disabled > *, .uk-card-primary > :not([class*='uk-card-media']) .uk-pagination > .uk-disabled > *, .uk-card-secondary.uk-card-body .uk-pagination > .uk-disabled > *, .uk-card-secondary > :not([class*='uk-card-media']) .uk-pagination > .uk-disabled > *, .uk-overlay-primary .uk-pagination > .uk-disabled > * {
   color: rgba(255, 255, 255, 0.85);
 }
-
+/* 
 .uk-light .uk-tab::before, .uk-section-primary:not(.uk-preserve-color) .uk-tab::before, .uk-section-secondary:not(.uk-preserve-color) .uk-tab::before, .uk-tile-primary:not(.uk-preserve-color) .uk-tab::before, .uk-tile-secondary:not(.uk-preserve-color) .uk-tab::before, .uk-card-primary.uk-card-body .uk-tab::before, .uk-card-primary > :not([class*='uk-card-media']) .uk-tab::before, .uk-card-secondary.uk-card-body .uk-tab::before, .uk-card-secondary > :not([class*='uk-card-media']) .uk-tab::before, .uk-overlay-primary .uk-tab::before {
   border-color: rgba(255, 255, 255, 0.2);
-}
+} */
 
 .uk-light .uk-tab > * > a, .uk-section-primary:not(.uk-preserve-color) .uk-tab > * > a, .uk-section-secondary:not(.uk-preserve-color) .uk-tab > * > a, .uk-tile-primary:not(.uk-preserve-color) .uk-tab > * > a, .uk-tile-secondary:not(.uk-preserve-color) .uk-tab > * > a, .uk-card-primary.uk-card-body .uk-tab > * > a, .uk-card-primary > :not([class*='uk-card-media']) .uk-tab > * > a, .uk-card-secondary.uk-card-body .uk-tab > * > a, .uk-card-secondary > :not([class*='uk-card-media']) .uk-tab > * > a, .uk-overlay-primary .uk-tab > * > a {
   color: rgba(255, 255, 255, 0.85);
@@ -12587,9 +12627,9 @@ iframe.uk-cover {
   margin: 5px 5px;
   display: inline-block;
   padding: .25em .4em;
-  font-size: 16px;
+  font-size: 12px;
   font-family: Whitney,Tahoma,Arial,sans-serif;
-  line-height: 1;
+  line-height: 1.1;
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;

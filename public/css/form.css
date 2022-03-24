@@ -123,6 +123,16 @@
 	background-image: linear-gradient(to left, #fbb5b5, #f3cfcf);
 }
 
+.save_button {
+	cursor: pointer;
+	background-color: #ff6e6e;
+}
+
+.delete_button {
+	cursor: pointer;
+	background-color: #ffafaf;
+}
+
 input[type=checkbox]:not(old) {
 	width: 2em;
 	margin: 0;

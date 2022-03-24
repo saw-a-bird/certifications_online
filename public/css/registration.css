@@ -120,8 +120,7 @@ p {
 	color: #555
 }
 
-.signup-content, .signin-content {
-	background: rgba(255, 255, 255, 0.8);
+.container-content {
 	padding: 50px 85px;
 }
 
@@ -131,7 +130,7 @@ p {
 		max-width: 100%;
 	}
 
-	.signup-content, .signin-content {
+	.container-content {
 		padding: 5px 5px;
 	}
 
@@ -141,7 +140,7 @@ p {
 }
 
 @media screen and (max-width:480px) {
-	.signup-content, .signin-content {
+	.container-content {
 		padding: 5px 5px;
 	}
 	
@@ -167,5 +166,41 @@ p {
 }
 
 .shadow_container {
+	background: rgba(255, 255, 255, 0.8);
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+/* .uk-tab > *:hover,
+.uk-tab > *:focus {
+	color: white;
+} */
+
+.uk-tab {
+	margin: 0;
+}
+
+.uk-tab > * {
+	padding-left: 0;
+}
+
+.uk-tab::before {
+	left: 0;
+}
+
+.uk-tab-active > a {
+	background-color: rgb(73 73 73);
+	color: #e4e1e1;
+	font-weight:bold;
+}
+
+.uk-tab-active > .uk-tab-sub {
+	background-color: rgb(138 138 138);
+	color: #e4e1e1;
+	font-weight:bold;
+}
+
+.uk-tabber {
+	background-color: rgba(255, 255, 255, 0.8);
 }

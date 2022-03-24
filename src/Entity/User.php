@@ -62,7 +62,6 @@ class User implements UserInterface, \Serializable
 
     /**
      * @var Datetime
-     *
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $last_login;
@@ -94,18 +93,18 @@ class User implements UserInterface, \Serializable
     private $specialty = "";
 
     /**
-     * @ORM\ManyToMany(targetEntity=Category::class)
-     */
-    private $selected_tags;
-
-    /**
      * @ORM\Column(type="string", length=25)
      */
     private $rank = "user";
 
+    /**
+     * @ORM\OneToMany(targetEntity=Enrolled::class, mappedBy="user")
+     */
+    private $certifications;
+
     public function __construct()
     {
-        $this->selected_tags = new ArrayCollection();
+        $this->certifications = new ArrayCollection();
     }
 
     public function getId(): int
@@ -189,12 +188,12 @@ class User implements UserInterface, \Serializable
         $this->last_login = $last_login;
     }
 
-    public function getCreatedAt(): Datetime
+    public function getCreatedAt() 
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(Datetime $created_at = null): void
+    public function setCreatedAt($created_at): void
     {
         $this->created_at = $created_at;
     }
@@ -248,30 +247,6 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * @return Collection|Category[]
-     */
-    public function getSelectedTags(): Collection
-    {
-        return $this->selected_tags;
-    }
-
-    public function addSelectedTag(Category $selectedTag): self
-    {
-        if (!$this->selected_tags->contains($selectedTag)) {
-            $this->selected_tags[] = $selectedTag;
-        }
-
-        return $this;
-    }
-
-    public function removeSelectedTag(Category $selectedTag): self
-    {
-        $this->selected_tags->removeElement($selectedTag);
-
-        return $this;
-    }
-
     public function getRank(): ?string
     {
         return $this->rank;
@@ -289,5 +264,35 @@ class User implements UserInterface, \Serializable
      */
     public function onPrePersist(){
         $this->created_at = new Datetime();
+    }
+
+    /**
+     * @return Collection|Enrolled[]
+     */
+    public function getCertifications(): Collection
+    {
+        return $this->certifications;
+    }
+
+    public function addCertification(Enrolled $enrolled): self
+    {
+        if (!$this->certifications->contains($enrolled)) {
+            $this->certifications[] = $enrolled;
+            $enrolled->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCertification(Enrolled $enrolled): self
+    {
+        if ($this->certifications->removeElement($enrolled)) {
+            // set the owning side to null (unless already changed)
+            if ($enrolled->getUser() === $this) {
+                $enrolled->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

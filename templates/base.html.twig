@@ -10,21 +10,10 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
 		
-        {% if page == 'register' or page == 'login' or page == 'newarticle' %}
-            <link rel="stylesheet" href="{{ asset('css/form.css') }}" />
-            <link rel="stylesheet" href="{{ asset('css/registration.css') }}" />
-        {% else %}
-            {% if page == "account" %}
-                <link rel="stylesheet" href="{{ asset('css/form.css') }}" />
-            {% elseif page == "profile" %}
-                <link rel="stylesheet" href="{{ asset('css/tables.css') }}" />
-            {% elseif page == "article" or page == 'main page' %}
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-            {% endif %}
-
+        {% block spreadsheets %}
             <script src = "{{ asset('js/awesomplete.js') }}"></script>
             <script src = "{{ asset('js/uikit.js') }}"></script>
-        {% endif %}
+        {% endblock spreadsheets %}
 
         <title>{% block title %}{% endblock title %}</title>
 

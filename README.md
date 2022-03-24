@@ -32,8 +32,9 @@ symfony server:start
 ### Todo list (To be updated): 
 
 - [X] Users (Roles, Authentification, Register, Edit Information)
-- [ ] Categories (List / Creation / Modify / Delete)
-- [ ] Certifications (List / Creation / Modify / Delete)
+- [X] Fournisseurs (List / Creation / Modify / Delete)
+- [X] Certifications (Creation / Modify / Delete)
+- [X] Certifications List (Pagination, Search by Title / Provider)
 
 - [ ] Certif-User Enroll
 - [ ] Certif-User Comment

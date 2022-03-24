@@ -4,293 +4,121 @@
 {% set page = "main page" %}
 {% extends "base.html.twig" %}
 
+{% block spreadsheets %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/uikit@3.13.1/dist/js/uikit-icons.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/uikit@3.13.1/dist/js/uikit.min.js"></script>	
+	<link rel="stylesheet" href="{{ asset('css/tables.css') }}" />
+	<link rel="stylesheet" href="{{ asset('css/grid_thumbnail.css') }}" />
+	
+	<script>
+		function navigateTab(evt, identifier) {
+			var i, tabcontent, tablinks;
+			document.getElementById("form_submit").style.display = "inline-flex";
+			document.getElementById("form_tab").value = identifier;
+
+			tabcontent = document.getElementsByClassName("tab-content");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+
+			tablinks = document.getElementsByClassName("tabbedAnchor");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].classList.remove("uk-active");
+			}
+
+			document.getElementsByClassName(identifier)[0].style.display = "block";
+			evt.currentTarget.parentElement.classList.add("uk-active");
+		}
+	</script>
+	
+	<style>
+	.tab-content {
+		display: none;
+	}
+	</style>
+
+	{{ parent() }}
+{% endblock %}
+
 {% block title %}X04wiki{% endblock %}
 
 {% block body %}
 
-<header id="header" class="uk-background-primary uk-background-norepeat uk-background-cover 
-	uk-background-center-center uk-background-fixed uk-background-blend-overlay" 
-	style="background-image: url(imgs/home.jpg);">
-	<div class="uk-navbar-wrapper" data-uk-sticky="animation: uk-animation-slide-top; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; cls-inactive: uk-navbar-transparent; top: #header; media: @m">
-		{% include 'components/navigation.html.twig' %}
-	</div>
+{% include "components/fixed_header.html.twig" %}
 
-	<div>
-		<div class="uk-section uk-section-large uk-section-hero uk-position-relative uk-light"  
-			data-uk-scrollspy="cls: uk-animation-slide-bottom-medium">
-			<div class="uk-container uk-margin-large-top uk-margin-small-bottom">
-				<div class="uk-child-width-1-2@m uk-grid-large" data-uk-grid>
-					<div class="uk-flex uk-flex-bottom">
-						<h1 class="uk-heading-medium">How can we help you today?</h1>
+
+<div class = "uk-section-transparent uk-margin-bottom-small uk-margin-horizontal-10 uk-box-shadow-bottom-small">
+	<div class="uk-container uk-section-small">
+
+		<div class="uk-flex uk-flex-middle uk-flex-column uk-width-1-1 uk-margin-small-bottom filter-options-container">
+					    {% for message in app.flashes('success') %}
+					<span class = 'uk-classic-italic form-alert-green'>
+						{{ message }}
+					</span><br><br>
+				{% endfor %}
+			<div class="uk-flex uk-flex-right uk-flex-last uk-flex-1 uk-margin-medium-bottom filter-search-container">
+
+				{{ form_start(form) }}
+					<div class = "uk-subnav uk-subnav-pill uk-search uk-search-default uk-width-medium">
+
+						{{ form_widget(form.searchF, {'attr': {'placeholder': 'Name...', 'class': 'uk-search-input tab-F tab-content'}}) }}
+
+						{{ form_widget(form.searchC, {'attr': {'placeholder': 'Title...', 'class': 'uk-search-input tab-C tab-content'}}) }}
+
+						<button type="submit" id = "form_submit" name="form_submit" class="uk-search-icon-flip uk-icon uk-search-icon" style = "display:none" uk-search-icon=""><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="search-icon"><circle fill="none" stroke="#000" stroke-width="1.1" cx="9" cy="9" r="7"></circle><path fill="none" stroke="#000" stroke-width="1.1" d="M14,14 L18,18 L14,14 Z"></path></svg></button>
 					</div>
-					<div class="uk-flex uk-flex-bottom">
-						<div class="uk-position-relative uk-width-1-1">
-							<form class="uk-search uk-search-default uk-width-1-1" name="search-hero" onsubmit="return false;">
-								<span class="uk-search-icon-flip" data-uk-search-icon="ratio: 1.6"></span>
-								<input id="search-hero" class="uk-search-input uk-form-large" type="search"
-									placeholder="Search for answers" autocomplete="off" data-minchars="1" data-maxitems="30">
-							</form>
-						</div>
+					
+					{% if search_text != "" %}
+					<div class = "uk-nav-center uk-margin-small-top">
+						<i class = "uk-classic-italic">Current filter: {{ search_type }}</i><br/>
+						<i class = "uk-classic-italic">Search: {{ search_text }}</i>
 					</div>
+					{% endif %}
+
+				{{ form_end(form) }}
+
+			</div>
+			
+			<div class="uk-flex uk-flex-center uk-flex-left@s uk-grid-small uk-grid-divider uk-child-width-auto uk-margin-small-bottom uk-grid" uk-grid="">
+				<div>
+					<ul class="tab uk-flex uk-flex-center uk-flex-left@s uk-subnav uk-subnav-pill" >
+						<li class = "tabbedAnchor"><a href='javascript:;' onclick="navigateTab(event, 'tab-F')">Fournisseurs</a></li>
+						<li class = "tabbedAnchor"><a href='javascript:;' onclick="navigateTab(event, 'tab-C')">Certifications</a></li>
+					</ul>
 				</div>
 			</div>
 		</div>
-	</div>
-</header>
 
-<div class = "uk-section-transparent">
-	{# {% include 'components/categoriesPills.php' %} #}
-	
-	<div class="uk-section uk-section-large">
-		<div class="uk-container">
-			<div data-uk-grid>
-				<div class="uk-width-1-3@m">
-					<h2 class="uk-h1"><a class = "uk-link" href="category.html">General</a></h2>
-					<p class="uk-text-lead">All the relevant articles</p>
-				</div>
-				<div class="uk-width-expand@m">
-					<div class="uk-child-width-1-2@s uk-h4 uk-text-500" data-uk-grid>
-						<div><a href="article.php">Holisticly pontificate technology</a></div>
-						<div><a href="article.php">Professionally customize systems</a></div>
-						<div><a href="article.php">Independent sources alignment to the center point</a></div>
-						<div><a href="article.php">Rapidious pursue improvements for interesting goals</a></div>	
-						<div><a href="article.php">Independent sources alignment</a></div>
-						<div><a href="article.php">Holisticly pontificate technology</a></div>
-						<div><a href="article.php">Professionally customize systems</a></div>
-						<div><a href="article.php">Phosfluoresce create expertise</a></div>
-						<div><a href="article.php">Energistic integrated interfaces</a></div>
-						<div><a href="article.php">Dynamically alone products</a></div>
-						<div><a href="article.php">Independent sources alignment to the center point</a></div>
-						<div><a href="article.php">Rapidious pursue improvements for interesting goals</a></div>	
+		<div class="uk-section uk-section-xsmall">
+			<div class = "uk-grid">
+				{% for certif in articles %}
+					<div class="uk-thumbnail">
+						<div class="container">
+							<img src="{{ asset(certif.getThumbnailPath()) }}" alt="">
+						</div>
+						<div class="uk-thumbnail-caption">
+							<h5>{{ certif.title }}</h5>
+							<div class="uk-badge">{{ certif.provider.name }}</div>
+							<p class = "uk-item-description">
+								{{ certif.description }}
+							</p>
+						</div>
+
+						<div class = "uk-margin-auto-top">
+							<p><i> Pass rate: 30% </i></p>
+							<button class="uk-button uk-button-danger">Enroll</button>
+						</div>
 					</div>
-				</div>
+				{% endfor %}
 			</div>
-			<div class="uk-margin-xlarge-top" data-uk-grid>
-				<div class="uk-width-1-3@m">
-					<h2 class="uk-h1"><a class = "uk-link" href="category.html">Angular</a></h2>
-					<p class="uk-text-lead">Front-end - TypeScript based framework for building mobile and desktop web applications </p>
-				</div>
-				<div class="uk-width-expand@m">
-					<div class="uk-child-width-1-2@s uk-h4 uk-text-500" data-uk-grid>
-						<div><a href="article.php">Holisticly pontificate technology</a></div>
-						<div><a href="article.php">Professionally customize systems</a></div>
-						<div><a href="article.php">Independent sources alignment to the center point</a></div>
-						<div><a href="article.php">Rapidious pursue improvements for interesting goals</a></div>	
-						<div><a href="article.php">Independent sources alignment</a></div>
-						<div><a href="article.php">Holisticly pontificate technology</a></div>
-						<div><a href="article.php">Professionally customize systems</a></div>
-						<div><a href="article.php">Phosfluoresce create expertise</a></div>
-						<div><a href="article.php">Energistic integrated interfaces</a></div>
-						<div><a href="article.php">Dynamically alone products</a></div>
-						<div><a href="article.php">Independent sources alignment to the center point</a></div>
-						<div><a href="article.php">Rapidious pursue improvements for interesting goals</a></div>	
-					</div>
-				</div>
-			</div>
-			<div class="uk-margin-xlarge-top" data-uk-grid>
-				<div class="uk-width-1-3@m">
-					<h2 class="uk-h1"><a class = "uk-link" href="category.html">PHP</a></h2>
-					<p class="uk-text-lead">Backend - Popular general-purpose scripting language that is especially suited to web development</p>
-				</div>
-				<div class="uk-width-expand@m">
-					<div class="uk-child-width-1-2@s uk-h4 uk-text-500" data-uk-grid>
-						<div><a href="article.php">Holisticly pontificate technology</a></div>
-						<div><a href="article.php">Professionally customize systems</a></div>
-						<div><a href="article.php">Independent sources alignment to the center point</a></div>
-						<div><a href="article.php">Rapidious pursue improvements for interesting goals</a></div>	
-						<div><a href="article.php">Independent sources alignment</a></div>
-						<div><a href="article.php">Holisticly pontificate technology</a></div>
-						<div><a href="article.php">Professionally customize systems</a></div>
-						<div><a href="article.php">Phosfluoresce create expertise</a></div>
-						<div><a href="article.php">Energistic integrated interfaces</a></div>
-						<div><a href="article.php">Dynamically alone products</a></div>
-						<div><a href="article.php">Independent sources alignment to the center point</a></div>
-						<div><a href="article.php">Rapidious pursue improvements for interesting goals</a></div>	
-					</div>
-				</div>
-			</div>
-			<div class="uk-margin-xlarge-top" data-uk-grid>
-				<div class="uk-width-1-3@m">
-					<h2 class="uk-h1"><a class = "uk-link" href="category.html">JavaScript</a></h2>
-					<p class="uk-text-lead">A famous programming language mostly used on the client-side, providing interactive elements that engage a user.</p>
-				</div>
-				<div class="uk-width-expand@m">
-					<div class="uk-child-width-1-2@s uk-h4 uk-text-500" data-uk-grid>
-						<div><a href="article.php">Holisticly pontificate technology</a></div>
-						<div><a href="article.php">Professionally customize systems</a></div>
-						<div><a href="article.php">Independent sources alignment to the center point</a></div>
-						<div><a href="article.php">Rapidious pursue improvements for interesting goals</a></div>	
-						<div><a href="article.php">Independent sources alignment</a></div>
-						<div><a href="article.php">Holisticly pontificate technology</a></div>
-						<div><a href="article.php">Professionally customize systems</a></div>
-						<div><a href="article.php">Phosfluoresce create expertise</a></div>
-						<div><a href="article.php">Energistic integrated interfaces</a></div>
-						<div><a href="article.php">Dynamically alone products</a></div>
-						<div><a href="article.php">Independent sources alignment to the center point</a></div>
-						<div><a href="article.php">Rapidious pursue improvements for interesting goals</a></div>	
-					</div>
-				</div>
-			</div>
+		</div>
+		<div class="uk-section uk-section-xsmall">
+			{{ knp_pagination_render(articles) }}
 		</div>
 	</div>
 </div>
 
-
-<div id="offcanvas-categoriess" data-uk-offcanvas="overlay: true">
-  <div class="uk-offcanvas-bar">
-    <span class="uk-logo">Categories</span>
-    <button class="uk-offcanvas-close" type="button" data-uk-close></button>
-    <h4 class="uk-margin-small-bottom uk-margin-medium-top">Payments & Prices</h4>
-    <ul class="uk-nav uk-nav-default">
-      <li><a href="category.html">Credit Card Charges</a></li>
-      <li class="uk-active"><a href="category.html">Prices Sales Tax</a></li>
-      <li><a href="category.html">Denied Payments</a></li>
-      <li><a href="category.html">Gift Certificates</a></li>
-      <li><a href="category.html">Currency Options</a></li>
-    </ul>
-    <h4 class="uk-margin-small-bottom uk-margin-medium-top">Shipping Info</h4>
-    <ul class="uk-nav uk-nav-default">
-      <li><a href="category.html">Shipping & Minimum Purchase</a></li>
-      <li><a href="category.html">US Shipping Rates</a></li>
-      <li><a href="category.html">International Shipping Rates</a></li>
-    </ul>
-    <h4 class="uk-margin-small-bottom uk-margin-medium-top">Return Items</h4>
-    <ul class="uk-nav uk-nav-default">
-      <li><a href="category.html">Store Refunds & Exchanges</a></li>
-      <li><a href="category.html">Online Refunds</a></li>
-      <li><a href="category.html">Final Sale Items</a></li>
-    </ul>
-  </div>
-</div>
-
-<div id="offcanvas" data-uk-offcanvas="flip: true; overlay: true">
-  <div class="uk-offcanvas-bar">
-    <button class="uk-offcanvas-close" type="button" data-uk-close></button>
-    <ul class="uk-nav uk-nav-primary uk-nav-offcanvas uk-margin-top uk-text-center uk-text-500">
-      <li class="uk-active"><a href="{{ path("index") }}">Home</a></li>
-      <li ><a href="category.html">Category</a></li>
-      <li ><a href="article.php">Article</a></li>
-      <li>
-        <div class="uk-navbar-item"><a class="uk-button uk-button-primary" href="contact.html">Contact</a></div>
-      </li>
-    </ul>
-    <div class="uk-margin-top uk-text-center">
-      <div data-uk-grid class="uk-child-width-auto uk-grid-small uk-flex-center">
-        <div>
-          <a href="https://twitter.com/" data-uk-icon="icon: twitter" class="uk-icon-link" target="_blank"></a>
-        </div>
-        <div>
-          <a href="https://www.facebook.com/" data-uk-icon="icon: facebook" class="uk-icon-link" target="_blank"></a>
-        </div>
-        <div>
-          <a href="https://www.instagram.com/" data-uk-icon="icon: instagram" class="uk-icon-link" target="_blank"></a>
-        </div>
-        <div>
-          <a href="https://vimeo.com/" data-uk-icon="icon: vimeo" class="uk-icon-link" target="_blank"></a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-{% if page == "account" or page == "profile" %}
-	<footer class="uk-section uk-section-transparent uk-section-large">
-		<div class="uk-container uk-container-xsmall">
-			<div class="uk-text-center">
-				<h3 class="uk-h2 uk-margin-remove"><span class = "uk-link">Fear of missing out?</span></h3>
-				<p class="uk-margin-remove-bottom uk-margin-xsmall-top">Be the first to know about the latest deals, style updates & more!</p>
-			</div>
-			<div class="uk-margin-top">
-				<div data-uk-scrollspy="cls: uk-animation-slide-bottom; repeat: true">
-				<form>
-					<div class="uk-grid-small" data-uk-grid>
-					<div class="uk-width-1-1 uk-width-expand@s">
-						<input type="email" placeholder="Email Address" class="uk-input uk-form-large uk-width-1-1">
-					</div>
-					<div class="uk-width-1-1 uk-width-auto@s">
-						<input type="submit" value="Subscribe" class="button uk-button uk-button-large uk-button-secondary">
-					</div>
-					</div>
-				</form>
-				</div>
-			</div>
-		</div>
-	{% else %}
-		<footer class="uk-section uk-section-transparent uk-padding-top-cancel">
-	{% endif %}
-
-
-	<div class="uk-container uk-text-muted uk-margin-xlarge-top">
-		<div class="uk-child-width-1-2@s uk-child-width-1-5@m" data-uk-grid>
-			<div>
-				<h5>About</h5>
-				<ul class="uk-list uk-text-small">
-					<li><a class="uk-link-muted" href="#">About Us</a></li>
-					<li><a class="uk-link-muted" href="#">Terms of Use</a></li>
-					<li><a class="uk-link-muted" href="#">Privacy Policy</a></li>
-				</ul>
-			</div>
-			<div>
-				<h5>Community</h5>
-				<ul class="uk-list uk-text-small">
-					<li><a class="uk-link-muted" href="#">Webinars</a></li>
-					<li><a class="uk-link-muted" href="#">Developers</a></li>
-					<li><a class="uk-link-muted" href="#">Platforms</a></li>
-					<li><a class="uk-link-muted" href="#">Workshops</a></li>
-					<li><a class="uk-link-muted" href="#">Local Meetups</a></li>
-				</ul>
-			</div>
-			<div>
-				<h5>Join Us</h5>
-				<ul class="uk-list uk-text-small">
-					<li><a class="uk-link-muted" href="#">Our Initiatives</a></li>
-					<li><a class="uk-link-muted" href="#">Jobs</a></li>
-					<li><a class="uk-link-muted" href="#">Experts</a></li>
-				</ul>
-			</div>
-			<div>
-				<h5>Contact</h5>
-				<ul class="uk-list uk-text-small">
-					<li><a class="uk-link-muted" href="#">Contact Us</a></li>
-					<li><a class="uk-link-muted" href="#">LinkedIn</a></li>
-					<li><a class="uk-link-muted" href="#">Facebook</a></li>
-					<li><a class="uk-link-muted" href="#">Instagram</a></li>
-				</ul>
-			</div>
-			<div>
-				<div class="uk-margin">
-					<a href="#" class="uk-logo">X04wiki</a>
-				</div>
-				<div class="uk-margin uk-text-small">				
-					<p>Made by <a href="https://unbound.studio/" target="_blank">a random kid</a> in Tunisia.</p>
-				</div>
-				<div class="uk-margin">
-					<div data-uk-grid class="uk-child-width-auto uk-grid-collapse">
-						<div class="uk-margin-small-right">
-							<a href="#" data-uk-icon="icon: facebook" class="uk-icon-link uk-icon"
-								target="_blank"></a>
-						</div>
-						<div class="uk-margin-small-right">
-							<a href="#" data-uk-icon="icon: instagram" class="uk-icon-link uk-icon"
-								target="_blank"></a>
-						</div>
-						<div class="uk-margin-small-right">
-							<a href="#" data-uk-icon="icon: twitter" class="uk-icon-link uk-icon"
-								target="_blank"></a>
-						</div>
-						<div class="uk-margin-small-right">
-							<a href="#" data-uk-icon="icon: youtube" class="uk-icon-link uk-icon"
-								target="_blank"></a>
-						</div>
-						<div class="uk-margin-small-right">
-							<a href="#" data-uk-icon="icon: vimeo" class="uk-icon-link uk-icon"
-								target="_blank"></a>
-						</div>
-					</div>
-				</div>
-			</div>			
-		</div>
-	</div>
-</footer>
+{% include "components/footer.html.twig" %}
 
 {% endblock %}

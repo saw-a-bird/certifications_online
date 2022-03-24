@@ -41,7 +41,7 @@ class AccountController extends AbstractController {
             // this condition is needed because the 'brochure' field is not required
             // so the IMAGE file must be processed only when a file is uploaded
             if ($file != null) {
-                $fileName = $fileUploader->upload($file);
+                $fileName = $fileUploader->upload($file, "avatar");
                 $this->user->setAvatarPath($fileName);
             } else {
                 $this->user->setAvatarPath($oldFileName);
