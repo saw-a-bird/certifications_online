@@ -1,0 +1,44 @@
+{% extends "admin/base.html.twig" %}
+
+{% block title %}Certifications - List{% endblock %}
+
+{% block tabs %}
+    <script>
+        document.getElementById("admin_certif").classList.add("uk-tab-active");
+    </script>
+
+    <ul class="uk-child-width-expand tabs uk-tab">
+        <li id = "_list" class = "uk-tab-active"><a href="#" class = "uk-tab-sub">Lister</a></li>
+        <li id = "_edit"><a href="{{ path("certif_new")}}" class = "uk-tab-sub">Ajouter</a></li>
+        <li id = "_modify"><a href="#" class = "uk-tab-sub">Modifier</a></li>
+    </ul>
+{% endblock %}
+
+{% block form %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for certification in certifications %}
+            <tr>
+                <td>{{ certification.id }}</td>
+                <td>{{ certification.title }}</td>
+                <td>{{ certification.description|length > 10 ? certification.description|slice(0, 10) ~ '...' :  certification.description}}</td>
+                <td>
+                    <a href="{{ path('certif_edit', {'id': certification.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,33 @@
+
+
+{% set page = "login" %}
+{% extends "base.html.twig" %}
+
+{% block spreadsheets %}
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/form.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/registration.css') }}" />
+{% endblock %}
+
+
+
+{% block body %}
+
+<div>
+    <section>
+        <div class="container shadow_container uk-tabber">
+            <div>
+                <ul class="uk-child-width-expand uk-tab">
+                    <li id = "admin_fournisseurs"><a href="{{ path("providers_index")}}">Fournisseurs</a></li>
+                    <li id = "admin_certif"><a href="{{ path("certif_index")}}">Certifications</a></li>
+                    <li id = "admin_examens"><a href="#">Examens</a></li>
+                </ul>
+                {% block tabs %} {% endblock %}
+            </div>
+            <div class = "container-content">
+                {% block form %} {% endblock %} 
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

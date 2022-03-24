@@ -1,0 +1,63 @@
+{% extends "admin/base.html.twig" %}
+
+{% block title %}Fournisseurs - List{% endblock %}
+
+{% block tabs %}
+    <script>
+        document.getElementById("admin_fournisseurs").classList.add("uk-tab-active");
+    </script>
+
+    <ul class="uk-child-width-expand tabs uk-tab">
+        <li id = "_list" class = "uk-tab-active"><a href="#" class = "uk-tab-sub">Lister</a></li>
+        <li id = "_edit"><a href="{{ path("providers_new")}}" class = "uk-tab-sub">Ajouter</a></li>
+        <li id = "_modify"><a href="#" class = "uk-tab-sub">Modifier</a></li>
+    </ul>
+{% endblock %}
+
+{% block form %}
+    {# {{form_start(form) }} #}
+        {# <div class="tabs_container"> #}
+        
+            {# <div id="tab1" class="blocco-tab"> #}
+            <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for provider in providers %}
+            <tr>
+                <td>{{ provider.id }}</td>
+                <td>{{ provider.name }}</td>
+                <td>
+                    <a href="{{ path('providers_edit', {'id': provider.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+            {# </div> #}
+{# 
+            <div id="tab2" class="blocco-tab">
+                <h1>Create new Providers</h1>
+
+                {{ include('providers/_form.html.twig') }}
+
+                <a href="{{ path('providers_index') }}">back to list</a>
+            </div>
+
+            <div id="tab3" class="blocco-tab">
+                <div id="surname_field">
+                    
+                </div><!-- /surname_field -->
+            </div>
+        </div> <!-- contenitore_tabs -->
+    {{form_end(form) }} #}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "admin/base.html.twig" %}
+
+{% block title %}Certifications - Ajouter{% endblock %}
+
+{% block tabs %}
+    <script>
+        document.getElementById("admin_certif").classList.add("uk-tab-active");
+    </script>
+
+    <ul class="uk-child-width-expand tabs uk-tab">
+        <li id = "_list"><a href="{{ path("certif_index")}}" class = "uk-tab-sub">Lister</a></li>
+        <li id = "_edit" class = "uk-tab-active"><a href="#" class = "uk-tab-sub">Ajouter</a></li>
+        <li id = "_modify"><a href="#" class = "uk-tab-sub">Modifier</a></li>
+    </ul>
+{% endblock %}
+
+{% block form %}
+    {{ include('admin/certif/_form.html.twig') }}
+{% endblock %}

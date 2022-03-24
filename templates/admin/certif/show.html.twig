@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Certifications{% endblock %}
+
+{% block body %}
+    <h1>Certifications</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ certification.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ certification.title }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ certification.description }}</td>
+            </tr>
+            <tr>
+                <th>Creation_date</th>
+                <td>{{ certification.creationDate ? certification.creationDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Update_date</th>
+                <td>{{ certification.updateDate ? certification.updateDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('certif_index') }}">back to list</a>
+
+    <a href="{{ path('certif_edit', {'id': certification.id}) }}">edit</a>
+
+    {{ include('admin/certif/_delete_form.html.twig') }}
+{% endblock %}
