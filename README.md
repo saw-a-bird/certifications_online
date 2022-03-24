@@ -23,11 +23,18 @@ yarn add webpack-notifier --dev
 yarn encore dev
 ```
 
-Terminate the last batch job with "CTRL + C", then simply start the project with
+Then, update your database with 
+
+```
+php bin/console doctrine:migrations:migrate
+```
+
+Start the project with
 
 ```
 symfony server:start
 ```
+
 
 ### Todo list (To be updated): 
 
