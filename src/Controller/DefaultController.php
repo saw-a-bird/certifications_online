@@ -22,17 +22,23 @@ class DefaultController extends AbstractController {
      * @Route("/", name="index")
      */
     public function index(Request $request, PaginatorInterface $paginator, CertificationsRepository $certificationsRepository) {
-        
+        $session = $request->getSession();
+
         $form = $this->createFormBuilder()
             ->add('searchF', EntityType::class, [
                 'class' => Providers::class,
                 'choice_label' => 'name',
+                'required' => false,
+                'placeholder' => 'Name...',
+            ])
+            ->add('searchC', TextType::class, [
                 'required' => false
             ])
             ->add('searchC', TextType::class, [
                 'required' => false
             ])
             ->add('tab', HiddenType::class)
+            ->add('reset', SubmitType::class, ['label' => 'Reset', ])
             ->getForm();
 
         $form->handleRequest($request);
@@ -43,31 +49,37 @@ class DefaultController extends AbstractController {
             $_searchC = $form->get('searchC')->getData();
 
             if ($type == "tab-F" && $_searchF != null) {
-                $this->search_type = "Fournisseur";
-                $this->search_text = $_searchF->getName();
+                $session->set('search_type', "Fournisseur");
+                $session->set('search_text', $_searchF->getName());
 
             } elseif ($type == "tab-C" && $_searchC != "") {
-                $this->search_type = "Certification";
-                $this->search_text = $_searchC;
+                $session->set('search_type', "Certification");
+                $session->set('search_text', $_searchC);
+                
+            } elseif ($form->get('reset')->isClicked()) {
+                $session->remove('search_type');
+                $session->remove('search_text');
             }
+
+            return $this->redirectToRoute('index');
         }
 
         // $query = $this->repository->recherche($form['rechercheClient']->getData());
         // Méthode findBy qui permet de récupérer les données avec des critères de filtre et de tri
 
-        if (!isset($this->search_type)) {
+        if ($session->get('search_type') == null) {
             $donnees = $certificationsRepository->findBy([],['creation_date' => 'desc']);
-        } elseif ($this->search_type == "Certification") {
-            $donnees = $certificationsRepository->byTitle($this->search_text);
+        } elseif ($session->get('search_type') == "Certification") {
+            $donnees = $certificationsRepository->byTitle($session->get('search_text'));
         } else {
-            $donnees = $certificationsRepository->byProvider($this->search_text);
+            $donnees = $certificationsRepository->byProvider($session->get('search_text'));
         }
         
 
         $articles = $paginator->paginate(
             $donnees, // Requête contenant les données à paginer (ici nos articles)
-            $request->query->getInt('page', 1), // Numéro de la page en cours, passé dans l'URL, 1 si aucune page
-            9 // Nombre de résultats par page
+            $request->query->getInt('page', 1), // Numéro de la page en cours, passé dans l'URL, 1 si aucune page (meaning null, like NVL2 in SQL)
+            2 // Nombre de résultats par page
         );
 
         // //Compte le nombre d'éléments recherchés
@@ -76,8 +88,8 @@ class DefaultController extends AbstractController {
         return $this->render('index.html.twig', [
             'form' => $form->createView(),
             'articles' => $articles,
-            'search_text' => $this->search_text ?: "",
-            'search_type' => $this->search_type ?: ""
+            'search_text' => $session->get('search_text') ?: "",
+            'search_type' => $session->get('search_type') ?: ""
         ]);
     }
 }

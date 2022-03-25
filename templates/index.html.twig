@@ -36,6 +36,15 @@
 	.tab-content {
 		display: none;
 	}
+
+	#form_reset {
+		color: blue;
+		font-style: italic;
+		font-size: 0.7rem;
+		cursor: pointer;
+		border: none;
+		text-decoration: underline;
+	}
 	</style>
 
 	{{ parent() }}
@@ -70,10 +79,13 @@
 					</div>
 					
 					{% if search_text != "" %}
-					<div class = "uk-nav-center uk-margin-small-top">
-						<i class = "uk-classic-italic">Current filter: {{ search_type }}</i><br/>
-						<i class = "uk-classic-italic">Search: {{ search_text }}</i>
-					</div>
+						<div class = "uk-nav-center uk-margin-small-top">
+							<i class = "uk-classic-italic">Current filter: {{ search_type }}</i><br/>
+							<i class = "uk-classic-italic">Search: {{ search_text }}</i>
+							{{ form_widget(form.reset) }}
+						</div>
+					{% else %}
+						{{ form_widget(form.reset, {'attr': {'style': 'display:none;'}}) }}
 					{% endif %}
 
 				{{ form_end(form) }}
