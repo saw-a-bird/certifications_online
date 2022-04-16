@@ -50,14 +50,14 @@
 	{{ parent() }}
 {% endblock %}
 
-{% block title %}X04wiki{% endblock %}
+{% block title %}CertifiyTN{% endblock %}
 
 {% block body %}
 
 {% include "components/fixed_header.html.twig" %}
 
 
-<div class = "uk-section-transparent uk-margin-bottom-small uk-margin-horizontal-10 uk-box-shadow-bottom-small">
+<div class = "uk-section-transparent uk-margin-bottom-small uk-margin-top uk-margin-horizontal-10 uk-box-shadow-vertical-small">
 	<div class="uk-container uk-section-small">
 
 		<div class="uk-flex uk-flex-middle uk-flex-column uk-width-1-1 uk-margin-small-bottom filter-options-container">
@@ -95,7 +95,7 @@
 			<div class="uk-flex uk-flex-center uk-flex-left@s uk-grid-small uk-grid-divider uk-child-width-auto uk-margin-small-bottom uk-grid" uk-grid="">
 				<div>
 					<ul class="tab uk-flex uk-flex-center uk-flex-left@s uk-subnav uk-subnav-pill" >
-						<li class = "tabbedAnchor"><a href='javascript:;' onclick="navigateTab(event, 'tab-F')">Fournisseurs</a></li>
+						<li class = "tabbedAnchor"><a href='javascript:;' onclick="navigateTab(event, 'tab-F')">Providers</a></li>
 						<li class = "tabbedAnchor"><a href='javascript:;' onclick="navigateTab(event, 'tab-C')">Certifications</a></li>
 					</ul>
 				</div>
@@ -105,12 +105,12 @@
 		<div class="uk-section uk-section-xsmall">
 			<div class = "uk-grid">
 				{% for certif in articles %}
-					<div class="uk-thumbnail">
-						<div class="container">
+					<div class="uk-thumbnail" style = "min-height:500px;">
+						<div class="container" style = "max-height:200px;">
 							<img src="{{ asset(certif.getThumbnailPath()) }}" alt="">
 						</div>
 						<div class="uk-thumbnail-caption">
-							<h5>{{ certif.title }}</h5>
+							<h5><a href="{{ path('certif_view', {'id': certif.id}) }}">{{ certif.title }}</a></h5>
 							<div class="uk-badge">{{ certif.provider.name }}</div>
 							<p class = "uk-item-description">
 								{{ certif.description }}
@@ -119,7 +119,11 @@
 
 						<div class = "uk-margin-auto-top">
 							<p><i> Pass rate: 30% </i></p>
-							<button class="uk-button uk-button-danger">Enroll</button>
+							{% if logged_in and app.user.isEnrolled(certif) %}
+								<button class="uk-button uk-button-danger" disabled><a href="{{ path('enroll_remove', {'id': certif.id}) }}">Enrolled</a></button>
+							{% else %}
+								<button class="uk-button uk-button-danger"><a href="{{ path('enroll_add', {'id': certif.id}) }}" style = "color: #fff;">Enroll</a></button>
+							{% endif %}
 						</div>
 					</div>
 				{% endfor %}

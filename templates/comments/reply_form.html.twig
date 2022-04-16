@@ -1,0 +1,11 @@
+<form>
+    <div class='row list-inline'>
+        <div class = 'comment-reply-picture'>
+            <img class='uk-border-rounded img-responsive' src='{{asset(user.getAvatarPath())}}' alt=''>
+        </div>
+        <div class='comment-form-group col-xs-12 col-sm-9 col-lg-10'>
+            <textarea class='comment-form-control' id='new_comment' placeholder='Add a public reply' required></textarea>
+        </div>
+    </div>
+</form>
+<button type='submit' class='uk-reply-submit btn uk-display-block'>Submit</button>

@@ -334,6 +334,10 @@ h6, .uk-h6,
   text-transform: none;
 }
 
+.uk-no-spacing {
+  padding: 0 !important;
+  margin: 0 !important;
+}
 /* Add margin if adjacent element */
 * + h1, * + .uk-h1,
 * + h2, * + .uk-h2,
@@ -1047,7 +1051,6 @@ a.uk-link-reset,
   /* 2 */
   width: 100%;
   /* 3 */
-  margin-bottom: 20px;
 }
 
 /* Add margin if adjacent element */
@@ -2950,6 +2953,62 @@ select.uk-form-width-xsmall {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.uk-details-grid {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  width:90%;
+}
+
+.uk-details-header {
+  display: flex;
+  flex-direction: row;
+  align-self: stretch;
+  width:100%;
+}
+
+.uk-details-thumbnail {
+  width:40%;
+}
+
+.uk-details-description {
+  margin-left: 30px;
+  align-self: stretch;
+  width:60%;
+  padding: 20px;
+}
+
+.uk-exam-table {
+  margin: 15px 15px;
+  padding: 20px;
+}
+
+.uk-sidebar {
+  width: 15%;
+  padding:10px
+}
+
+.uk-sidebar h4 {
+  margin-bottom:10px
+}
+
+.uk-sidebar p {
+  margin: 10px 0;
+}
+
+.uk-sidebar a {
+  font-size:14px;
+  text-decoration: underline;
+}
+
+.uk-page-formatter {
+  display: flex;
+  flex-direction: row;
+  column-gap: 20px;
+  width:100%;
+  justify-content: space-between;
 }
 
 /*
@@ -9489,11 +9548,7 @@ iframe.uk-cover {
 }
 
 .uk-box-shadow-vertical-small {
-  box-shadow:  rgb(0 0 0 / 0.16) 0px 4px 3px, 0px -4px 3px rgba(0, 0, 0, 0.16);
-}
-
-.uk-box-shadow-bottom-small {
-  box-shadow:  rgb(0 0 0 / 0.16) 0px 4px 3px;
+  box-shadow:  rgb(0 0 0 / 0.16) 0px 4px 3px, 0px -1px 3px rgba(0, 0, 0, 0.16);
 }
 
 /*
@@ -12732,7 +12787,8 @@ iframe.uk-cover {
 }
 
 .comment-new-picture {
-  width: 8%;
+  width: 50px;
+  height: 50px;
   margin-right: 20px;
 }
 
@@ -12759,7 +12815,7 @@ iframe.uk-cover {
   margin-left: 40px;
 }
 
-/* .btn {
+.comment_btn {
   margin-right: 40px;
   padding: 6px 12px;
   margin-bottom: 0;
@@ -12780,17 +12836,17 @@ iframe.uk-cover {
   border: 1px solid transparent;
   border-radius: 4px;  
   background-color: rgb(223, 223, 223);
-} */
+} 
 
-.form-group {
-  width: 87%;
+.comment-form-group {
+  width: 85%;
   position: relative;
   min-height: 1px;
   padding-right: 15px;
   padding-left: 15px;
 }
 
-/* .form-control {
+.comment-form-control {
   height: 120px;
   width: 100%;
   padding: 6px 12px;
@@ -12810,9 +12866,9 @@ iframe.uk-cover {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 2px -10px;
 }
 
-.form-control:focus {
+.comment-form-control:focus {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px 0px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-} */
+}
 
 .comment-new-header {
   justify-content: space-between;

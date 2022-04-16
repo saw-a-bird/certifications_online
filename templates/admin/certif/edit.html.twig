@@ -1,28 +1,15 @@
 {% extends "admin/base.html.twig" %}
 
-{% block spreadsheets %}
-	<link rel="stylesheet" href="{{ asset('css/grid_thumbnail.css') }}" />
-
-	{{ parent() }}
-{% endblock %}
-
 {% block title %}Certifications - Modifier{% endblock %}
 
-{% block tabs %}
+{% block scriptsheet %}
     <script>
-        document.getElementById("admin_certif").classList.add("uk-tab-active");
+        document.getElementById("admin_certif").classList.add("link-active");
     </script>
-
-    <ul class="uk-child-width-expand tabs uk-tab">
-        <li id = "_list"><a href="{{ path("certif_index")}}" class = "uk-tab-sub">Lister</a></li>
-        <li id = "_edit"><a href="{{ path("certif_new")}}" class = "uk-tab-sub">Ajouter</a></li>
-        <li id = "_modify" class = "uk-tab-active"><a href="#" class = "uk-tab-sub">Modifier</a></li>
-    </ul>
 {% endblock %}
 
 {% block form %}
-    <img src="{{ asset(certification.getThumbnailPath()) }}" alt="">
-
-    {{ include('admin/certif/_form.html.twig', {'button_label': 'Update'}) }}
-    {{ include('admin/certif/_delete_form.html.twig') }}
+    <div class = "form_container">
+        {{ include('admin/certif/_form.html.twig', {'path': asset(certification.getThumbnailPath()),'button_label': 'Update'}) }}
+    </div>
 {% endblock %}

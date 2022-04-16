@@ -1,20 +1,15 @@
 {% extends "admin/base.html.twig" %}
 
-{% block title %}Fournisseurs - Modifier{% endblock %}
+{% block title %}Providers - Modifier{% endblock %}
 
-{% block tabs %}
+{% block scriptsheet %}
     <script>
-        document.getElementById("admin_fournisseurs").classList.add("uk-tab-active");
+        document.getElementById("admin_providers").classList.add("link-active");
     </script>
-
-    <ul class="uk-child-width-expand tabs uk-tab">
-        <li id = "_list"><a href="{{ path("providers_index")}}" class = "uk-tab-sub">Lister</a></li>
-        <li id = "_edit"><a href="{{ path("providers_new")}}" class = "uk-tab-sub">Ajouter</a></li>
-        <li id = "_modify" class = "uk-tab-active"><a href="#" class = "uk-tab-sub">Modifier</a></li>
-    </ul>
 {% endblock %}
 
 {% block form %}
-    {{ include('admin/providers/_form.html.twig', {'button_label': 'Update'}) }}
-    {{ include('admin/providers/_delete_form.html.twig') }}
+    <div class = "form_container">
+        {{ include('admin/providers/_form.html.twig', {'button_label': 'Update'}) }}
+    </div>
 {% endblock %}

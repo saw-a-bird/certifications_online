@@ -26,7 +26,7 @@ class CertifController extends AbstractController
             'certifications' => $certificationsRepository->findAll(),
         ]);
     }
-
+    
     /**
      * @Route("/new", name="certif_new", methods={"GET","POST"})
      */
@@ -62,11 +62,11 @@ class CertifController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="certif_show", methods={"GET"})
+     * @Route("/{id}", name="certif_list", methods={"GET"})
      */
-    public function show(Certifications $certification): Response
+    public function list(Certifications $certification): Response
     {
-        return $this->render('admin/certif/show.html.twig', [
+        return $this->render('admin/certif/list.html.twig', [
             'certification' => $certification,
         ]);
     }

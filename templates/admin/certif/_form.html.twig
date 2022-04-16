@@ -1,4 +1,19 @@
 {{ form_start(form) }}
+    {% if path is defined %}
+        <div class = "image_container">
+            <img src="{{ path }}" alt="">
+
+            <div class="form-group" style = "margin: auto 10px">
+                <label class="control-label" for="certifications_thumbnail_path">Thumbnail :</label>
+                {{ form_widget(form.thumbnail_path) }}
+            </div>
+        </div>
+    {% else %}
+        {{ form_row(form.thumbnail_path) }}
+    {% endif %}
+
     {{ form_widget(form) }}
-    <button class="btn form-submit save_button">{{ button_label|default('Save') }}</button>
+    <div class = "right_wrapper">
+        <button class="btn form-submit save_button">{{ button_label|default('Save') }}</button>
+    </div>
 {{ form_end(form) }}

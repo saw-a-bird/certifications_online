@@ -19,6 +19,16 @@ class DefaultController extends AbstractController {
     private $search_type;
 
     /**
+     * @Route("/certifications/{id}", name="certif_view")
+     */
+    public function view(Certifications $certification) {
+
+        return $this->render('certification.html.twig', [
+            'certif' => $certification
+        ]);
+    }
+
+    /**
      * @Route("/", name="index")
      */
     public function index(Request $request, PaginatorInterface $paginator, CertificationsRepository $certificationsRepository) {
@@ -49,7 +59,7 @@ class DefaultController extends AbstractController {
             $_searchC = $form->get('searchC')->getData();
 
             if ($type == "tab-F" && $_searchF != null) {
-                $session->set('search_type', "Fournisseur");
+                $session->set('search_type', "Provider");
                 $session->set('search_text', $_searchF->getName());
 
             } elseif ($type == "tab-C" && $_searchC != "") {
@@ -79,7 +89,7 @@ class DefaultController extends AbstractController {
         $articles = $paginator->paginate(
             $donnees, // Requête contenant les données à paginer (ici nos articles)
             $request->query->getInt('page', 1), // Numéro de la page en cours, passé dans l'URL, 1 si aucune page (meaning null, like NVL2 in SQL)
-            2 // Nombre de résultats par page
+            3 // Nombre de résultats par page
         );
 
         // //Compte le nombre d'éléments recherchés

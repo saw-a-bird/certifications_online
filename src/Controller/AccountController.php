@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Services\FileUploader;
 use App\Form\ProfileEdit;
 use App\Entity\User;
+use App\Entity\Certifications;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -23,6 +24,39 @@ class AccountController extends AbstractController {
     
     public function __construct(TokenStorageInterface $tokenStorage) {
         $this->user = $tokenStorage->getToken()->getUser();
+    }
+
+    /**
+     * @Route("/certifications/enroll/remove/{id}", name="enroll_add", methods={"GET"})
+     */
+    public function enroll(Certifications $certification): Response {
+        $certification->addUser($this->user);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($certification);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('index');
+    }
+
+        /**
+     * @Route("/certifications/enroll/add/{id}", name="enroll_remove", methods={"GET"})
+     */
+    public function unenroll(Certifications $certification): Response {
+        $certification->removeUser($this->user);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($certification);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('index');
+    }
+    
+    /**
+     * @Route("/profile/{name}/certifications", name="user_certifs")
+     */
+    public function user_certifs($name) {
+        return $this->renderIfPossible('profile/certifications.html.twig', $name);
     }
 
     /**
@@ -103,10 +137,12 @@ class AccountController extends AbstractController {
             }
         // }
 
-
+        
         return $this->render('account/settings.html.twig',
             array('form' => $form->createView())
         );
+
+
     }
 
     /**
@@ -144,5 +180,32 @@ class AccountController extends AbstractController {
         return $this->render('account/password.html.twig',
             array('form' => $form->createView())
         );
+    }
+
+    /**
+     * @Route("/profile/{name}/about", name="user_about")
+     */
+    public function user_about($name) {
+        return $this->renderIfPossible('profile/about.html.twig', $name);
+    }
+
+    /**
+     * @Route("/profile/{name}/favourites", name="user_favs")
+     */
+    public function user_favs($name) {
+        return $this->renderIfPossible('profile/favourites.html.twig', $name);
+    }
+    
+
+    public function renderIfPossible($url, $name) {
+        if ($name == $this->user->getUsername()) {
+            return $this->render($url, ["unknown" => $this->user]);
+        } else {
+            $result = $this->getDoctrine()->getRepository(User::class)->loadUserByUsername($name);
+            if (is_null($result)) {
+                return $this->redirectToRoute('index');
+            }
+            return $this->render($url, ["unknown" => $result]);
+        }
     }
 }

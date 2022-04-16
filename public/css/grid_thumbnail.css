@@ -1,16 +1,37 @@
-.uk-thumbnail {
+.uk-certif-box {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.votecell {
+    margin-left: 15px;
+    margin-right: 20px;
+}
+
+.votecell .s-popover {
+    margin-bottom:30px;
+    text-align: center;
+}
+
+.uk-grid > .uk-thumbnail {
     flex-basis: 25%;
+}
+
+.uk-thumbnail {
     box-sizing: border-box;
     margin: 0;
     padding: 10px 10px 20px 10px;
     border: 1px solid #E5E5E5;
-    background: #fff;
+
     border-radius: 4px;
-    box-shadow: 0 1px 3px rgb(0 0 0 / 5%);
     display:flex;
     flex-direction: column;
     align-items: center;
-    min-height:500px;
+}
+
+.uk-grid-shadowing {
+    box-shadow:  rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .uk-thumbnail-caption > h5 {
@@ -24,10 +45,9 @@
 
 .uk-thumbnail > .container {
     overflow: hidden;
-	max-height: 200px;
 }
 
-.uk-thumbnail > .container > img{
+.uk-thumbnail > .container > img {
     flex-shrink: 0;
     min-width: 100%;
     min-height: 100%

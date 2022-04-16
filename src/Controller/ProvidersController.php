@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/admin/fournisseurs")
+ * @Route("/admin/providers")
  */
 class ProvidersController extends AbstractController
 {
@@ -19,8 +19,18 @@ class ProvidersController extends AbstractController
      * @Route("/", name="providers_index", methods={"GET"})
      */
     public function index(ProvidersRepository $providersRepository): Response {
-        return $this->render('admin/providers/list.html.twig', [
+        return $this->render('admin/providers/index.html.twig', [
             'providers' => $providersRepository->findAll(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="providers_show", methods={"GET"})
+     */
+    public function list(Providers $provider): Response
+    {
+        return $this->render('admin/providers/list.html.twig', [
+            'provider' => $provider,
         ]);
     }
 

@@ -52,13 +52,31 @@ class Certifications
     private $update_date;
 
     /**
-     * @ORM\OneToMany(targetEntity=Enrolled::class, mappedBy="certification")
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="certifications")
      */
     private $users;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Exams::class, mappedBy="certification", orphanRemoval=true)
+     */
+    private $exams;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="writtenOn", orphanRemoval=true)
+     */
+    private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CertificationRates::class, mappedBy="certification", orphanRemoval=true)
+     */
+    private $certificationRates;
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->exams = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->certificationRates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -135,6 +153,60 @@ class Certifications
     }
 
     /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        $this->users->removeElement($user);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Exams[]
+     */
+    public function getExams(): Collection
+    {
+        return $this->exams;
+    }
+
+    public function addExam(Exams $exam): self
+    {
+        if (!$this->exams->contains($exam)) {
+            $this->exams[] = $exam;
+            $exam->setCertification($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExam(Exams $exam): self
+    {
+        if ($this->exams->removeElement($exam)) {
+            // set the owning side to null (unless already changed)
+            if ($exam->getCertification() === $this) {
+                $exam->setCertification(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Gets triggered only on insert
      * @ORM\PrePersist
      */
@@ -153,28 +225,59 @@ class Certifications
     }
 
     /**
-     * @return Collection|Enrolled[]
+     * @return Collection|Comments[]
      */
-    public function getUsers(): Collection
+    public function getComments(): Collection
     {
-        return $this->users;
+        return $this->comments;
     }
 
-    public function addUser(Enrolled $enrolled): self {
-        if (!$this->users->contains($enrolled)) {
-            $this->users[] = $enrolled;
-            $enrolled->setCertification($this);
+    public function addComment(Comments $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setWrittenOn($this);
         }
 
         return $this;
     }
 
-    public function removeUser(Enrolled $enrolled): self
+    public function removeComment(Comments $comment): self
     {
-        if ($this->users->removeElement($enrolled)) {
+        if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($enrolled->getCertification() === $this) {
-                $enrolled->setCertification(null);
+            if ($comment->getWrittenOn() === $this) {
+                $comment->setWrittenOn(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CertificationRates[]
+     */
+    public function getCertificationRates(): Collection
+    {
+        return $this->certificationRates;
+    }
+
+    public function addCertificationRate(CertificationRates $certificationRate): self
+    {
+        if (!$this->certificationRates->contains($certificationRate)) {
+            $this->certificationRates[] = $certificationRate;
+            $certificationRate->setCertification($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCertificationRate(CertificationRates $certificationRate): self
+    {
+        if ($this->certificationRates->removeElement($certificationRate)) {
+            // set the owning side to null (unless already changed)
+            if ($certificationRate->getCertification() === $this) {
+                $certificationRate->setCertification(null);
             }
         }
 

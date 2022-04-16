@@ -1,0 +1,5 @@
+{% for reply in comment.getReplies() %}
+    <div id = "comm_{{ reply.getId() }}">
+        {% include 'comments/one_comment.html.twig' with {'comment': reply} %}
+    </div>
+{% endfor %}

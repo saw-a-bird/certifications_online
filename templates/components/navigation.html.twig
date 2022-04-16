@@ -1,14 +1,7 @@
 <nav class="uk-navbar-container">
     <div class="uk-container uk-navbar-transparent uk-light">
         <div data-uk-navbar>
-        <div class="uk-navbar-left">
-            <a class="uk-navbar-item uk-logo uk-visible@m" href="{{ path("index")}}">X04wiki</a>
-            <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas-categoriess" data-uk-toggle><span
-            data-uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Categories</span></a>
-        </div>
-        <div class="uk-navbar-center uk-hidden@m">
-            <a class="uk-navbar-item uk-logo" href="{{ path("index")}}">X04wiki</a>
-        </div>
+
         <div class="uk-navbar-right">
             <div>
             <a id="search-navbar-toggle" class="uk-navbar-toggle" data-uk-search-icon="ratio: 1.1" href="#"></a>
@@ -24,15 +17,6 @@
             <ul class="uk-navbar-nav uk-visible@m">
             <li class="uk-active"><a href="{{ path("index")}}">Home</a></li>
             <li>
-                <a href="#">Join Us</a>
-                <div class="uk-navbar-dropdown">
-                    <ul class="uk-navbar-dropdown-nav uk-nav-parent-icon" data-uk-nav>
-                        <li><a href="#">Write an article</a></li>
-                        <li><a href="contact.php">Suggest an article</a></li>           
-                    </ul>
-                </div>            
-            </li>
-            <li>
                 <a>Contact</a>
                 <div class="uk-navbar-dropdown">
                     <ul class="uk-navbar-dropdown-nav uk-nav-parent-icon" data-uk-nav>
@@ -42,19 +26,19 @@
                 </div>
             </li>
             <li>
-                <a href="#">Explore</a>
+                <a href="#">Providers</a>
                 <div class="uk-navbar-dropdown">
                     <ul class="uk-navbar-dropdown-nav uk-nav-parent-icon" data-uk-nav>
                         <li><a href="#">Page one</a></li>
                         <li><a href="#">Page two</a></li>
                         <li><a href="#">Page three</a></li>
-                        <li class="uk-parent">
+                        {# <li class="uk-parent">
                         <a href="#">Parent</a>
                         <ul class="uk-nav-sub">
                             <li><a href="#">Sub item</a></li>
                             <li><a href="#">Sub item</a></li>
                         </ul>
-                        </li>                
+                        </li>                 #}
                     </ul>
                 </div>            
             </li>

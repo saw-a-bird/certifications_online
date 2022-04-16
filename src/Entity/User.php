@@ -98,7 +98,7 @@ class User implements UserInterface, \Serializable
     private $rank = "user";
 
     /**
-     * @ORM\OneToMany(targetEntity=Enrolled::class, mappedBy="user")
+     * @ORM\ManyToMany(targetEntity=Certifications::class, mappedBy="users")
      */
     private $certifications;
 
@@ -267,30 +267,31 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * @return Collection|Enrolled[]
+     * @return Collection|Certifications[]
      */
     public function getCertifications(): Collection
     {
         return $this->certifications;
     }
 
-    public function addCertification(Enrolled $enrolled): self
+    public function isEnrolled(Certifications $certification): bool {
+        return $this->certifications->contains($certification);
+    }
+
+    public function addCertification(Certifications $certification): self
     {
-        if (!$this->certifications->contains($enrolled)) {
-            $this->certifications[] = $enrolled;
-            $enrolled->setUser($this);
+        if (!$this->certifications->contains($certification)) {
+            $this->certifications[] = $certification;
+            $certification->addUser($this);
         }
 
         return $this;
     }
 
-    public function removeCertification(Enrolled $enrolled): self
+    public function removeCertification(Certifications $certification): self
     {
-        if ($this->certifications->removeElement($enrolled)) {
-            // set the owning side to null (unless already changed)
-            if ($enrolled->getUser() === $this) {
-                $enrolled->setUser(null);
-            }
+        if ($this->certifications->removeElement($certification)) {
+            $certification->removeUser($this);
         }
 
         return $this;

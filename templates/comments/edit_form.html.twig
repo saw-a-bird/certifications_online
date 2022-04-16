@@ -1,0 +1,18 @@
+
+
+<div class = "edit-form"> 
+    <form class = 'uk-container media g-mb-30 media-comment'>
+        <div class='row list-inline'>
+            <div class = 'comment-new-picture'>
+                <img class='uk-border-rounded img-responsive' src='{{ asset(app.user.getAvatarPath()) }}' alt=''>
+            </div>
+            <div class='comment-form-group col-xs-12 col-sm-9 col-lg-10'>
+                <textarea class='comment-form-control' id='edit_comment' required>{{ content }}</textarea>
+            </div>
+        </div>
+    </form>
+    <div class = "uk-flex uk-flex-right" style = "margin-top: 5px">
+        <button id = 'cancel' class='btn btn-normal' style = "padding-left: 20px; padding-right: 20px;">Cancel</button>
+        <button id = 'edit' class='uk-margin-left btn btn-normal' style = "padding-left: 20px; padding-right: 20px;">Edit</button>
+    </div>
+</div>

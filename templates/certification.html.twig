@@ -1,0 +1,119 @@
+
+
+
+{% set page = "main page" %}
+{% extends "base.html.twig" %}
+
+{% block spreadsheets %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/uikit@3.13.1/dist/js/uikit-icons.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/uikit@3.13.1/dist/js/uikit.min.js"></script>	
+	<link rel="stylesheet" href="{{ asset('css/tables.css') }}" />
+	<link rel="stylesheet" href="{{ asset('css/grid_thumbnail.css') }}" />
+
+	{{ parent() }}
+{% endblock %}
+
+{% block title %}CertifiyTN{% endblock %}
+
+{% block body %}
+
+{% include "components/fixed_header.html.twig" %}
+
+
+<div class = "uk-margin-bottom-small uk-margin-top uk-margin-horizontal-10">
+	<div class="uk-container">
+		<div class = "uk-page-formatter">
+			<div class = "uk-details-grid">
+				<div class = "uk-details-header">
+					<div class="uk-details-thumbnail uk-section-transparent">
+						<div class="uk-grid-shadowing uk-certif-box">
+							<div class="votecell post-layout--left">
+            <div class="js-voting-container d-flex jc-center fd-column ai-stretch gs4 fc-black-200" data-post-id="4564925">
+        <button class="js-vote-up-btn flex--item s-btn s-btn__unset c-pointer " data-controller="s-tooltip" data-s-tooltip-placement="right" aria-pressed="false" aria-label="Up vote" data-selected-classes="fc-theme-primary" data-unselected-classes="" aria-describedby="--stacks-s-tooltip-3fkalptz">
+            <svg aria-hidden="true" class="svg-icon iconArrowUpLg" width="36" height="36" viewBox="0 0 36 36"><path d="M2 25h32L18 9 2 25Z"></path></svg>
+        </button>
+		<div id="--stacks-s-tooltip-3fkalptz" class="s-popover" aria-hidden="true" role="tooltip" style="">Good<div class="s-popover--arrow" style=""></div></div>
+        <div class="js-vote-count flex--item d-flex fd-column ai-center fc-black-500 fs-title" itemprop="upvoteCount" data-value="3">
+
+        </div>
+        <button class="js-vote-down-btn flex--item s-btn s-btn__unset c-pointer " data-controller="s-tooltip" data-s-tooltip-placement="right" aria-pressed="false" aria-label="Down vote" data-selected-classes="fc-theme-primary" data-unselected-classes="" aria-describedby="--stacks-s-tooltip-nggywyis">
+            <svg aria-hidden="true" class="svg-icon iconArrowDownLg" width="36" height="36" viewBox="0 0 36 36"><path d="M2 11h32L18 27 2 11Z"></path></svg>
+        </button><div id="--stacks-s-tooltip-nggywyis" class="s-popover" aria-hidden="true" role="tooltip">Bad<div class="s-popover--arrow"></div></div>
+
+			</div>
+						</div>
+							<div class = "uk-thumbnail">
+								<div class="container" style = "max-height:300px; max-width:300px;">
+									<img src="{{ asset(certif.getThumbnailPath()) }}" alt="">
+								</div>
+
+								<div class = "uk-margin-auto-top ">
+									<br/>
+									{% if logged_in and app.user.isEnrolled(certif) %}
+										<button class="uk-button uk-button-danger" disabled><a href="{{ path('enroll_remove', {'id': certif.id}) }}">Enrolled</a></button>
+									{% else %}
+										<button class="uk-button uk-button-danger"><a href="{{ path('enroll_add', {'id': certif.id}) }}" style = "color: #fff;">Enroll</a></button>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="uk-details-description uk-section-transparent uk-container-sud">
+						<h1 class="uk-no-spacing">{{ certif.title }}</h1>
+						<div class="uk-badge">{{ certif.provider.name }}</div>
+						<p class = "uk-item-description">
+							{{ certif.description }}
+						</p>
+					</div>
+				</div>
+
+				<div class = "uk-section-transparent uk-container-sud uk-exam-table">
+					<table class="uk-table uk-table-divider">
+						<thead>
+							<tr>
+								<th>Code</th>
+								<th>Title</th>
+								<th>Questions</th>
+								<th>Passed</th>
+							</tr>
+						</thead>
+						<tbody>
+						{% for exam in certif.getExams() %}
+							<tr>
+								<td>{{ exam.code }}</td>
+								<td>{{ exam.title }}</td>
+								<td>{{ exam.getQuestions().count }}</td>
+								<td>0</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="6">no records found</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</div>
+
+				<div class = "uk-section-transparent uk-container-sud uk-margin-larger-bottom">
+					{% include 'comments/comment_section.html.twig' with {'certif': certif, 'logged_in': logged_in} %}
+				</div>
+			</div>
+
+			<div class="uk-sidebar uk-section-transparent uk-grid-shadowing">
+				<h4>Related: </h4>
+				{% for certification in certif.getProvider().getCertifications() %}
+					<p><a href="{{ path('certif_view', {'id': certification.id}) }}">{{ certification.title }}</a></p>
+				{% else %}
+					<tr>
+						<td colspan="6">no records found</td>
+					</tr>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+
+{% include "components/footer.html.twig" %}
+
+{% endblock %}
