@@ -360,6 +360,16 @@ input[type=file] {
 	justify-content: right;
 }
 
+.between_wrapper {
+	display: flex;
+	justify-content: space-between;
+}
+
+.updated_at {
+	margin-left: 10px;
+	font-size:12px;
+}
+
 .btn-delete {
 	border: none;
 	margin-bottom:0;
@@ -385,7 +395,7 @@ input[type=file] {
 	width: 20%;
 }
 
-.between_wrapper {
+.question_wrapper {
 	margin-top:70px;
 	width: 100%;
 	display: flex;
@@ -393,10 +403,14 @@ input[type=file] {
 	justify-content: space-between;
 }
 
-.between_wrapper > table {
+.question_wrapper > .questions_table {
 	width: 60%
 }
 
-.between_wrapper > form {
+.question_wrapper > form {
 	width: 30%;
+}
+
+.pdf_importer {
+	margin-top:76px
 }

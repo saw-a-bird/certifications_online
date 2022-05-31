@@ -32,6 +32,10 @@
                     <td>{{ exam.getQuestions().count }}</td>
                     <td>
                         <a href="{{ path('exam_edit', {'id': exam.id}) }}">edit</a>
+                        <form method="post" action="{{ path('exam_delete', {'id': exam.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');" class = "btn-delete">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ exam.id) }}">
+                            <button class="btn-link">delete</button>
+                        </form>
                     </td>
                 </tr>
             {% else %}

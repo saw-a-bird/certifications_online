@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PropositionsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PropositionsRepository::class)
@@ -19,13 +20,14 @@ class Propositions
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
      */
     private $proposition;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default":"0"}))
      */
-    private $isCorrect;
+    private $isCorrect = false;
 
     /**
      * @ORM\ManyToOne(targetEntity=Questions::class, inversedBy="propositions")

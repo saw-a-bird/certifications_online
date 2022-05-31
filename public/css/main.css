@@ -2345,6 +2345,10 @@ select.uk-form-width-xsmall {
   border: 1px solid transparent;
 }
 
+.uk-button-secondary > a {
+  color: #fff;
+}
+
 /* Hover + Focus */
 .uk-button-secondary:hover,
 .uk-button-secondary:focus {
@@ -2375,9 +2379,24 @@ select.uk-form-width-xsmall {
   color: #fff;
 }
 
-/* OnClick + Active */
-.uk-button-danger:active,
-.uk-button-danger.uk-active {
+/*
+ * Success
+ */
+
+.uk-button-success {
+  background-color: #63f050;
+  color: #fff;
+  border: 1px solid transparent;
+}
+
+.uk-button-success:hover,
+.uk-button-success:focus {
+  background-color: rgb(112, 199, 36);
+  color: #fff;
+}
+
+.uk-button-success:active,
+.uk-button-success.uk-active {
   background-color: #ec2147;
   color: #fff;
 }
@@ -2624,6 +2643,9 @@ select.uk-form-width-xsmall {
 
 /* Size modifiers
  ========================================================================== */
+
+
+
 /*
  * XSmall
  */
@@ -2955,11 +2977,26 @@ select.uk-form-width-xsmall {
   list-style: none;
 }
 
+.uk-flex-item-60 {
+  width:60%;
+}
+
+.uk-flex-item-90 {
+  width:90%;
+}
+
+.uk-flex-item-100 {
+  width:100%
+}
+
+.uk-flex-item-40 {
+  width:40%;
+}
+
 .uk-details-grid {
   display: flex;
   flex-direction: column;
   row-gap: 20px;
-  width:90%;
 }
 
 .uk-details-header {
@@ -2969,14 +3006,9 @@ select.uk-form-width-xsmall {
   width:100%;
 }
 
-.uk-details-thumbnail {
-  width:40%;
-}
-
 .uk-details-description {
   margin-left: 30px;
   align-self: stretch;
-  width:60%;
   padding: 20px;
 }
 
@@ -4138,10 +4170,18 @@ select.uk-form-width-xsmall {
   color: #555;
 }
 
+.uk-big-avatar {
+  width: 200px;
+  height: 200px;
+  max-width: none;
+}
+
 .uk-article-meta .uk-avatar, .uk-profile-meta .uk-avatar {
   margin-right: 15px;
   width: auto;
 }
+
+
 
 .uk-account-bread {
   font-size: 18px;
@@ -10190,6 +10230,24 @@ iframe.uk-cover {
   flex: 1;
 }
 
+
+/* ========================================================================
+   Component: Color
+ ========================================================================== */
+
+.uk-color-grey-primary {
+    color: #718096;
+}
+
+.uk-color-grey-secondary {
+    color: rgb(160, 174, 192);
+}
+
+.uk-color-grey:hover {
+  color: #718096;
+}
+
+
 /* ========================================================================
    Component: Margin
  ========================================================================== */
@@ -10207,10 +10265,24 @@ iframe.uk-cover {
   margin-bottom: 0px;
 }
 
+.uk-margin-vertical-xsmall {
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
+
 .uk-margin-vertical-small {
   margin-top: 20px !important;
   margin-bottom: 20px !important;
 }
+
+.uk-margin-top-none {
+  margin-top: 0px !important;
+}
+
+.uk-margin-top-xsmall {
+  margin-top: 10px !important;
+}
+
 
 .uk-margin-bottom-none {
   margin-bottom: 0 !important;
@@ -10251,6 +10323,10 @@ iframe.uk-cover {
 
 .uk-margin-right {
   margin-right: 20px !important;
+}
+
+.uk-margin-right-large {
+  margin-right: 150px !important;
 }
 
 /* Small
@@ -10603,6 +10679,10 @@ iframe.uk-cover {
 
 .uk-padding-right-small {
   padding-right: 15px;
+}
+
+.uk-padding-left-none {
+  padding-left: 0 !important;
 }
 
 .uk-padding-left-small {
@@ -12593,6 +12673,10 @@ iframe.uk-cover {
   border: 2px white solid;
 }
 
+.-g-size-small {
+  font-size: .875rem;
+}
+
 .g-size-45 {
   height: 45px;
   width: 45px;
@@ -12656,10 +12740,6 @@ iframe.uk-cover {
 	display: block;
   max-width: 100%;
   height: auto;
-}
-
-.fa {
-  margin-right: 5px;
 }
 
 

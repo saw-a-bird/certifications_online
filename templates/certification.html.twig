@@ -24,9 +24,9 @@
 <div class = "uk-margin-bottom-small uk-margin-top uk-margin-horizontal-10">
 	<div class="uk-container">
 		<div class = "uk-page-formatter">
-			<div class = "uk-details-grid">
-				<div class = "uk-details-header">
-					<div class="uk-details-thumbnail uk-section-transparent">
+			<div class = "uk-details-grid uk-flex-item-90">
+				<div class = "uk-details-header uk-flex-item-100">
+					<div class="uk-details-thumbnail uk-flex-item-40 uk-section-transparent">
 						<div class="uk-grid-shadowing uk-certif-box">
 							<div class="votecell post-layout--left">
             <div class="js-voting-container d-flex jc-center fd-column ai-stretch gs4 fc-black-200" data-post-id="4564925">
@@ -51,7 +51,7 @@
 								<div class = "uk-margin-auto-top ">
 									<br/>
 									{% if logged_in and app.user.isEnrolled(certif) %}
-										<button class="uk-button uk-button-danger" disabled><a href="{{ path('enroll_remove', {'id': certif.id}) }}">Enrolled</a></button>
+										<button class="uk-button uk-button-danger" disabled><a href="{{ path('enroll_remove', {'id': certif.id}) }}">Start</a></button>
 									{% else %}
 										<button class="uk-button uk-button-danger"><a href="{{ path('enroll_add', {'id': certif.id}) }}" style = "color: #fff;">Enroll</a></button>
 									{% endif %}
@@ -59,7 +59,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="uk-details-description uk-section-transparent uk-container-sud">
+					<div class="uk-details-description uk-flex-item-60 uk-section-transparent uk-container-sud">
 						<h1 class="uk-no-spacing">{{ certif.title }}</h1>
 						<div class="uk-badge">{{ certif.provider.name }}</div>
 						<p class = "uk-item-description">
@@ -79,18 +79,24 @@
 							</tr>
 						</thead>
 						<tbody>
+						{% set found = false %}
 						{% for exam in certif.getExams() %}
-							<tr>
-								<td>{{ exam.code }}</td>
-								<td>{{ exam.title }}</td>
-								<td>{{ exam.getQuestions().count }}</td>
-								<td>0</td>
-							</tr>
-						{% else %}
+							{% if exam.getQuestions().count > 0 %}
+								{% set found = true %}
+								<tr>
+									<td>{{ exam.code }}</td>
+									<td>{{ exam.title }}</td>
+									<td>{{ exam.getQuestions().count }}</td>
+									<td>0</td>
+								</tr>
+							{% endif %}
+						{% endfor %}
+
+						{% if found == false %}
 							<tr>
 								<td colspan="6">no records found</td>
 							</tr>
-						{% endfor %}
+						{% endif %}
 						</tbody>
 					</table>
 				</div>

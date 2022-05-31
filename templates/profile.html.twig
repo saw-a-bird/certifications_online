@@ -13,22 +13,32 @@
 </div>
 
 <div class = "uk-section-transparent">
-        <div class="uk-section uk-section-large uk-padding-bottom-large">
-            <div class="uk-container">
-                <div class="uk-profile-meta uk-flex uk-flex-center">
-                    <img class="uk-border-circle uk-avatar" src="{{ asset(unknown.getAvatarPath() ) }}" alt="Sara Galen" loading="lazy" style="width: 100px; height: 100px">
-                    {% if app.user.id == unknown.id %}
-                        <div class = 'uk-text-center'>
-                            <a class = 'uk-text-bold uk-link uk-font-size-20'>{{ app.user.username }}</a> <a href = '{{ path("account_settings") }}' class='uk-display-block uk-button uk-button-secondary uk-margin-top uk-margin-vertical-10'>Edit Profile</a>
-                    {% else %}
-                        <div style = 'margin: auto 10px;'>
-                            <a class = 'uk-text-bold uk-link uk-font-size-20'>{{unknown.username }}</a>
-                    {% endif %}
+        <div class="uk-section uk-section-small uk-padding-bottom-large">
+            <div class="uk-container uk-flex">
+                <div class = "uk-margin-right-large">
+                    {% if unknown is not defined %}
+                        {% set unknown = app.user %}
+                    {% endif %} 
+                    <div class="uk-flex uk-flex-center">
+                        <img class="uk-big-avatar" src="{{ asset(unknown.getAvatarPath() ) }}" alt="Sara Galen" loading="lazy">
                     </div>
-                </div>
+                    <p class = "uk-margin-bottom-none uk-margin-top-xsmall">
+                        <a class = 'uk-text-bold ' style = "font-size: 1.4rem !important;">
+                            {% if app.user.id == unknown.id %}
+                                {{ app.user.username }} 
+                            {% else %}
+                                {{unknown.username }}
+                            {% endif %}
+                        </a>
+                    </p>
+                    <p class = "uk-color-grey-primary uk-margin-top-none uk-margin-bottom-small">{{ unknown.specialty}}</p>
+                    <p class = "uk-color-grey uk-color-grey-secondary uk-text-small uk-margin-vertical-none">{{ unknown.biography}}</p>
+                    <p class = "uk-color-grey-primary uk-margin-vertical-small uk-text-small">Member since {{ unknown.getCreatedAt()|date("m/d/Y")}}</p>
 
+                    {# <a href = '{{ path("account_settings") }}' class='uk-display-block uk-button uk-button-secondary uk-margin-top uk-margin-vertical-10'>Edit Profile</a> #}
+                </div>
                 <div>
-                    <div class="uk-section uk-section-large uk-padding-bottom-large">
+                    <div>
                         {% block page %}
                         {% endblock %}
                     </div>

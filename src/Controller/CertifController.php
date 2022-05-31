@@ -105,7 +105,7 @@ class CertifController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="certif_delete", methods={"POST"})
+     * @Route("/{id}/delete", name="certif_delete", methods={"POST"})
      */
     public function delete(Request $request, Certifications $certification): Response
     {

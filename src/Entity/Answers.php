@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Entity;
+// namespace App\Entity;
 
 use App\Repository\AnswersRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Tries;
+use App\Entity\Propositions;
 
 /**
- * @ORM\Entity(repositoryClass=AnswersRepository::class)
- */
-class Answers
-{
+  * @ORM\Entity(repositoryClass=AnswersRepository::class)
+*/
+class Answers {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -39,7 +41,7 @@ class Answers
         return $this->id;
     }
 
-    public function getTry(): ?Tries
+    public function getTry(): Tries
     {
         return $this->try;
     }

@@ -27,7 +27,7 @@ class CommentController extends AbstractController {
     }
 
     /**
-    * @Route("/comment/new/{certification}", name="comment_new", methods={"POST"})
+    * @Route("/comment/{certification}/new", name="comment_new", methods={"POST"})
     */ 
     public function newComment(Certifications $certification, Request $request) {
         $data = $request->request->all();
@@ -48,7 +48,7 @@ class CommentController extends AbstractController {
     }
 
     /**
-    * @Route("/comment/edit", name="comment_edit_form", methods={"POST"})
+    * @Route("/comment/edit/form", name="comment_edit_form", methods={"POST"})
     */ 
     public function editFormComment(Request $request) {
         $data = $request->request->all();
@@ -59,15 +59,19 @@ class CommentController extends AbstractController {
     }
 
     /**
-    * @Route("/comment/edit/{comment}", name="comment_edit", methods={"POST"})
+    * @Route("/comment/{comment}/edit", name="comment_edit", methods={"POST"})
     */ 
     public function editComment(Comments $comment, Request $request) {
+        
         $data = $request->request->all();
-        $comment->setContent($data["content"]);
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($comment);
-        $em->flush();
+        if (!empty($data["content"]) && $comment->getCreatedBy() == $this->user) {
+            $comment->setContent($data["content"]);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($comment);
+            $em->flush();
+        }
 
         return $this->render('comments/one_comment.html.twig', [
             'user' => $this->user,
@@ -76,13 +80,15 @@ class CommentController extends AbstractController {
     }
 
     /**
-    * @Route("/comment/delete/{comment}", name="comment_delete", methods={"POST"})
+    * @Route("/comment/{comment}/delete", name="comment_delete", methods={"POST"})
     */ 
     public function deleteComment(Comments $comment, Request $request) : Response {
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($comment);
-        $em->flush();
+        if ($comment->getCreatedBy() == $this->user) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($comment);
+            $em->flush();
+        }
 
         return new Response();
     }
@@ -97,7 +103,7 @@ class CommentController extends AbstractController {
     }
 
     /**
-     * @Route("/comment/reply/add/{comment}", name="reply_add", methods={"POST"})
+     * @Route("/comment/reply/{comment}/new", name="reply_add", methods={"POST"})
     */ 
     public function addReply(Comments $comment, Request $request) : Response {
         $data = $request->request->all();
@@ -118,7 +124,7 @@ class CommentController extends AbstractController {
     }
 
      /**
-        * @Route("/comment/reply/get/{comment}", name="get_replies", methods={"POST"})
+        * @Route("/comment/reply/{comment}", name="get_replies", methods={"POST"})
     */ 
     public function replySection(Comments $comment) : Response {
         return $this->render('comments/reply_section.html.twig', [

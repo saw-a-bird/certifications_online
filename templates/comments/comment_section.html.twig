@@ -52,11 +52,13 @@
     $('#comment_submit').click(function() {
         var texta = $(this).parent().next().find("textarea#new_comment");
 
-        $.post("/comment/new/"+certification_id, {content: texta.val()}).done(function(data) {    
-            texta.val('');
-            var x = $(data).prependTo(comments_container);
-            load_one(x, "new comment");
-        });
+        if (texta.val() != "") {
+            $.post("/comment/"+certification_id+"/new", {content: texta.val()}).done(function(data) {    
+                texta.val('');
+                var x = $(data).prependTo(comments_container);
+                load_one(x, "new comment");
+            });
+        }
     });
 
     function reply_submit(self, comm_container) {
@@ -107,7 +109,7 @@
 
     function delete_button(comment_con, comm_id) {
         alert(comm_id);
-        $.post("/comment/delete/" + comm_id).done(function(data) {
+        $.post("/comment/" + comm_id+"/delete").done(function(data) {
             // fetch DOM element and delete it.
             comment_con.remove();
         });
@@ -121,7 +123,7 @@
                 col_con.hide();
             });
         } else {
-            $.post("/comment/edit", {content : old_content}).done(function(data) {
+            $.post("/comment/edit/form", {content : old_content}).done(function(data) {
                 col_con.hide();
                 comment_con.prepend(data);
                 var form_edit = comment_con.children(":first"); 
@@ -145,7 +147,7 @@
         var form_content = self.find("#edit_comment");
 
         self.find('#edit').click(function() {
-            $.post("/comment/edit/"+comment_id, {content : form_content.val()}).done(function(data) { 
+            $.post("/comment/"+comment_id+"/edit", {content : form_content.val()}).done(function(data) { 
 
                 col_con.find("p").text($(data).find("p").text());
 

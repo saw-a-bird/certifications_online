@@ -53,10 +53,23 @@ class AccountController extends AbstractController {
     }
     
     /**
-     * @Route("/profile/{name}/certifications", name="user_certifs")
+     * @Route("/profile/{name}", name="user_certifs")
      */
     public function user_certifs($name) {
-        return $this->renderIfPossible('profile/certifications.html.twig', $name);
+        if ($this->user->getUsername() == $name) {
+            return $this->renderIfPossible('profile/certifications.html.twig', $name);
+        } else {
+            return $this->redirectToRoute('user_certifs', ['name' => $this->user->getUsername()]);
+        }
+    }
+
+    /**
+     * @Route("/profile/certifications/{id}", name="user_attempts")
+     */
+    public function user_attempts(Certifications $certification) {
+        return $this->render('profile/attempts.html.twig',
+            array('certif' => $certification)
+        );
     }
 
     /**
@@ -180,20 +193,6 @@ class AccountController extends AbstractController {
         return $this->render('account/password.html.twig',
             array('form' => $form->createView())
         );
-    }
-
-    /**
-     * @Route("/profile/{name}/about", name="user_about")
-     */
-    public function user_about($name) {
-        return $this->renderIfPossible('profile/about.html.twig', $name);
-    }
-
-    /**
-     * @Route("/profile/{name}/favourites", name="user_favs")
-     */
-    public function user_favs($name) {
-        return $this->renderIfPossible('profile/favourites.html.twig', $name);
     }
     
 

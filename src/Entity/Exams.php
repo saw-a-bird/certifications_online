@@ -6,6 +6,7 @@ use App\Repository\ExamsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ExamsRepository::class)
@@ -21,12 +22,14 @@ class Exams
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, unique=true)
+     * @Assert\NotBlank(message = "This field is required.")
      */
     private $code;
 
     /**
      * @ORM\Column(type="string", length=150)
+     * @Assert\NotBlank(message = "This field is required.")
      */
     private $title;
 
@@ -42,6 +45,11 @@ class Exams
     private $questions;
 
     /**
+     * @ORM\OneToMany(targetEntity=Tries::class, mappedBy="exam", orphanRemoval=true)
+     */
+    private $tries;
+
+    /**
      * @ORM\Column(type="date")
      */
     private $created_at;
@@ -54,6 +62,7 @@ class Exams
     public function __construct()
     {
         $this->questions = new ArrayCollection();
+        $this->tries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -97,12 +106,55 @@ class Exams
         return $this;
     }
 
+/**
+     * @return Collection|Tries[]
+     */
+    public function getTries($user): Collection
+    {
+        $user_tries = new ArrayCollection();
+
+        foreach ( $this->tries as $try ) {
+            if ( $try->getUser()->getId() == $user->getId() ) {
+                $user_tries[] = $try;
+            }
+        }
+        
+        return $user_tries;
+    }
+
+    public function addTry(Tries $try): self
+    {
+        if (!$this->tries->contains($try)) {
+            $this->tries[] = $try;
+            $try->setExam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTry(Tries $try): self
+    {
+        if ($this->tries->removeElement($try)) {
+            // set the owning side to null (unless already changed)
+            if ($try->getExam() === $this) {
+                $try->setExam(null);
+            }
+        }
+
+        return $this;
+    }
+
     /**
      * @return Collection|Questions[]
      */
     public function getQuestions(): Collection
     {
         return $this->questions;
+    }
+
+    public function removeAllQuestions(): void
+    {
+        $this->questions->clear();;
     }
 
     public function addQuestion(Questions $question): self
@@ -132,9 +184,9 @@ class Exams
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
+    public function setUpdatedAt(): self
     {
-        $this->updated_at = $updated_at;
+        $this->updated_at = new \DateTime("now");
 
         return $this;
     }

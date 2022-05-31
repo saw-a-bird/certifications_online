@@ -167,7 +167,7 @@ p {
 
 .shadow_container {
 	background: rgba(255, 255, 255, 0.8);
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 7px 29px 0px;
 	border-bottom-left-radius: 10px;
 	border-bottom-right-radius: 10px;
 }
@@ -203,4 +203,14 @@ p {
 
 .uk-tabber {
 	background-color: rgba(255, 255, 255, 0.8);
+}
+
+.uk-tab-title {
+	line-height: 1.66;
+	margin: 0 ;
+	padding: 0;
+	font-weight: 900;
+	font-size: 24px;
+	text-transform: uppercase;
+	text-align: center;
 }

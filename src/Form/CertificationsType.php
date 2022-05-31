@@ -36,10 +36,11 @@ class CertificationsType extends AbstractType
             ])
             ->add('title', TextType::class)
             ->add('provider', EntityType::class,
-            array(
-                'class' => Providers::class,
-                'choice_label' => 'name',
-            ))
+                array(
+                    'class' => Providers::class,
+                    'choice_label' => 'name',
+                )
+            )
             ->add('description', TextareaType::class, [
             'attr' => [
                 'rows' => '10'

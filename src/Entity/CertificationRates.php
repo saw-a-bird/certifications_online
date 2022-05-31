@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use App\Repository\CertificationRatesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Onurb\Doctrine\ORMMetadataGrapher\Mapping as Grapher;
 
 /**
+ * @Grapher\CustomEntityName("Certification Rates")
  * @ORM\Entity(repositoryClass=CertificationRatesRepository::class)
  */
 class CertificationRates

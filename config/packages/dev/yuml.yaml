@@ -1,0 +1,4 @@
+parameters:
+    onurb_yuml.style: scruffy
+    onurb_yuml.show_fields_description: false
+    onurb_yuml.extension: jpg

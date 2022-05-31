@@ -3,6 +3,7 @@
 parameters:
     avatars_directory: '%kernel.project_dir%/public/imgs/avatars'
     thumbnails_directory: '%kernel.project_dir%/public/imgs/thumbnails'
+    documents_directory: '%kernel.project_dir%/public/docs'
 
 services:
     # default configuration for services in *this* file
@@ -31,7 +32,11 @@ services:
         arguments:
             $avatarDirectory: '%avatars_directory%'
             $thumbnailDirectory: '%thumbnails_directory%'
-            
+
+        # for FileUploader service
+    App\Services\PDFImporter:
+        arguments:
+            $documentsDirectory: '%documents_directory%'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     App\EventListener\RedirectUserListener:

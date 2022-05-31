@@ -80,7 +80,7 @@ class User implements UserInterface, \Serializable
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $avatar_path = "imgs/avatars/default1.png";
+    private $avatar_path = "default1.png";
 
     /**
      * @ORM\Column(type="string", length=125)

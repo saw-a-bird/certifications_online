@@ -1,6 +1,17 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
-    <div class = "right_wrapper">
-        <button class="btn form-submit save_button">{{ button_label|default('Save') }}</button>
+    <div class = "between_wrapper">
+        {% if (exam is defined) and (exam.getUpdatedAt() != null) %}
+            <i class = "updated_at"> Last updated at {{ exam.getUpdatedAt()|date('Y-m-d H:i:s') }}</i>
+        {% else %}
+            <i class = "updated_at"></i>
+        {% endif %}
+        
+        <div>
+            {% if (exam is defined) and (exam.questions|length > 0 ) %}
+                <a href = "{{ path('exam_reset', {'id': exam.id}) }}" class = "btn form-submit save_button">Reset</a>
+            {% endif %}
+            <button class="btn form-submit save_button">{{ button_label|default('Save') }}</button>
+        </div>
     </div>
 {{ form_end(form) }}
