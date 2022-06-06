@@ -75,6 +75,8 @@
 
 						{{ form_widget(form.searchC, {'attr': {'placeholder': 'Title...', 'class': 'uk-search-input tab-C tab-content'}}) }}
 
+						{{ form_widget(form.searchE, {'attr': {'placeholder': 'Code...', 'class': 'uk-search-input tab-E tab-content'}}) }}
+
 						<button type="submit" id = "form_submit" name="form_submit" class="uk-search-icon-flip uk-icon uk-search-icon" style = "display:none" uk-search-icon=""><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="search-icon"><circle fill="none" stroke="#000" stroke-width="1.1" cx="9" cy="9" r="7"></circle><path fill="none" stroke="#000" stroke-width="1.1" d="M14,14 L18,18 L14,14 Z"></path></svg></button>
 					</div>
 					
@@ -97,6 +99,7 @@
 					<ul class="tab uk-flex uk-flex-center uk-flex-left@s uk-subnav uk-subnav-pill" >
 						<li class = "tabbedAnchor"><a href='javascript:;' onclick="navigateTab(event, 'tab-F')">Providers</a></li>
 						<li class = "tabbedAnchor"><a href='javascript:;' onclick="navigateTab(event, 'tab-C')">Certifications</a></li>
+						<li class = "tabbedAnchor"><a href='javascript:;' onclick="navigateTab(event, 'tab-E')">Examen</a></li>
 					</ul>
 				</div>
 			</div>
@@ -107,7 +110,7 @@
 				{% for certif in articles %}
 					<div class="uk-thumbnail uk-thumbnail-box" style = "min-height:500px;">
 						<div class="container" style = "max-height:200px;">
-							<img src="{{ asset(certif.getThumbnailPath()) }}" alt="">
+							<a href="{{ path('certif_view', {'id': certif.id}) }}"><img src="{{ asset(certif.getThumbnailPath()) }}" alt=""></a>
 						</div>
 						<div class="uk-thumbnail-caption">
 							<h5><a href="{{ path('certif_view', {'id': certif.id}) }}">{{ certif.title }}</a></h5>
@@ -118,14 +121,19 @@
 						</div>
 
 						<div class = "uk-margin-auto-top">
-							<p><i> Pass rate: 30% </i></p>
+							<div class = "uk-thumbnail-info">
+							<p class = "uk-font-size-12"><i> Users : {{ certif.users|length }} </i></p>
+							<p class = "uk-font-size-12"><i> Last update was at {{ certif.getUpdateDate()|date("m/d/Y") }} </i></p>
+							</div>
 							{% if logged_in and app.user.isEnrolled(certif) %}
-								<button class="uk-button uk-button-danger" disabled><a href="{{ path('enroll_remove', {'id': certif.id}) }}">Enrolled</a></button>
+								<a href="{{ path('enroll_remove', {'id': certif.id}) }}"><button class="uk-button uk-button-danger uk-full-width uk-button-disabled">UnEnroll</button></a>
 							{% else %}
-								<button class="uk-button uk-button-danger"><a href="{{ path('enroll_add', {'id': certif.id}) }}" style = "color: #fff;">Enroll</a></button>
+								<a href="{{ path('enroll_add', {'id': certif.id}) }}" style = "color: #fff;"><button class="uk-button uk-button-danger uk-full-width">Enroll</button></a>
 							{% endif %}
 						</div>
 					</div>
+				{% else %}
+					<h5>no records found</h5>
 				{% endfor %}
 			</div>
 		</div>

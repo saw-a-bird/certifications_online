@@ -1,0 +1,50 @@
+{% extends "@admin_root/base.html.twig" %}
+
+{% block title %}{{certification.title}} - Examens{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("collab_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div class = "form_container">
+        <h1>Les examens de {{certification.title}} :</h1>
+        <div class="buttons_container">
+            <a href="{{ path("exam_new", {'id': certification.id})}}"><button class="btn add_button">Add</button></a>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Title</th>
+                    <th>Questions</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for exam in certification.getExams() %}
+                <tr>
+                    <td>{{ exam.code }}</td>
+                    <td>{{ exam.title }}</td>
+                    <td>{{ exam.getQuestions().count }}</td>
+                    <td>
+                       <a href="{{ path('exam_signals', {'id': exam.id}) }}">signals</a>
+                        <a href="{{ path('exam_edit', {'id': exam.id}) }}">edit</a>
+                        <form method="post" action="{{ path('exam_delete', {'id': exam.id}) }}" onsubmit="return confirm('Are you sure you want to delete this exam? {{ exam.getQuestions().count }} question(s) WILL be deleted from the database.');" class = "btn-delete">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ exam.id) }}">
+                            <button class="btn-link">delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

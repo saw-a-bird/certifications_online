@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en-gb" dir="ltr">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/css/errorPage.css" />
+    </head>
+
+    <body>
+        <div class="face">
+            <div class="band">
+                <div class="red"></div>
+                <div class="white"></div>
+                <div class="blue"></div>
+            </div>
+            <div class="eyes"></div>
+            <div class="dimples"></div>
+            <div class="mouth"></div>
+        </div>
+
+        <h1>Oops! Something went wrong!</h1>
+        <h4 class = "exception_message">{{ message }}</h4>
+        <h5 class = "exception_message">Error: {{ error }}</h5>
+        <h5 class = "exception_message">Route: {{ route }}</h5>
+
+        <div class="btn"><a class = "no-style" href="{{ path('index') }}">Return to Home</a></div>
+    </body>
+</html>

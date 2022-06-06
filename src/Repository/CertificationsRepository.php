@@ -19,23 +19,39 @@ class CertificationsRepository extends ServiceEntityRepository
         parent::__construct($registry, Certifications::class);
     }
 
+    public function getAllFiltered() {
+        return $this->filter($this->createQueryBuilder('u')
+            ->orderBy('u.creation_date', 'desc'));
+    }
+
     public function byTitle($str) {
-        return $this->createQueryBuilder('u')
+        return $this->filter($this->createQueryBuilder('u')
             ->andWhere('u.title like :str')
             ->orderBy('u.creation_date', 'desc')
-            ->setParameter('str','%'.$str.'%')
-            ->getQuery()
-            ->getResult();
+            ->setParameter('str','%'.$str.'%'));
     }
 
     public function byProvider($str) {
-        return $this->createQueryBuilder('u')
+        return $this->filter($this->createQueryBuilder('u')
             ->leftJoin('u.provider', 'p')
             ->andWhere('p.name = :str')
             ->orderBy('u.creation_date', 'desc')
-            ->setParameter('str', $str)
-            ->getQuery()
-            ->getResult();
+            ->setParameter('str', $str));
+    }
+
+    public function byExamen($code) {
+        return $this->filter($this->createQueryBuilder('u')
+             ->leftJoin('u.exams', 'e')
+            ->andWhere('e.code like :code')
+            ->orderBy('u.creation_date', 'desc')
+            ->setParameter('code', $code));
+    }
+
+    public function filter($builder) {
+        return $builder ->andWhere('u.countQ > 0')
+                    ->andWhere('u.isBlocked = 0')
+                    ->getQuery()
+                    ->getResult();
     }
 
     // /**

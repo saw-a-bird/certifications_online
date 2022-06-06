@@ -29,8 +29,8 @@
 					<div class="uk-details-thumbnail uk-flex-item-40 uk-section-transparent">
 						<div class="uk-grid-shadowing uk-certif-box">
 							<div class="votecell post-layout--left">
-            <div class="js-voting-container d-flex jc-center fd-column ai-stretch gs4 fc-black-200" data-post-id="4564925">
-        <button class="js-vote-up-btn flex--item s-btn s-btn__unset c-pointer " data-controller="s-tooltip" data-s-tooltip-placement="right" aria-pressed="false" aria-label="Up vote" data-selected-classes="fc-theme-primary" data-unselected-classes="" aria-describedby="--stacks-s-tooltip-3fkalptz">
+            {# <div class="js-voting-container d-flex jc-center fd-column ai-stretch gs4 fc-black-200" data-post-id="4564925"> #}
+        {# <button class="js-vote-up-btn flex--item s-btn s-btn__unset c-pointer " data-controller="s-tooltip" data-s-tooltip-placement="right" aria-pressed="false" aria-label="Up vote" data-selected-classes="fc-theme-primary" data-unselected-classes="" aria-describedby="--stacks-s-tooltip-3fkalptz">
             <svg aria-hidden="true" class="svg-icon iconArrowUpLg" width="36" height="36" viewBox="0 0 36 36"><path d="M2 25h32L18 9 2 25Z"></path></svg>
         </button>
 		<div id="--stacks-s-tooltip-3fkalptz" class="s-popover" aria-hidden="true" role="tooltip" style="">Good<div class="s-popover--arrow" style=""></div></div>
@@ -39,9 +39,9 @@
         </div>
         <button class="js-vote-down-btn flex--item s-btn s-btn__unset c-pointer " data-controller="s-tooltip" data-s-tooltip-placement="right" aria-pressed="false" aria-label="Down vote" data-selected-classes="fc-theme-primary" data-unselected-classes="" aria-describedby="--stacks-s-tooltip-nggywyis">
             <svg aria-hidden="true" class="svg-icon iconArrowDownLg" width="36" height="36" viewBox="0 0 36 36"><path d="M2 11h32L18 27 2 11Z"></path></svg>
-        </button><div id="--stacks-s-tooltip-nggywyis" class="s-popover" aria-hidden="true" role="tooltip">Bad<div class="s-popover--arrow"></div></div>
+        </button><div id="--stacks-s-tooltip-nggywyis" class="s-popover" aria-hidden="true" role="tooltip">Bad<div class="s-popover--arrow"></div></div> #}
 
-			</div>
+			{# </div> #}
 						</div>
 							<div class = "uk-thumbnail">
 								<div class="container" style = "max-height:300px; max-width:300px;">
@@ -102,7 +102,7 @@
 				</div>
 
 				<div class = "uk-section-transparent uk-container-sud uk-margin-larger-bottom">
-					{% include 'comments/comment_section.html.twig' with {'certif': certif, 'logged_in': logged_in} %}
+					{% include '@user/comments/comment_section.html.twig' with {'certif': certif, 'logged_in': logged_in} %}
 				</div>
 			</div>
 

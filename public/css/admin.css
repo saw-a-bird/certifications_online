@@ -414,3 +414,25 @@ input[type=file] {
 .pdf_importer {
 	margin-top:76px
 }
+
+.pdf_importer .form-group {
+	margin-bottom: 0;
+}
+
+.pdf_importer .pdf_log {
+	margin: 5px 0;
+	display:block;
+}
+
+.pdf_importer .pdf_error {
+	color: red;
+}
+
+.pdf_importer .pdf_success {
+	color: rgb(65, 122, 48);
+}
+
+.pdf_importer .right_wrapper {
+	margin-top: 20px;
+}
+

@@ -93,18 +93,19 @@ class User implements UserInterface, \Serializable
     private $specialty = "";
 
     /**
-     * @ORM\Column(type="string", length=25)
-     */
-    private $rank = "user";
-
-    /**
      * @ORM\ManyToMany(targetEntity=Certifications::class, mappedBy="users")
      */
     private $certifications;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Certifications::class, mappedBy="createdBy")
+     */
+    private $creations;
+
     public function __construct()
     {
         $this->certifications = new ArrayCollection();
+        $this->creations = new ArrayCollection();
     }
 
     public function getId(): int
@@ -151,6 +152,11 @@ class User implements UserInterface, \Serializable
         }
 
         return array_unique($roles);
+    }
+
+    public function hasRole($role)
+    {
+        return array_search($role, $this->roles);
     }
 
     public function setRoles(array $roles): void
@@ -247,18 +253,6 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    public function getRank(): ?string
-    {
-        return $this->rank;
-    }
-
-    public function setRank(string $rank): self
-    {
-        $this->rank = $rank;
-
-        return $this;
-    }
-
     /**
      * @ORM\PrePersist
      */
@@ -292,6 +286,36 @@ class User implements UserInterface, \Serializable
     {
         if ($this->certifications->removeElement($certification)) {
             $certification->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Certifications>
+     */
+    public function getCreations(): Collection
+    {
+        return $this->creations;
+    }
+
+    public function addCreation(Certifications $creation): self
+    {
+        if (!$this->creations->contains($creation)) {
+            $this->creations[] = $creation;
+            $creation->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreation(Certifications $creation): self
+    {
+        if ($this->creations->removeElement($creation)) {
+            // set the owning side to null (unless already changed)
+            if ($creation->getCreatedBy() === $this) {
+                $creation->setCreatedBy(null);
+            }
         }
 
         return $this;

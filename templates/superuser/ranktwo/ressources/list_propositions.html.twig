@@ -1,0 +1,37 @@
+{% extends "@admin_root/base.html.twig" %}
+
+{% block title %}Propositions - {{question.title}} - {% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("mod_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div class = "form_container">
+        <a href="{{ path('exam_questions_list', {'id': question.exam.id}) }}"><button class="btn back_button">Go Back</button></a>
+        <h1>Les propositions de Question {{question.title}} :</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Proposition</th>
+                    <th>Correct</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for prop in question.getPropositions() %}
+                <tr>
+                    <td>{{ prop.proposition }}</td>
+                    <td>{% if prop.isCorrect %}true{% else %}false{% endif %}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

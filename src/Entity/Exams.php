@@ -7,9 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ExamsRepository::class)
+ * @UniqueEntity(fields="code", message="This exam code is already taken.")
+ * @UniqueEntity(fields="title", message="This exam title is already taken.")
  * @ORM\HasLifecycleCallbacks
  */
 class Exams
@@ -28,7 +31,7 @@ class Exams
     private $code;
 
     /**
-     * @ORM\Column(type="string", length=150)
+     * @ORM\Column(type="string", length=150, unique=true)
      * @Assert\NotBlank(message = "This field is required.")
      */
     private $title;
@@ -59,10 +62,16 @@ class Exams
      */
     private $updated_at;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Signaler::class, mappedBy="exam", orphanRemoval=true)
+     */
+    private $signalers;
+
     public function __construct()
     {
         $this->questions = new ArrayCollection();
         $this->tries = new ArrayCollection();
+        $this->signalers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -154,7 +163,9 @@ class Exams
 
     public function removeAllQuestions(): void
     {
-        $this->questions->clear();;
+        $this->getCertification()->decCountQ($this->questions->count());
+        $this->questions->clear();
+        
     }
 
     public function addQuestion(Questions $question): self
@@ -162,6 +173,7 @@ class Exams
         if (!$this->questions->contains($question)) {
             $this->questions[] = $question;
             $question->setExam($this);
+            $this->getCertification()->addCountQ(1);
         }
 
         return $this;
@@ -173,6 +185,7 @@ class Exams
             // set the owning side to null (unless already changed)
             if ($question->getExam() === $this) {
                 $question->setExam(null);
+                $this->getCertification()->decCountQ(1);
             }
         }
 
@@ -198,5 +211,35 @@ class Exams
     public function onPrePersist()
     {
         $this->created_at = new \DateTime("now");
+    }
+
+    /**
+     * @return Collection<int, Signaler>
+     */
+    public function getSignalers(): Collection
+    {
+        return $this->signalers;
+    }
+
+    public function addSignaler(Signaler $signaler): self
+    {
+        if (!$this->signalers->contains($signaler)) {
+            $this->signalers[] = $signaler;
+            $signaler->setExam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSignaler(Signaler $signaler): self
+    {
+        if ($this->signalers->removeElement($signaler)) {
+            // set the owning side to null (unless already changed)
+            if ($signaler->getExam() === $this) {
+                $signaler->setExam(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -1,0 +1,48 @@
+{% extends "@admin_root/base.html.twig" %}
+
+{% block title %}Users - List{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("admin_users").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <table class="table" style = "margin-top: 50px">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Created At</th>
+                <th>Last Login At</th>
+                <th>Banned</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.roles|join(', ') }}</td>
+                <td>{{ user.getCreatedAt()|date('Y-m-d H:i:s') }}</td>
+                <td>{{ user.getLastLogin()|date('Y-m-d H:i:s') }}</td>
+                <td>{% if user.isBanned %}true{% else %}false{% endif %}</td>
+                <td>
+                    <a href="{{ path('users_able', {'id': user.id}) }}">{% if user.isBanned %}unban{% else %}ban{% endif %}</a>
+                    <a href="{{ path('users_mod', {'id': user.id}) }}">{% if user.hasRole("ROLE_MODERATOR") != false %}unmod{% else %}mod{% endif %}</a>
+                    <a href="{{ path('users_collab', {'id': user.id}) }}">{% if user.hasRole("ROLE_COLLABORATOR") != false %}uncollab{% else %}collab{% endif %}</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

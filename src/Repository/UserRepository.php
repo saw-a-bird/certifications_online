@@ -32,4 +32,14 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findAllExcept($id)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.id != :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
+    
 }

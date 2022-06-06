@@ -29,7 +29,7 @@ class Providers
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Certifications::class, mappedBy="provider")
+     * @ORM\OneToMany(targetEntity=Certifications::class, mappedBy="provider", orphanRemoval=true)
      */
     private $certifications;
 

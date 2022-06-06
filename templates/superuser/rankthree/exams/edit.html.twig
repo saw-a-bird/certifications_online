@@ -1,0 +1,136 @@
+{% extends "@admin_root/base.html.twig" %}
+
+{% block title %}Examens - Modifier{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("collab_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div class = "form_container">
+        {{ include('@exams_collab/_form.html.twig', {'button_label': 'Update'}) }}
+
+        <div class = "question_wrapper">
+            <div>
+                {{ form_start(form_question) }}
+                    {{ form_errors(form_question) }}
+                    {{ form_row(form_question.title) }}
+                    {{ form_row(form_question.task) }}
+                    <div class="form-group">
+                        <ul id = "question_propositions" class="list-style-none" data-prototype="{{ form_widget(form_question.propositions.vars.prototype)|e('html_attr') }}">
+                            {% for propositionForm in form_question.propositions %}
+                                
+                                <li class = "proposition_wrapper">
+                                    <div class = "questions_propositions_{{ loop.index }}">
+
+                    {{ form_row(propositionForm.proposition) }} 
+                    {{ form_widget(propositionForm.isCorrect, {'attr': {'class': 'display-inline-block'}}) }}
+
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <button type="button" class="btn add_item_link" data-collection-holder-class="propositions">Add a proposition</button>
+                    </div>
+                    {% do form_question.propositions.setRendered %}
+
+                    <div class = "right_wrapper" style = "margin-top:20px">
+                        {% if question_label is defined %} 
+                            <a class="btn form-submit save_button" href="{{ path('exam_edit', {'id': exam.id}) }}">Clear</a> 
+                        {% endif %}
+                        <button type = "submit" class="btn form-submit save_button">{{ question_label|default('Add') }}</button>
+                    </div>
+                {{ form_end(form_question) }}
+
+
+                {{ form_start(form_import, {'attr': {'class': 'pdf_importer'}}) }}
+                    {{ form_row(form_import.FileChooser) }}
+                    <i>Currently supported fonts: Helvetica, Helvetica-Bold</i>
+                    {% if import_status is defined %}
+                        {% if import_status == false %}
+                            <i class = "pdf_log pdf_error">{{ import_message }}</i>
+                        {% elseif import_status == true %}
+                            <i class = "pdf_log pdf_success">{{ import_message }}</i>
+                        {% endif %}
+                    {% endif %}
+
+                    <div class = "right_wrapper">
+                        <button class="btn form-submit save_button">Import PDF</button>
+                    </div>
+                {{ form_end(form_import)}}
+            </div>
+            <div class = "questions_table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Propositions</th>
+                            <th>actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for question in exam.getQuestions() %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ question.title }}</td>
+                            <td>{{ question.getPropositions().count }}</td>
+                            <td>
+                                <a href="{{ path('question_edit', {'eid': exam.id, 'qid': question.id}) }}">edit</a>
+                                <form method="post" action="{{ path('question_delete', {'eid': exam.id, 'qid': question.id}) }}" onsubmit="return confirm('Are you sure you want to delete this question?');" class = "btn-delete">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ question.id) }}">
+                                    <button class="btn-link">delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6">no records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+
+    jQuery(document).ready(function() {
+        var $addTagLink = $(".add_item_link");
+        var $collectionHolder = $("#question_propositions");
+        
+        // count the current form inputs we have (e.g. 2), use that as the new
+        // index when inserting a new item (e.g. 2)
+        $collectionHolder.data('index', $collectionHolder.find(':input').length);
+        
+        $addTagLink.on('click', function(e) {
+            // prevent the link from creating a "#" on the URL
+            e.preventDefault();
+            // add a new tag form (see code block below)
+            addTagForm($collectionHolder);
+        });
+    });
+
+    function addTagForm($collectionHolder) {
+        // Get the data-prototype explained earlier
+        var prototype = $collectionHolder.data('prototype');
+        
+        // get the new index
+        var index = $collectionHolder.data('index');
+        
+        // Replace '$$name$$' in the prototype's HTML to
+        // instead be a number based on how many items we have
+        var newForm = prototype.replace(/__name__/g, index);
+        
+        // increase the index with one for the next item
+        $collectionHolder.data('index', index + 1);
+        
+        // Display the form in the page in an li, before the "Add a tag" link li
+        var $newFormLi = $('<li class = "proposition_wrapper"></li>').append(newForm);
+
+        $collectionHolder.append($newFormLi);
+    }
+    </script>
+{% endblock %}

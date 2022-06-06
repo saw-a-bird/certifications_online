@@ -1,0 +1,92 @@
+<html lang="en"><head>
+
+  <meta charset="UTF-8">
+  
+<link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png">
+<meta name="apple-mobile-web-app-title" content="CodePen">
+
+<link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico">
+
+<link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111">
+
+
+  <title>CertifyTN - Backend </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ asset("css/admin.css") }}">
+
+    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-1b93190375e9ccc259df3a57c1abc0e64599724ae30d7ea4c6877eb615f89387.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  
+</head>
+
+<body translate="no">
+  <!-- Header - Start  -->
+<header id="header">
+ <div class="menu-button">
+  <div id="nav-icon3">
+   <span></span>
+   <span></span>
+   <span></span>
+   <span></span>
+  </div>
+ </div>
+ <div id="top-bar">
+  <h3>{% block title %}{% endblock %}</h3>
+ </div>
+</header>
+<!-- Header - End  -->
+<!-- Navigation - Start  -->
+<nav id="sidemenu">
+ <div class="main-menu">
+  <ul class="main-menu">
+
+    <li id = "index"><a href="{{ path("index")}}"> <span class="glyphicon glyphicon-home"></span>Index</a></li>
+
+      <li id = "admin_dashboard"><a href="{{ path("admin_dashboard")}}"> <span class="glyphicon glyphicon-stats"></span>Dashboard</a></li>
+
+   {% if is_granted('ROLE_ADMIN') %}
+      <li id = "admin_users"><a href="{{ path("users_index")}}"> <span class="glyphicon glyphicon-user"></span>Users</a></li>
+  {% endif %}
+
+   {% if is_granted('ROLE_MODERATOR') %}
+     <li id = "mod_index"><a href="{{ path("mod_index")}}"> <span class="glyphicon glyphicon-folder-open"></span>Ressources</a></li>
+  {% endif %}
+
+    {% if is_granted('ROLE_COLLABORATOR') %}
+        <li id = "collab_index"><a href="{{ path("collab_index")}}"> <span class="glyphicon glyphicon-file"></span>Your additions</a></li>
+    {% endif %}
+
+      {% block scriptsheet %}{% endblock %}
+  </ul>
+  <ul class="main-menu bottom">
+   <li>
+    <a href="#">
+     <span class="glyphicon glyphicon-cog"></span> Home
+    </a>
+   </li>
+  </ul>
+ </div>
+</nav>
+<!-- Navigation - End  -->
+<!-- Content - Start  -->
+<div id="content-wrapper">
+ <div class="container-fluid">
+  {% block form %} {% endblock %} 
+ </div>
+</div>
+      <script id="rendered-js">
+$("#header>.menu-button").click(function () {
+  $("#sidemenu").toggleClass("open");
+  $(".copyright").toggleClass("show");
+});
+$("#sidemenu, #top-bar, #content-wrapper").click(function (e) {
+  $("#sidemenu").removeClass("open");
+  $(".copyright").removeClass("show");
+});
+//# sourceURL=pen.js
+    </script>
+ 
+</body></html>

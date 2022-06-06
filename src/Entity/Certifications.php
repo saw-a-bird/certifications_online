@@ -6,9 +6,12 @@ use App\Repository\CertificationsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CertificationsRepository::class)
+ * @UniqueEntity(fields="title", message="This title is already taken.")
  * @ORM\HasLifecycleCallbacks
  */
 class Certifications
@@ -21,12 +24,14 @@ class Certifications
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, unique=true)
+     * @Assert\NotBlank(message = "This field is required.")
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message = "This field is required.")
      */
     private $description;
 
@@ -70,6 +75,22 @@ class Certifications
      * @ORM\OneToMany(targetEntity=CertificationRates::class, mappedBy="certification", orphanRemoval=true)
      */
     private $certificationRates;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $countQ = 0;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isBlocked = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="creations")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $createdBy;
 
     public function __construct()
     {
@@ -198,8 +219,10 @@ class Certifications
     {
         if ($this->exams->removeElement($exam)) {
             // set the owning side to null (unless already changed)
+
             if ($exam->getCertification() === $this) {
                 $exam->setCertification(null);
+                $this->decCountQ(count($exam->getQuestions()));
             }
         }
 
@@ -280,6 +303,56 @@ class Certifications
                 $certificationRate->setCertification(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCountQ(): ?int
+    {
+        return $this->countQ;
+    }
+
+    public function setCountQ(int $countQ): self
+    {
+        $this->countQ = $countQ;
+
+        return $this;
+    }
+
+    public function addCountQ(int $increase): self
+    {
+        $this->countQ+=$increase;
+
+        return $this;
+    }
+
+    public function decCountQ(int $decrease): self
+    {
+        $this->countQ-=$decrease;
+
+        return $this;
+    }
+
+    public function getIsBlocked(): ?bool
+    {
+        return $this->isBlocked;
+    }
+
+    public function setIsBlocked(bool $isBlocked): self
+    {
+        $this->isBlocked = $isBlocked;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }

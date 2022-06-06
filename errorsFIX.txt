@@ -1,39 +1,4 @@
-
-Try -> ADD - 'Back to Certification' button
-Try -> ADD - Premature 'Submit' button or Exit (SAVE DATA, the rest as False)
-Try -> FIX - Validate and show answers only on 'Submit' -> Navigates to First (Maybe easier than I thought)
-Try -> FIX - Submit when the exam is removed. (shouldn't work)
-
-Index -> ADD - PassRate%
-Index -> CONFIGURE - Change item COUNT per PAGE to 6
-Index -> FIX - Empty Certifications should not be shown in List.
-
-Administration -> ADD - Gestion Users (+ add Admin)
-Administration -> ADD - 'Back to Main Page' button
-Administration Bar -> REMOVE - Examen button
-
-Certification -> FIX - DO NOT remove Examen when there's a Try made by users.
 Certification -> ADD - Like and Dislike Button.
-Certification -> FIX - Add + Edit Form - (Title) MUST be UNIQUE
+Account User -> ADD - Suggest Examen + ACCEPT OR REJECT
 
-Examens -> ADD -> 'Back to Examens List' button
-Examens -> FIX (XX) -> List Examens in Administration. (Possible Redondency ON ADD?)
-Examens -> FIX (XX) - Add + Edit Form - (Code + Title) MUST be UNIQUE
-
-Questions -> FIX - NOT ADD question when (propositons.count <= 1)
-Questions -> FIX - IMPORT PDF (REGEX of get Propositions from PDF)
-Questions -> FIX (XX) -> Add + Edit Form - (Title) MUST be UNIQUE
-
-Quiz -> FIX - Examen URL navigation. (Check if user is enrolled)
-Quiz -> ADD - Signaler Question.
-
-Personal Space -> FIX - Certification URL navigation. (Check if user is enrolled)
-Attempts -> FIX - Best Attempt (Untried)??
-Account User - ADD -> Suggest Examen (+ certification) + ACCEPT OR REJECT
-Account User -> REMOVE - Email notifications + Sessions
-Account User -> FIX - URL "profile/{name}" can be shortened.
-
-
-Remove Provider Entity.
-Search by Certification OR Exam.
-Fix (Enrollments List) + (Quiz) CSS
+(Quiz) CSS

@@ -17,11 +17,12 @@ class ExamsType extends AbstractType
     {
         $builder
             ->add('certification', EntityType::class,
-            array(
-                'class' => Certifications::class,
-                'choice_label' => 'title',
-                'disabled' => "disabled"
-            ))
+                array(
+                    'class' => Certifications::class,
+                    'choice_label' => 'title',
+                    'disabled' => "disabled"
+                )
+            )
             ->add('code', TextType::class)
             ->add('title', TextType::class)
         ;

@@ -257,9 +257,7 @@ footer .total_que span p:first-child{
     padding-left: 0px;
 }
 
-.navigation_quiz_buttons button {
-    height: 40px;
-    padding: 0 13px;
+.navigation_quiz_buttons button, .exit_btn, .signaler_btn {
     font-size: 18px;
     font-weight: 400;
     cursor: pointer;
@@ -272,23 +270,51 @@ footer .total_que span p:first-child{
     /* transform: scale(0.95); */
     /* transition: all 0.3s ease; */
     /* opacity: 0; */
+
+}
+
+.navigation_quiz_buttons button {
+    height: 40px;
+    padding: 0 13px;
     display: none;
 }
 
-.ok_btn, .next_btn {
+.exit_btn, .signaler_btn {
+    height: 40px;
+    padding: 0 20px;
+}
+
+.ok_btn {
+    background: #bc9170;
+    padding: 0 20px;
+}
+
+.ok_btn:hover {
+    background: #9c7150;
+}
+
+.next_btn {
     background: #d75858;
 }
 
-.ok_btn:hover, .next_btn:hover {
+.next_btn:hover {
     background: #c43e3e;
 }
 
-.prev_btn, .fnext_btn {
+.prev_btn, .fnext_btn, .exit_btn, .signaler_btn {
     background: lightsteelblue !important;
 }
 
-.prev_btn:hover, .fnext_btn:hover {
+.prev_btn:hover, .fnext_btn:hover, .exit_btn:hover, .signaler_btn:hover {
     background: rgb(141, 161, 188) !important;
+}
+
+.finish_btn {
+    background: #587cd7;
+}
+
+.finish_btn:hover {
+    background: #406ad4;
 }
 
 .navigation_quiz_buttons button.show {
@@ -300,7 +326,7 @@ footer .total_que span p:first-child{
     border-radius: 5px;
     display: flex;
     padding: 25px 30px;
-    width: 450px;
+    width: 550px;
     align-items: center;
     flex-direction: column;
     justify-content: center;
@@ -372,4 +398,16 @@ div.icons {
 
 div.icons  div {
     margin: 0 2px;
+}
+
+.quiz_header {
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    gap: 15px
+}
+
+
+.hide {
+    display:none;
 }

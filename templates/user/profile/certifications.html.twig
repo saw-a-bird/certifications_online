@@ -1,0 +1,51 @@
+
+{% extends "@user/profile.html.twig" %}
+
+{% block spreadsheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/tables.css') }}" />
+	<link rel="stylesheet" href="{{ asset('css/grid_thumbnail.css') }}" />
+
+{% endblock %}
+
+{% block page %}
+<nav class="uk-navbar-nocolor uk-navbar-container">
+    <div class="uk-container uk-navbar-transparent">
+        <div data-uk-navbar>
+
+            <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas" data-uk-toggle><span
+            data-uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Menu</span></a>
+            <ul class="uk-navbar-nav uk-visible@m">
+                <li><a href="#"><b>Here's all the certifications you're enrolled in:</b></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<hr class = "uk-hr uk-margin-horizontal-none" style = "border-color: #b1b1b1;">
+
+<div class = "uk-grid uk-margin-vertical-medium">
+    {% for certif in app.user.certifications %}
+        <div class="uk-thumbnail uk-thumbnail-box" style = "max-height:450px;">
+            <div class="container" style = "height:200px; overflow: hidden;">
+                <img src="{{ asset(certif.getThumbnailPath()) }}" alt="">
+            </div>
+            <div class="uk-thumbnail-caption">
+                <h5><a href="{{ path('certif_view', {'id': certif.id}) }}">{{ certif.title }}</a></h5>
+            </div>
+
+            <div class = "uk-margin-auto-top uk-thumbnail-info">
+                <p><i> Provider: {{ certif.provider.name }}</i></p>
+                <a href="{{ path('user_attempts', {'id': certif.id}) }}"><button class="uk-button uk-button-secondary">Start</button></a>
+            </div>
+        </div>
+    {% else %}
+        <h5>no records found</h5>
+    {% endfor %}
+</div>
+
+<script>
+    document.querySelector(".uk-section-transparent").classList.add("uk-height-viewport");
+    document.querySelector(".profile_div").classList.add("uk-full-width");
+    </script>
+{% endblock page %}

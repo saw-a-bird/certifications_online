@@ -7,9 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator as Constraints;
 
 /**
  * @ORM\Entity(repositoryClass=QuestionsRepository::class)
+ * @Constraints\QConstraint
  * @ORM\HasLifecycleCallbacks
  */
 class Questions
@@ -48,7 +50,6 @@ class Questions
      * @ORM\Column(type="date")
      */
     private $created_at;
-
     
     public function __construct()
     {

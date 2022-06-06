@@ -18,6 +18,7 @@ class CertificationsType extends AbstractType
         $builder
             ->add('thumbnail_path', FileType::class, [
                 'data_class' => null,
+                'label' => 'Thumbnail',
                 // make it optional so you don't have to re-upload the PDF file
                 // every time you edit the Product details
                 'required' => false,

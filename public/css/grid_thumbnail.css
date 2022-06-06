@@ -72,13 +72,13 @@
 }
 
 .uk-thumbnail-info {
-    padding-top:30px;
-    text-align:center;
+    padding:15px 0;
 }
 
 .uk-thumbnail-info > p {
     margin:5px 0; 
     font-size: 12px;
+    text-align:center;
 }
 
 .uk-thumbnail-info > button {

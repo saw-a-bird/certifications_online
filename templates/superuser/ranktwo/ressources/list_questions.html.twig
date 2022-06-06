@@ -1,0 +1,41 @@
+{% extends "@admin_root/base.html.twig" %}
+
+{% block title %}Questions - {{exam.title}}{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("mod_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div class = "form_container">
+        <a href="{{ path('certif_exams_list', {'id': exam.certification.id}) }}"><button class="btn back_button">Go Back</button></a>
+        <h1>Les questions de Examen {{exam.title}} :</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Task</th>
+                    <th>Propositions</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for question in exam.getQuestions() %}
+                <tr>
+                    <td>{{ question.title }}</td>
+                    <td>{{ question.task|length > 15 ? question.task|slice(0, 15) ~ '...' :  question.task}}</td>
+                    <td>{{ question.getPropositions().count }}</td>
+                    <td> <a href="{{ path('question_propositions_list', {'id': question.id}) }}">propositions</a> </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -15,9 +15,6 @@ use Symfony\Component\Form\FormFactoryInterface;
 
 class DefaultController extends AbstractController {
 
-    private $search_text;
-    private $search_type;
-
     /**
      * @Route("/certifications/{id}", name="certif_view")
      */
@@ -44,7 +41,7 @@ class DefaultController extends AbstractController {
             ->add('searchC', TextType::class, [
                 'required' => false
             ])
-            ->add('searchC', TextType::class, [
+            ->add('searchE', TextType::class, [
                 'required' => false
             ])
             ->add('tab', HiddenType::class)
@@ -57,6 +54,7 @@ class DefaultController extends AbstractController {
             $type = $form->get('tab')->getData();
             $_searchF = $form->get('searchF')->getData();
             $_searchC = $form->get('searchC')->getData();
+            $_searchE = $form->get('searchE')->getData();
 
             if ($type == "tab-F" && $_searchF != null) {
                 $session->set('search_type', "Provider");
@@ -66,6 +64,10 @@ class DefaultController extends AbstractController {
                 $session->set('search_type', "Certification");
                 $session->set('search_text', $_searchC);
                 
+            } elseif ($type == "tab-E" && $_searchE != "") {
+                $session->set('search_type', "Examen");
+                $session->set('search_text', $_searchE);
+
             } elseif ($form->get('reset')->isClicked()) {
                 $session->remove('search_type');
                 $session->remove('search_text');
@@ -78,9 +80,11 @@ class DefaultController extends AbstractController {
         // Méthode findBy qui permet de récupérer les données avec des critères de filtre et de tri
 
         if ($session->get('search_type') == null) {
-            $donnees = $certificationsRepository->findBy([],['creation_date' => 'desc']);
+            $donnees = $certificationsRepository->getAllFiltered();
         } elseif ($session->get('search_type') == "Certification") {
             $donnees = $certificationsRepository->byTitle($session->get('search_text'));
+        } elseif ($session->get('search_type') == "Examen") {
+            $donnees = $certificationsRepository->byExamen($session->get('search_text'));
         } else {
             $donnees = $certificationsRepository->byProvider($session->get('search_text'));
         }
@@ -89,7 +93,7 @@ class DefaultController extends AbstractController {
         $articles = $paginator->paginate(
             $donnees, // Requête contenant les données à paginer (ici nos articles)
             $request->query->getInt('page', 1), // Numéro de la page en cours, passé dans l'URL, 1 si aucune page (meaning null, like NVL2 in SQL)
-            3 // Nombre de résultats par page
+            6 // Nombre de résultats par page
         );
 
         // //Compte le nombre d'éléments recherchés

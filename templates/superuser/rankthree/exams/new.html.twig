@@ -1,0 +1,16 @@
+{% extends "superuser/base.html.twig" %}
+
+{% block title %}Examens - Ajouter{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("collab_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+
+{% block form %}
+    <div class = "form_container">
+        {{ include('@exams_collab/_form.html.twig') }}
+    </div>
+{% endblock %}

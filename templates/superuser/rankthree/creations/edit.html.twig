@@ -1,0 +1,15 @@
+{% extends "@admin_root/base.html.twig" %}
+
+{% block title %}Creations - Modifier Certification{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("collab_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div class = "form_container">
+        {{ include('@certifs_collab/_form.html.twig', {'path': asset(certification.getThumbnailPath()),'button_label': 'Update'}) }}
+    </div>
+{% endblock %}

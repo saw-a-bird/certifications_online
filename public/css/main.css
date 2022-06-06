@@ -2408,7 +2408,7 @@ select.uk-form-width-xsmall {
 .uk-button-default:disabled,
 .uk-button-primary:disabled,
 .uk-button-secondary:disabled,
-.uk-button-danger:disabled {
+.uk-button-danger:disabled, .uk-button-disabled {
   background-color: transparent;
   color: #555;
   border-color: #000;
@@ -6301,6 +6301,11 @@ ul.uk-nav-sub {
  * Container size
  * Take the same size as the Container component
  */
+
+ .uk-full-width {
+  width: 100%;
+ }
+ 
 .uk-modal-container .uk-modal-dialog {
   width: 1200px;
 }
@@ -12978,7 +12983,7 @@ iframe.uk-cover {
   font-weight: bold;
 }
 
-.comment-desc {
+.uk-font-size-12 {
   font-size: 12px;  
 }
 
