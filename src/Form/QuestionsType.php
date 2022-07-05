@@ -2,21 +2,22 @@
 
 namespace App\Form;
 
-use App\Entity\Questions;
+use App\Entity\Question;
 use App\Form\PropositionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\{FileType, TextType, TextareaType, CollectionType};
-use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Form\Extension\Core\Type\{TextType, CollectionType};
 
 class QuestionsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', TextType::class)
+            ->add('title', TextType::class, [
+                'empty_data' => '', 
+                'required' => false
+            ])
             ->add('task', TextType::class)
             ->add('propositions', CollectionType::class, [
                 'entry_type' => PropositionType::class, 
@@ -31,7 +32,7 @@ class QuestionsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Questions::class,
+            'data_class' => Question::class,
         ]);
     }
 }

@@ -1,0 +1,41 @@
+<a href="{{ path('provider_certifs_list', {'id': certif.eProvider.id}) }}"  class = "btn normal_btn back_btn"><span class="glyphicon glyphicon-arrow-left"></span> Go Back</a>
+
+{{ form_start(form) }}
+    {% for message in app.flashes('success') %}
+        <div class = "form-alert green">
+            <span class = ''>
+                {{ message }}
+            </span>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class = "form-alert red">
+            <span class = ''>
+                {{ message }}
+            </span>
+        </div>
+    {% endfor %}
+    
+    {% if path is defined %}
+        <div class = "image_container">
+            <img src="{{ path }}" alt="">
+
+            <div class="form-group" style = "margin: auto 10px">
+                <label class="control-label" for="certifications_thumbnail_path">Thumbnail :</label>
+                {{ form_widget(form.thumbnail_path) }}
+            </div>
+        </div>
+    {% else %}
+        {{ form_row(form.thumbnail_path) }}
+    {% endif %}
+
+    {{ form_widget(form) }}
+    
+    <div class = "right_wrapper spaced_btn_wrapper">
+        {% if certif is defined %}
+            <a class="btn" href="{{ path('certif_exams_list', {'id': certif.id}) }}">Exams</a>
+        {% endif %}
+        <button class="btn form-submit save_button">{{ button_label|default('Save') }}</button>
+    </div>
+{{ form_end(form) }}

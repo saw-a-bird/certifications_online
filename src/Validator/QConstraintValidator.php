@@ -9,16 +9,20 @@ class QConstraintValidator extends ConstraintValidator {
 
     public function validate($questionAdd, Constraint $constraint)
     {
-        foreach ($questionAdd->getExam()->getQuestions() as $question) {
-            if ($question != $questionAdd && $questionAdd->getTitle() == $question->getTitle()) {
-                $this->context->buildViolation($constraint->uniqueTitleError)
-                    ->atPath('title')
-                    ->addViolation();
+        if ($questionAdd->getTitle() != "Question") {
+            foreach ($questionAdd->getExamPaper()->getQuestions() as $question) {
+                if ($question != $questionAdd && $questionAdd->getTitle() == $question->getTitle()) {
+                    $this->context->buildViolation($constraint->uniqueTitleError)
+                        ->atPath('title')
+                        ->addViolation();
 
-                break;
+                    break;
+                }
             }
+        } else {
+            $questionAdd->setTitle("Question");
         }
-
+        
         $count = $questionAdd->getPropositions()->count();
         foreach ($questionAdd->getPropositions() as $proposition) {
             if ($proposition->getProposition() == "") {

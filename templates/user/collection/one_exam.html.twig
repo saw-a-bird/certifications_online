@@ -1,0 +1,86 @@
+<div style = "padding: 10px 20px;">
+    <div class="uk-width-1-1">
+        <table class="uk-table uk-table-hover uk-table-striped" style="width: 100%;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Last Updated At</th>
+                <th>Question Provider</th>
+                <th>Questions</th>
+                <th>Tries</th>
+                <th>Last Try At</th>
+                <th>Best Attempt</th>
+                <th>Attempt</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set passrate = 0 %}
+            {% for paper in exam.getExamPapers() %}
+                <tr>
+                    {% set attempts = attemptsRepository.getAttempts(userId, paper.id) %}
+                    {% set countQuestions = paper.getQuestions().count() %}
+                    {% set was_updated, best_attempt = false, null %}
+                    {% if attempts is not empty %}
+                        {% set last_attempt = (attempts|last).getTriedAt() %}
+                        {% if paper.getUpdatedAt() > last_attempt %}
+                            {% set was_updated = true %}
+                        {% else %}
+
+                            {% for attempt in attempts %}
+                                {% if paper.getUpdatedAt() <= attempt.getTriedAt() and (best_attempt == null or attempt.score > best_attempt.score) %}
+                                    {% set best_attempt = attempt %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% set passrate = passrate + ((best_attempt.score/best_attempt.questionCount)*100) %}
+                        {% endif %}
+                    {% endif %}
+                    
+                    <td>{{ loop.index }}</td>
+                    <td class = "datetime">{{paper.getUpdatedAt()|date('Y-m-d H:i:s')}} 
+                        {% if was_updated == true %}
+                            <img src="{{asset("imgs/updated.gif") }}"/>
+                        {% endif %}
+                    </td>
+                    <td>{{paper.qProvider}}</td>
+                    <td>{{countQuestions}}</td>
+
+                    {% if attempts is not empty %}
+                        <td>{{ attempts|length }}</td>
+                        <td class = "datetime">{{ last_attempt|date('m/d/Y H:i:s') }}</td>
+
+                    {% else %}
+                        <td>0</td>
+                        <td>Untried</td>
+                    {% endif %}
+                    <td>{{ best_attempt != null ? (best_attempt.score ~ "/" ~ best_attempt.questionCount) : "Untried" }}</td>
+
+                    <td>
+                        {% if paper.IsLocked == true or countQuestions == 0 %}
+                            <a class = "uk-button uk-button-default uk-full-width" title="Locked until further notice.">Locked</a>
+                        {% else %}
+                    <a class = "uk-button uk-button-default uk-full-width" href="{{ path('try_exam', {'id': paper.id, '_return_route': app.request.get('_route')}) }}">Start</a>
+                        {% endif %}
+                </td>
+                </tr>
+                {% endfor %}
+				<tr>
+				    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Pass-Rate</td>
+                    <td>{{ passrate != 0 ? passrate/exam.getExamPapers().count() ~ "%" : "-"}}</td>
+                    <td></td>
+				</tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .datetime {
+        font-size:13px
+    }
+</style>

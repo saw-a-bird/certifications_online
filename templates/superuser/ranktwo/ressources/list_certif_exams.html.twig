@@ -1,0 +1,61 @@
+{% extends "@backend_root/base.html.twig" %}
+
+{% block title %}Certification '{{certification.title}}' - Exam List{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("ressources_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div class = "form_container">
+        <a href="{{ path('provider_certifs_list', {'id': certification.eProvider.id}) }}"><button class="btn back_button">Go Back</button></a>
+
+        <div class = "admin_list_header">
+            <h1>All exams of Certification {{certification.title}} :</h1>
+            <div class="buttons_container">
+                <a href="{{ path("certif_available_exams_list", {'id': certification.id}) }}"><button class="btn add_button">Add</button></a>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Code</th>
+                    <th>Title</th>
+                    <th>Certification</th>
+                    <th>Papers</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for exam in certification.getExams() %}
+                <tr>
+                    {% set countPapers = exam.getExamPapers().count() %}
+                    <td>{{ exam.id }}</td>
+                    <td>{{ exam.code }}</td>
+                    <td>{{ exam.title }}</td>
+                    <td>{{ exam.certification.title|default("None") }}</td>
+                    <td>{{ countPapers }}</td>
+                    <td> 
+                        <a href="{{ path('certif_remove_exam', {'certif_id': certification.id, 'exam_id': exam.id}) }}) }}">remove</a>
+                        <a href="{{ path('exam_edit', {'id': exam.id}) }}">edit</a>
+                        <form method="post" action="{{ path('exam_delete', {'id': exam.id}) }}" onsubmit="return confirm('Are you sure you want to delete this EXAM? {{ countPapers }} paper(s) WILL be deleted from the database.');" class = "btn-delete">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ exam.id) }}">
+                            <button class="btn-link">delete</button>
+                        </form>
+
+                        <a href="{{ path('exam_papers_list', {'id': exam.id}) }}">papers</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

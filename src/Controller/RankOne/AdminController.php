@@ -10,7 +10,7 @@ use Symfony\UX\Chartjs\Model\Chart;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
- * @Route("/admin/rankone")
+ * @Route("/admin")
  * @IsGranted("ROLE_ADMIN")
  */
 class AdminController extends AbstractController

@@ -1,0 +1,49 @@
+
+
+
+{% set page = "login" %}
+{% extends "base.html.twig" %}
+
+{% block spreadsheets %}
+    <link rel="stylesheet" href="{{ asset('css/form.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/formAlert.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/shadowForm.css') }}" />
+{% endblock %}
+
+{% block title %}Suggestions - Modify{% endblock %}
+
+{% block body %}
+    <section>
+        <div class="container shadow_container">
+            <div class="container-content">
+                <div class = "form_container">
+                    <h2 class="uk-tab-title uk-link-bright" style = "margin-bottom: 30px">Edit Suggestion</h2>
+
+                    {{ form_start(form) }}
+
+                        {% for message in app.flashes('success') %}
+                            <div class = "form-alert-white-cover">
+                                <span class = 'uk-classic-italic form-alert-white'>
+                                    {{ message }}
+                                </span>
+                            </div>
+                        {% endfor %}
+
+                        {{ include('@user/suggestions/_form.html.twig', {'path': asset(suggestion.getPdfFile())}) }}
+                        <div class = "right_wrapper">
+                            <button class="form-submit full_red_shade">Edit</button>
+                        </div>
+                    {{ form_end(form) }}
+                    <form method="post" action="{{ path('user_sugg_delete', {'id': suggestion.id}) }}" onsubmit="return confirm('Are you sure you want to delete this suggestion?');" class = "btn-delete">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ suggestion.id) }}">
+                    <button class="form-submit full_blue_shade">Delete</button>
+                    </form>
+
+                    <p class="registerhere">
+                    <a href="{{ path('user_suggs') }}" class="uk-link-bright">Go back to personal space</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

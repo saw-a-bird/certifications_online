@@ -1,17 +1,23 @@
-{% extends "@admin_root/base.html.twig" %}
+{% extends "@backend_root/base.html.twig" %}
 
-{% block title %}{{certification.title}} - Examens{% endblock %}
+{% block title %}Provider {{provider.name}} - Exam List{% endblock %}
 
 {% block scriptsheet %}
     <script>
-        document.getElementById("mod_index").classList.add("link-active");
+        document.getElementById("ressources_index").classList.add("link-active");
     </script>
 {% endblock %}
 
 {% block form %}
     <div class = "form_container">
-        <a href="{{ path('provider_certifs_list', {'id': certification.provider.id}) }}"><button class="btn back_button">Go Back</button></a>
-        <h1>Les examens de {{certification.title}} :</h1>
+        <a href="{{ path('ressources_index') }}"><button class="btn back_button">Go Back</button></a>
+        <div class = "admin_list_header">
+           <h1>All exams of Provider {{provider.name}} :</h1>
+            <div class="buttons_container">
+                <a href="{{ path("exam_new", {'id': provider.id}) }}"><button class="btn add_button">New</button></a>
+            </div>
+        </div>
+        
 
         <table class="table">
             <thead>
@@ -19,26 +25,28 @@
                     <th>#</th>
                     <th>Code</th>
                     <th>Title</th>
-                    <th>Questions</th>
+                    <th>Certification</th>
+                    <th>Papers</th>
                     <th>actions</th>
                 </tr>
             </thead>
             <tbody>
-            {% for exam in certification.getExams() %}
+            {% for exam in provider.getExams() %}
                 <tr>
+                    {% set countPapers = exam.getExamPapers().count() %}
                     <td>{{ exam.id }}</td>
                     <td>{{ exam.code }}</td>
                     <td>{{ exam.title }}</td>
-                    <td>{{ exam.getQuestions().count }}</td>
+                    <td>{{ exam.certification.title|default("None") }}</td>
+                    <td>{{ countPapers }}</td>
                     <td> 
                         <a href="{{ path('exam_edit', {'id': exam.id}) }}">edit</a>
-                        <form method="post" action="{{ path('exam_delete', {'id': exam.id}) }}" onsubmit="return confirm('Are you sure you want to delete this exam? {{ exam.getQuestions().count }} question(s) WILL be deleted from the database.');" class = "btn-delete">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ exam.id) }}">
-                            <button class="btn-link">delete</button>
-                        </form>
-
-                        <a href="{{ path('exam_signals_list', {'id': exam.id}) }}">signals</a>
-                        <a href="{{ path('exam_questions_list', {'id': exam.id}) }}">questions</a> </td>
+                        <a href="{{ path('exam_papers_list', {'id': exam.id}) }}">papers</a>
+                    <form method="post" action="{{ path('exam_delete', {'id': exam.id}) }}" onsubmit="return confirm('Are you sure you want to delete this EXAM? {{ countPapers }} paper(s) WILL be deleted from the database.');" class = "btn-delete">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ exam.id) }}">
+    <button class="btn-link">delete</button>
+</form>
+                    </td>
                 </tr>
             {% else %}
                 <tr>

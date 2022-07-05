@@ -1,0 +1,16 @@
+{% extends "@backend_root/base.html.twig" %}
+
+{% block title %}Feedback - View{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("feedbacks_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div class = "form_container">
+        <a href="{{ path('feedbacks_index') }}"  class = "btn normal_btn back_btn"><span class="glyphicon glyphicon-arrow-left"></span> Go Back</a>
+        {{ include('@user/feedbacks/_form.html.twig', {'new': false}) }}
+    </div>
+{% endblock %}

@@ -1,9 +1,8 @@
 security:
 
     role_hierarchy:
-        ROLE_ADMIN:       [ROLE_USER, ROLE_COLLABORATOR, ROLE_MODERATOR]
-        ROLE_COLLABORATOR: ROLE_USER
-        ROLE_MODERATOR: ROLE_USER
+        ROLE_ADMIN:       [ROLE_USER, ROLE_MODERATOR]
+        ROLE_MODERATOR:    ROLE_USER
 
     encoders:
         App\Entity\User: 'sodium'
@@ -46,5 +45,4 @@ security:
 
     access_control:
         - { path: '^/login', roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: '^/profile', roles: [IS_AUTHENTICATED_FULLY, IS_AUTHENTICATED_REMEMBERED] }
-        - { path: '^/account', roles: [IS_AUTHENTICATED_FULLY, IS_AUTHENTICATED_REMEMBERED] }
+        - { path: '^/your', roles: [IS_AUTHENTICATED_FULLY, IS_AUTHENTICATED_REMEMBERED] }

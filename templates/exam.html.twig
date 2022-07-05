@@ -1,0 +1,169 @@
+
+{% extends "main.html.twig" %}
+
+{% block spreadsheets %}
+	{{ parent() }}
+
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.uikit.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.uikit.min.css" />
+    <style>
+        .dataTables_wrapper > .row {
+            margin: 15px 0
+        }
+		.exam-code {
+			color: #782c2c;
+			font-weight: bold;
+			text-decoration: underline;
+		}
+		.vote-text {
+			text-align:center;
+            font-size: 12.5px
+		}
+    </style>
+{% endblock %}
+
+{% block title %}CertifyTN - {{exam.title}} Papers {% endblock %}
+
+{% block breadcrumb %}
+    <li><a href="{{path("index")}}">Home</a></li>
+    <li><a href="{{path("provider_view", {"pname": exam.eProvider.name})}}">{{exam.eProvider.name}}</a></li>
+	<li class="uk-disabled"><a>{{exam.code}}</a> <span>({{exam.title}})</span></li>
+{% endblock %}
+
+{% block content %}
+
+<script>
+    var ForEachDisable = function (array) {
+        for (var i = 0; i < array.length; i++) {
+            array[i].disabled = true;
+        }
+    };
+
+    var AdjustChecked = function (paperId, starsNumber) {
+        var paper = document.getElementById('paper-'+paperId);
+        paper.classList.remove("enabled");
+        paper.querySelector('input[value="'+starsNumber+'"]').checked = true;
+        paper.parentElement.querySelector('#rating_thanks').innerHTML = "Thanks!";
+        ForEachDisable(paper.querySelectorAll('input'));
+    };
+</script>
+
+<div style = "margin-top:25px; padding: 10px 10px 40px">
+    <div style="background-color: #e5e5e5;padding: 20px;border-radius: 18px;">
+		<p style = "margin: 0; font-size: 13px;">
+		There are {{exam.getExamPapers().count}} paper(s) in this exam from different question providers, each with their own questions.</p>
+    </div>
+
+    <h3 class = "uk-table-header"> {{exam.code}} Exam Papers</h3>
+    <div style = "padding: 10px 30px 10px 10px;">
+        <div class="uk-width-1-1">
+            <table class="uk-table uk-table-hover uk-table-striped dataTable" style="width: 100%;">
+<thead>
+				<tr>
+                    <th>ID</th>
+					<th>Question Provider</th>
+					<th class = "uk-table-expand">Suggested By</th>
+					<th class = "uk-table-small">Questions</th>
+                    <th class = "uk-table-small">Time (min)</th>
+					<th>Last Updated At</th>
+					<th style = "width: 200px;">Votes</th>
+					<th>Attempt</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for paper in exam.getExamPapers() %}
+					<tr>
+                        <td>{{ loop.index }}</td>
+						<td>{{paper.qProvider}}</td>
+						<td>{{paper.suggestedBy.username}}</td>
+                        {% set questionsCount = paper.getQuestions().count() %}
+						<td>{{ questionsCount }}</td>
+                        <td>{{paper.minsUntil}}</td>
+						<td>{{paper.getUpdatedAt()|date('Y-m-d H:i:s')}}</td>
+                        <td>
+                            {% set paperId = paper.id %}
+                            <div class="uk-rate enabled" id="paper-{{ paperId}}">
+                                <input type="radio" id="star5{{ paperId}}" name="rate{{ paperId }}" value="5" />
+                                <label for="star5{{ paperId}}" title="5/5">5 stars</label>
+                                <input type="radio" id="star4{{ paperId}}" name="rate{{ paperId }}" value="4" />
+                                <label for="star4{{ paperId}}" title="4/5">4 stars</label>
+                                <input type="radio" id="star3{{ paperId}}" name="rate{{ paperId }}" value="3" />
+                                <label for="star3{{ paperId}}" title="3/5">3 stars</label>
+                                <input type="radio" id="star2{{ paperId}}" name="rate{{ paperId }}" value="2" />
+                                <label for="star2{{ paperId}}" title="2/5">2 stars</label>
+                                <input type="radio" id="star1{{ paperId}}" name="rate{{ paperId }}" value="1" />
+                                <label for="star1{{ paperId}}" title="1/5">1 star</label>
+                            </div>
+                            <div class = "vote-text">
+                                <p class = "uk-margin-bottom-none">
+                                    {% if paper.getStars == 0 %}
+                                        {% set users_count, eStar = 0, null %}
+                                        <b>0</b>
+                                    {% else %}
+                                        {% set users_count, eStar = paper.getEStars().count(), starsRepository.findStar(app.user.id, paperId) %}
+                                        <b>{{ (paper.getStars()/ users_count)|round(1) }}</b>
+                                    {% endif %}/5 (<span id = 'raters_count'>{{ users_count }}</span> votes) stars. <span id = 'rating_thanks' class = "uk-rating-green"></span></p>
+
+                                {% if eStar != null %}
+                                    <script>
+                                        AdjustChecked('{{paperId}}', '{{eStar[0].stars}}');
+                                    </script>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            {% if paper.IsLocked == true or questionsCount == 0 %}
+                                <a class = "uk-button uk-button-default uk-full-width" title="Locked until further notice.">Locked</a>
+                            {% else %}
+                                <a class = "uk-button uk-button-default uk-full-width" href="{{ path('try_exam', {'id': paperId, '_return_route': app.request.get('_route')}) }}">Start</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <script>
+            $(document).ready(function () {
+                function redirect_register() {
+                    window.location.href = "{{ path("security_registration") }}";
+                }
+
+                var isLogged = '{{logged_in}}';
+
+                $('.uk-table input').click(function() {
+                    if (isLogged == '1') {
+                        var parentRate = $(this).parent();
+
+                        $.post("{{path("vote_new")}}", {paper: parentRate.attr('id').split("-")[1], stars: $(this).val()}).done(function(response) {
+                            alert(response);
+                            if (response == "accepted") {
+                                var parentTD = parentRate.parent();
+                                var raters_count = parentTD.children('#raters_count');
+                                raters_count.empty().append(raters_count.text()+1)
+                                parentTD.find('#rating_thanks').text("Thanks!");
+                            }
+                        });
+                    } else {
+                        redirect_register();
+                    }
+                });
+
+
+            });
+        </script>
+    </div>
+</div>
+
+{% if not (logged_in == false and exam.getComments().count == 0)  %}
+</div>
+</div>
+
+<div class = "uk-section uk-section-transparent uk-padding-top-cancel uk-margin-bottom-medium uk-box-shadow-78-tomiddle">
+    {% include '@components/comments/comment_section.html.twig' %}
+</div>
+
+{% endif  %}
+
+{% endblock %}

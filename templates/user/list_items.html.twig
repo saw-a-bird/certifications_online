@@ -1,0 +1,63 @@
+{% set page = "profile" %}
+{% extends "base.html.twig" %}
+
+{% block spreadsheets %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="{{ asset('css/tables.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/footer-services.css') }}" />
+	<link rel="stylesheet" href="{{ asset('css/glyphicon.min.css') }}" />
+
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+<div class="uk-navbar-wrapper" data-uk-sticky="animation: uk-animation-slide-top; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; top: 200; media: @m">
+    {% include 'components/navigation.html.twig' %}
+</div>
+
+<div class = "uk-section-transparent uk-margin-bottom-small uk-box-shadow-78-tobottom">
+        <div class="uk-section uk-section-small" style = "padding-top:70px">
+            <div class="uk-container uk-flex">
+                <div class = "uk-margin-right-slarge">
+                    {% if unknown is not defined %}
+                        {% set unknown = app.user %}
+                    {% endif %} 
+                    <div class="uk-flex uk-flex-center">
+                        <img class="uk-big-avatar" src="{{ asset(unknown.getAvatarPath() ) }}" alt="Sara Galen" loading="lazy">
+                    </div>
+                    <p class = "uk-margin-bottom-none uk-margin-top-xsmall">
+                        <a class = 'uk-text-bold ' style = "font-size: 1.4rem !important;">
+                            {% if app.user.id == unknown.id %}
+                                {{ app.user.username }} 
+                            {% else %}
+                                {{unknown.username }}
+                            {% endif %}
+                        </a>
+                    </p>
+                    <p class = "uk-color-grey-primary uk-margin-top-none uk-margin-bottom-small">{{ unknown.specialty}}</p>
+                    <p class = "uk-color-grey uk-color-grey-secondary uk-text-small uk-margin-vertical-none">Contribution: {{ unknown.acceptedSugg}}</p>
+                    <p class = "uk-color-grey-primary uk-margin-vertical-small uk-text-small">Member since {{ unknown.getCreatedAt()|date("m/d/Y")}}</p>
+
+                    {# <a href = '{{ path("account_settings") }}' class='uk-display-block uk-button uk-button-secondary uk-margin-top uk-margin-vertical-10'>Edit Profile</a> #}
+                </div>
+                <div class = "profile_div uk-full-width">
+                    <ul class="uk-breadcrumb uk-margin-top-none">
+                        {% block breadcrumb %}
+                            <li><a href="{{path("index")}}">Home</a></li>
+                            <li class="uk-disabled uk-disabled-color"><span>Personal Space</span></li>
+                        {% endblock %}
+                    </ul>
+                    {% block page %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "components/footer.html.twig" %}
+
+{% endblock body %}

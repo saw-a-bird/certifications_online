@@ -1,0 +1,44 @@
+
+
+
+{% set page = "login" %}
+{% extends "base.html.twig" %}
+
+{% block spreadsheets %}
+    <link rel="stylesheet" href="{{ asset('css/form.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/shadowForm.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/formAlert.css') }}" />
+{% endblock %}
+
+{% block title %}CertifyTN - Create Feedback{% endblock %}
+
+{% block body %}
+    <section>
+        <div class="container shadow_container">
+            <div class="container-content">
+                <div class = "form_container">
+                    <h2 class="uk-tab-title uk-link-bright" style = "margin-bottom: 30px">Form</h2>
+
+                    {{ form_start(form) }}
+                        {% for message in app.flashes('success') %}
+                            <div class = "form-alert-white-cover">
+                                <span class = 'uk-classic-italic form-alert-white'>
+                                    {{ message }}
+                                </span>
+                            </div>
+                        {% endfor %}
+
+                        {{ include('@user/feedbacks/_form.html.twig', {'new': true}) }}
+                        <div class = "right_wrapper">
+                            <button class="form-submit full_red_shade">{{ button_label|default('Create') }}</button>
+                        </div>
+                    {{ form_end(form) }}
+
+                    <p class="registerhere">
+                    <a href="{{ path('index') }}" class="uk-link-bright">Go back to main page</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

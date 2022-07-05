@@ -1,16 +1,16 @@
-{% extends "@admin_root/base.html.twig" %}
+{% extends "@backend_root/base.html.twig" %}
 
-{% block title %}Propositions - {{question.title}} - {% endblock %}
+{% block title %}Question '{{question.title}}' - Propositions List{% endblock %}
 
 {% block scriptsheet %}
     <script>
-        document.getElementById("mod_index").classList.add("link-active");
+        document.getElementById("ressources_index").classList.add("link-active");
     </script>
 {% endblock %}
 
 {% block form %}
     <div class = "form_container">
-        <a href="{{ path('exam_questions_list', {'id': question.exam.id}) }}"><button class="btn back_button">Go Back</button></a>
+        <a href="{{ path('paper_questions_list', {'id': question.examPaper.id}) }}"><button class="btn back_button">Go Back</button></a>
         <h1>Les propositions de Question {{question.title}} :</h1>
 
         <table class="table">

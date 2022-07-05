@@ -1,9 +1,9 @@
 {
     "type": "project",
-    "name": "fidanf/symfony4-auth",
-    "description": "Registration and authentication example project with Symfony 4.3",
+    "name": "pokerfce/symfony5-project",
+    "description": "Some project I've started lately",
     "license": "proprietary",
-    "keywords": ["symfony4", "authentication", "registration"],
+    "keywords": [],
     "require": {
         "php": ">=7.3",
         "composer/package-versions-deprecated": "1.11.99.5",
@@ -21,17 +21,22 @@
         "symfony/flex": "^1.2",
         "symfony/form": "4.4.*",
         "symfony/framework-bundle": "4.4.*",
+        "symfony/google-mailer": "4.4.*",
+        "symfony/http-foundation": "v5.4.9",
         "symfony/http-kernel": "4.4.*",
+        "symfony/mailer": "4.4.*",
         "symfony/maker-bundle": "^1.0",
         "symfony/mime": "4.4.*",
         "symfony/monolog-bundle": "^3.1",
         "symfony/security-bundle": "4.4.*",
         "symfony/string": "5.4.2",
+        "symfony/twig-bridge": "v4.4.0",
         "symfony/twig-bundle": "4.4.*",
         "symfony/ux-chartjs": "^2.1",
         "symfony/validator": "4.4.*",
         "symfony/webpack-encore-bundle": "^1.6",
-        "symfony/yaml": "4.4.*"
+        "symfony/yaml": "4.4.*",
+        "symfonycasts/verify-email-bundle": "^1.10"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.0",
@@ -41,7 +46,7 @@
         "symfony/browser-kit": "4.4.*",
         "symfony/css-selector": "4.4.*",
         "symfony/debug-bundle": "4.4.*",
-        "symfony/phpunit-bridge": "^6.0",
+        "symfony/phpunit-bridge": "^6.1",
         "symfony/stopwatch": "4.4.*",
         "symfony/var-dumper": "4.4.*",
         "symfony/web-profiler-bundle": "4.4.*"

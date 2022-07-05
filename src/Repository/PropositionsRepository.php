@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\Propositions;
+use App\Entity\Proposition;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Propositions|null find($id, $lockMode = null, $lockVersion = null)
- * @method Propositions|null findOneBy(array $criteria, array $orderBy = null)
- * @method Propositions[]    findAll()
- * @method Propositions[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Proposition|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Proposition|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Proposition[]    findAll()
+ * @method Proposition[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class PropositionsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Propositions::class);
+        parent::__construct($registry, Proposition::class);
     }
 
     // /**
-    //  * @return Propositions[] Returns an array of Propositions objects
+    //  * @return Proposition[] Returns an array of Proposition objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class PropositionsRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Propositions
+    public function findOneBySomeField($value): ?Proposition
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.exampleField = :val')

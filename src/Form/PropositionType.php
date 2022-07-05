@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Propositions;
+use App\Entity\Proposition;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -30,7 +30,7 @@ class PropositionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Propositions::class,
+            'data_class' => Proposition::class,
         ]);
     }
 }

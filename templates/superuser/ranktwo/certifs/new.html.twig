@@ -1,0 +1,15 @@
+{% extends "@backend_root/base.html.twig" %}
+
+{% block title %}Certifications - Add new{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("ressources_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div class = "form_container">
+        {{ include('@mod_root/certifs/_form.html.twig') }}
+    </div>
+{% endblock %}

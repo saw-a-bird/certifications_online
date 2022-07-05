@@ -1,0 +1,42 @@
+{% extends "@backend_root/base.html.twig" %}
+
+{% block title %}Suggestions - Modify{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("suggestions_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div class = "form_container">
+        <a href="{{ path('suggestions_index') }}"  class = "btn normal_btn back_btn"><span class="glyphicon glyphicon-arrow-left"></span> Go Back</a>
+        {{ form_start(form) }}
+        
+            {% for message in app.flashes('success') %}
+                <div class = "form-alert green">
+                    <span class = ''>
+                        {{ message }}
+                    </span>
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+                <div class = "form-alert red">
+                    <span class = ''>
+                        {{ message }}
+                    </span>
+                </div>
+            {% endfor %}
+
+            {{ include('@user/suggestions/_form.html.twig', {'path': asset(suggestion.getPdfFile())}) }}
+            <div class = "right_wrapper spaced_btn_wrapper">
+                <a id = "reject" class="btn normal_btn" href = "{{ path('sugg_reject', {'id': suggestion.id}) }}" onclick="return confirm('Are you sure you want to REJECT this suggestion?');">Reject</a>
+
+                <a id = "accept" class="btn normal_btn" href = "{{ path('sugg_accept', {'id': suggestion.id}) }}" onclick="return confirm('Are you sure you want to ACCEPT this suggestion? Have you checked for mistakes?');">Accept</a>
+                <button class="btn save_btn">{{ button_label|default('Edit') }}</button>
+            </div>
+        {{ form_end(form) }}
+
+    </div>
+{% endblock %}

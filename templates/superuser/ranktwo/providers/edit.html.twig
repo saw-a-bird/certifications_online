@@ -1,0 +1,15 @@
+{% extends "@backend_root/base.html.twig" %}
+
+{% block title %}Provider - Modify{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("admin_providers").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div class = "form_container">
+        {{ include('@mod_root/providers/_form.html.twig', {'button_label': 'Update'}) }}
+    </div>
+{% endblock %}

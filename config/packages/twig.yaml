@@ -1,12 +1,12 @@
 twig:
     paths: 
       '%kernel.project_dir%/vendor/knplabs/knp-paginator-bundle/templates': KnpPaginator
-      '%kernel.project_dir%/templates/superuser/rankone/users/': user_admin
-      '%kernel.project_dir%/templates/superuser/ranktwo/ressources/': ressources_mod
-      '%kernel.project_dir%/templates/superuser/rankthree/exams': exams_collab
-      '%kernel.project_dir%/templates/superuser/rankthree/creations': certifs_collab
-      '%kernel.project_dir%/templates/superuser': admin_root
+      '%kernel.project_dir%/templates/superuser/rankone/': admin_root
+      '%kernel.project_dir%/templates/superuser/ranktwo/': mod_root
+      '%kernel.project_dir%/templates/superuser/ranktwo/ressources/': ressources_dir
+      '%kernel.project_dir%/templates/superuser': backend_root
       '%kernel.project_dir%/templates/user': user
+      '%kernel.project_dir%/templates/components': components
 
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'

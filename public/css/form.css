@@ -5,7 +5,6 @@
 	padding: 0;
 }
 
-
 .form-control {
 	width: 100%;
 	border: 1px solid #d2d2d2;
@@ -16,45 +15,6 @@
 	color: #222;
     background-color:rgba(255, 255, 255,0.8);
 }
-
-.form-alert-red {
-	color:#fc7c7c;
-	margin: 0 0 10px 10px;
-	font-weight: bold;
-}
-
-.form-alert-red-cover {
-	color: #ffffff;
-    margin: 5px 5px 30px 0;
-    padding: 5px 0;
-    font-weight: bold;
-    background-color: rgb(172 12 12 / 56%);
-    border-radius: 15px;
-	text-align: center;
-}
-
-.form-alert-green {
-	color:#15b521;
-	margin: 0 5px 10px 0;
-	font-weight: bold;
-}
-
-.form-alert-green-cover {
-	color: #ffffff;
-    margin: 5px 5px 30px 0;
-    padding: 5px 0;
-    font-weight: bold;
-    background-color: rgb(15 139 23 / 56%);
-    border-radius: 15px;
-	text-align: center;
-}
-
-.input-alert-red {
-	margin-top: 3px;
-	color:#fc7c7c;
-	font-weight: bold;
-}
-
 
 
 .form-control::-webkit-input-placeholder, .form-control::-moz-placeholder, .form-control:-ms-input-placeholder {
@@ -93,24 +53,6 @@
 	text-transform: uppercase;
 	border: none;
     cursor: pointer;
-}
-
-.red_shade:not(:disabled) {
-	cursor: pointer;
-	background-image: -moz-linear-gradient(to left, #ff3a3a, #f3cfcf);
-	background-image: -ms-linear-gradient(to left, #ff3a3a, #f3cfcf);
-	background-image: -o-linear-gradient(to left, #ff3a3a, #f3cfcf);
-	background-image: -webkit-linear-gradient(to left, #ff3a3a, #f3cfcf);
-	background-image: linear-gradient(to left, #ff3a3a, #f3cfcf);
-}
-
-.red_shade:disabled {
-	cursor: default;
-	background-image: -moz-linear-gradient(to left, #fbb5b5, #f3cfcf);
-	background-image: -ms-linear-gradient(to left, #fbb5b5, #f3cfcf);
-	background-image: -o-linear-gradient(to left, #fbb5b5, #f3cfcf);
-	background-image: -webkit-linear-gradient(to left, #fbb5b5, #f3cfcf);
-	background-image: linear-gradient(to left, #fbb5b5, #f3cfcf);
 }
 
 .save_button {

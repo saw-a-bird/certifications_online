@@ -3,7 +3,7 @@
 namespace App\Controller\RankOne;
 
 use App\Entity\User;
-use App\Repository\UserRepository;
+use App\Repository\UsersRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,7 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @Route("/admin/rankone/users")
+ * @Route("/admin/users")
  * @IsGranted("ROLE_ADMIN")
  */
 class UsersController extends AbstractController
@@ -24,9 +24,9 @@ class UsersController extends AbstractController
     /**
      * @Route("/", name="users_index", methods={"GET"})
      */
-    public function index(UserRepository $userRepository): Response
+    public function index(UsersRepository $userRepository): Response
     {
-        return $this->render('superuser/rankone/users/index.html.twig', [
+        return $this->render('@admin_root/users/index.html.twig', [
             'users' => $userRepository->findAllExcept($this->user->getId()),
         ]);
     }
@@ -59,30 +59,6 @@ class UsersController extends AbstractController
             unset($roles[$key]);
         } else {
             $roles[] = "ROLE_MODERATOR";
-        }
-
-        $user->setRoles($roles);
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-
-        return $this->redirectToRoute('users_index', [], Response::HTTP_SEE_OTHER);
-    }
-
-        /**
-     * @Route("/{id}/collab", name="users_collab")
-     */
-    public function collab(User $user): Response
-    {
-
-        $key = $user->hasRole("ROLE_COLLABORATOR");
-        $roles = $user->getRoles();
-        if ($key !== false) {
-            unset($roles[$key]);
-        } else {
-            $roles[] = "ROLE_COLLABORATOR";
         }
 
         $user->setRoles($roles);

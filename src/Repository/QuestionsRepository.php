@@ -2,25 +2,46 @@
 
 namespace App\Repository;
 
-use App\Entity\Questions;
+use App\Entity\Question;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Questions|null find($id, $lockMode = null, $lockVersion = null)
- * @method Questions|null findOneBy(array $criteria, array $orderBy = null)
- * @method Questions[]    findAll()
- * @method Questions[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Question|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Question|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Question[]    findAll()
+ * @method Question[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class QuestionsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Questions::class);
+        parent::__construct($registry, Question::class);
+    }
+
+    public function findByPaperId($paperId)
+    {
+        return $this->createQueryBuilder('q')
+            ->andWhere('q.examPaper = :paper')
+            ->setParameter('paper', $paperId)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function questionCount($paperId)
+    {
+        return $this->createQueryBuilder('q')
+            ->select('count(q.id)')
+            ->where('q.examPaper = :paper')
+            ->setParameter('paper', $paperId)
+            ->getQuery()
+            ->getSingleScalarResult();
+        
     }
 
     // /**
-    //  * @return Questions[] Returns an array of Questions objects
+    //  * @return Question[] Returns an array of Question objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +58,7 @@ class QuestionsRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Questions
+    public function findOneBySomeField($value): ?Question
     {
         return $this->createQueryBuilder('q')
             ->andWhere('q.exampleField = :val')

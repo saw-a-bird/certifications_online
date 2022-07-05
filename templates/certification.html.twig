@@ -1,125 +1,109 @@
 
-
-
-{% set page = "main page" %}
-{% extends "base.html.twig" %}
+{% extends "main.html.twig" %}
 
 {% block spreadsheets %}
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/uikit@3.13.1/dist/js/uikit-icons.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/uikit@3.13.1/dist/js/uikit.min.js"></script>	
-	<link rel="stylesheet" href="{{ asset('css/tables.css') }}" />
-	<link rel="stylesheet" href="{{ asset('css/grid_thumbnail.css') }}" />
-
 	{{ parent() }}
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.uikit.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.uikit.min.css" />
+    <link rel="stylesheet" href="{{ asset("css/examTable.css")}}" />
 {% endblock %}
 
-{% block title %}CertifiyTN{% endblock %}
+{% block title %}CertifyTN - {{certif.title}} Exams {% endblock %}
 
-{% block body %}
+{% block breadcrumb %}
+    <li><a href="{{path("index")}}">Home</a></li>
+    <li><a href="{{path("provider_view", {"pname": certif.eProvider.name})}}">{{certif.eProvider.name}}</a></li>
+	<li class="uk-disabled"><a>{{certif.title}}</a></li>
+    {# <li class="uk-disabled"><a>Disabled Category</a></li>
+    <li><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span></li> #}
+{% endblock %}
 
-{% include "components/fixed_header.html.twig" %}
+{% block content %}
 
+{# <div style = "margin-top:15px; padding: 10px 10px 20px"> #}
+<div class = "uk-details-header" style = "margin:0 20px; width: 95%; padding: 20px">
+	<div style = "padding: 15px">
+        <div class = "uk-thumbnail">
+            <div class="container" style = "border: 1px solid #cacaca; max-height:400px; max-width:400px;">
+                <img src="{{ asset(certif.getThumbnailPath()) }}" alt="">
+            </div>
 
-<div class = "uk-margin-bottom-small uk-margin-top uk-margin-horizontal-10">
-	<div class="uk-container">
-		<div class = "uk-page-formatter">
-			<div class = "uk-details-grid uk-flex-item-90">
-				<div class = "uk-details-header uk-flex-item-100">
-					<div class="uk-details-thumbnail uk-flex-item-40 uk-section-transparent">
-						<div class="uk-grid-shadowing uk-certif-box">
-							<div class="votecell post-layout--left">
-            {# <div class="js-voting-container d-flex jc-center fd-column ai-stretch gs4 fc-black-200" data-post-id="4564925"> #}
-        {# <button class="js-vote-up-btn flex--item s-btn s-btn__unset c-pointer " data-controller="s-tooltip" data-s-tooltip-placement="right" aria-pressed="false" aria-label="Up vote" data-selected-classes="fc-theme-primary" data-unselected-classes="" aria-describedby="--stacks-s-tooltip-3fkalptz">
-            <svg aria-hidden="true" class="svg-icon iconArrowUpLg" width="36" height="36" viewBox="0 0 36 36"><path d="M2 25h32L18 9 2 25Z"></path></svg>
-        </button>
-		<div id="--stacks-s-tooltip-3fkalptz" class="s-popover" aria-hidden="true" role="tooltip" style="">Good<div class="s-popover--arrow" style=""></div></div>
-        <div class="js-vote-count flex--item d-flex fd-column ai-center fc-black-500 fs-title" itemprop="upvoteCount" data-value="3">
-
+            
+            <div style = "padding: 20px 0 10px;">
+                {% if logged_in and app.user.isAddedCertif(certif) %}    
+                    <a class ="uk-button uk-button-default uk-full-width" href="{{ path('user_certif_select', {'id': certif.id}) }}">Already enrolled</a>
+                {% else %}
+                    <a class ="uk-button uk-button-danger uk-full-width" href="{{ path('certif_add_coll', {'id': certif.id}) }}">Enroll</a>
+                {% endif %}
+            </div>
         </div>
-        <button class="js-vote-down-btn flex--item s-btn s-btn__unset c-pointer " data-controller="s-tooltip" data-s-tooltip-placement="right" aria-pressed="false" aria-label="Down vote" data-selected-classes="fc-theme-primary" data-unselected-classes="" aria-describedby="--stacks-s-tooltip-nggywyis">
-            <svg aria-hidden="true" class="svg-icon iconArrowDownLg" width="36" height="36" viewBox="0 0 36 36"><path d="M2 11h32L18 27 2 11Z"></path></svg>
-        </button><div id="--stacks-s-tooltip-nggywyis" class="s-popover" aria-hidden="true" role="tooltip">Bad<div class="s-popover--arrow"></div></div> #}
-
-			{# </div> #}
-						</div>
-							<div class = "uk-thumbnail">
-								<div class="container" style = "max-height:300px; max-width:300px;">
-									<img src="{{ asset(certif.getThumbnailPath()) }}" alt="">
-								</div>
-
-								<div class = "uk-margin-auto-top ">
-									<br/>
-									{% if logged_in and app.user.isEnrolled(certif) %}
-										<button class="uk-button uk-button-danger" disabled><a href="{{ path('enroll_remove', {'id': certif.id}) }}">Start</a></button>
-									{% else %}
-										<button class="uk-button uk-button-danger"><a href="{{ path('enroll_add', {'id': certif.id}) }}" style = "color: #fff;">Enroll</a></button>
-									{% endif %}
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="uk-details-description uk-flex-item-60 uk-section-transparent uk-container-sud">
-						<h1 class="uk-no-spacing">{{ certif.title }}</h1>
-						<div class="uk-badge">{{ certif.provider.name }}</div>
-						<p class = "uk-item-description">
-							{{ certif.description }}
-						</p>
-					</div>
-				</div>
-
-				<div class = "uk-section-transparent uk-container-sud uk-exam-table">
-					<table class="uk-table uk-table-divider">
-						<thead>
-							<tr>
-								<th>Code</th>
-								<th>Title</th>
-								<th>Questions</th>
-								<th>Passed</th>
-							</tr>
-						</thead>
-						<tbody>
-						{% set found = false %}
-						{% for exam in certif.getExams() %}
-							{% if exam.getQuestions().count > 0 %}
-								{% set found = true %}
-								<tr>
-									<td>{{ exam.code }}</td>
-									<td>{{ exam.title }}</td>
-									<td>{{ exam.getQuestions().count }}</td>
-									<td>0</td>
-								</tr>
-							{% endif %}
-						{% endfor %}
-
-						{% if found == false %}
-							<tr>
-								<td colspan="6">no records found</td>
-							</tr>
-						{% endif %}
-						</tbody>
-					</table>
-				</div>
-
-				<div class = "uk-section-transparent uk-container-sud uk-margin-larger-bottom">
-					{% include '@user/comments/comment_section.html.twig' with {'certif': certif, 'logged_in': logged_in} %}
-				</div>
-			</div>
-
-			<div class="uk-sidebar uk-section-transparent uk-grid-shadowing">
-				<h4>Related: </h4>
-				{% for certification in certif.getProvider().getCertifications() %}
-					<p><a href="{{ path('certif_view', {'id': certification.id}) }}">{{ certification.title }}</a></p>
-				{% else %}
+    </div>
+    <div style="position: relative;background: linear-gradient(90deg, rgb(210 210 210 / 70%) 35%, rgb(221 221 221) 100%);padding: 20px 30px;border-radius: 18px;margin: 20px;width: 80%;">
+		<h1 class="uk-no-spacing">{{ certif.title }}</h1>
+   	 	<p style = "margin: 20px 10px; font-size: 18px;">{{certif.description}}</p>
+		<div style = "position: absolute; bottom: 0; position: absolute; bottom: 0">
+		<p style = "font-size: 13px">There are {{certif.getExams().count}} exam(s) in this certification containing {{certif.countQ}} questions in total.</p>
+		</div>
+    </div>
+</div>
+<h3 class = "uk-table-header"> Certification Exams</h3>
+<div style = "padding: 10px 30px 10px 10px;">
+	<div class="uk-width-1-1">
+		<table id="example" class="uk-table uk-table-hover uk-table-striped dataTable" style="width: 100%;" aria-describedby="example_info">
+			<thead>
+				<tr>
+					<th>Code</th>
+					<th class = "uk-table-expand">Title</th>
+					<th>Papers</th>
+					<th class = "uk-width-small">Last Updated At</th>
+					<th class = "uk-width-small"></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for exam in certif.getExams() %}
 					<tr>
-						<td colspan="6">no records found</td>
+						<td><a href="{{path("exam_view", {"id": exam.code})}}" class = "exam-code"><span class="glyphicon glyphicon-new-window"></span> {{exam.code}}</a></td>
+						<td>{{exam.title}}</td>
+						<td>{{exam.getExamPapers().count()}}</td>
+						<td>{{exam.getUpdatedAt()|date('Y-m-d H:i:s')}}</td>
+						<td class = "uk-text-align-center">
+							<button type="button" class="like-button {% if logged_in and app.user.isAddedExam(exam) %} selected {% endif %}" id = "{{exam.id}}">
+                                <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M91.6 13A28.7 28.7 0 0 0 51 13l-1 1-1-1A28.7 28.7 0 0 0 8.4 53.8l1 1L50 95.3l40.5-40.6 1-1a28.6 28.6 0 0 0 0-40.6z"/></svg>
+                                Favourite
+							</button>
+						</td>
 					</tr>
 				{% endfor %}
-			</div>
-		</div>
+			</tbody>
+		</table>
 	</div>
+	<script>
+		$(document).ready(function () {
+			$('#example').DataTable({"aoColumns": [ {"bSearchable": true}, {"bSearchable": true}, {"bSearchable": false}, {"bSearchable": false}, {"bSearchable": false}]});
+
+			function redirect_register() {
+				window.location.href = "{{ path('security_registration') }}";
+			}
+
+			var isLogged = '{{logged_in}}';
+					
+			$('.like-button').click(function() {
+				if (isLogged == '1') {
+				if (($(this).hasClass("selected"))) {
+					$(this).removeClass('selected');
+					$.post("{{ path('exam_remove_coll') }}", {exam_id: $(this).attr("id")});
+				} else {
+					$(this).addClass('selected');
+					$.post("{{ path('exam_add_coll') }}", {exam_id: $(this).attr("id")});
+				}
+				} else {
+					redirect_register();
+				}
+			});
+		});
+	</script>
 </div>
 
-{% include "components/footer.html.twig" %}
 
 {% endblock %}

@@ -4,7 +4,8 @@
 
 {% block spreadsheets %}
     <link rel="stylesheet" href="{{ asset('css/form.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/registration.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/shadowForm.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/formAlert.css') }}" />
 {% endblock %}
 
 {% block title %}Register{% endblock %}
@@ -19,6 +20,14 @@
                 <form method="POST" id="signup-form" class="signup-form">
                     <input type="hidden" name="action" value="register" />
                     <h2 class="uk-tab-title uk-link-bright" style = "margin-bottom: 40px">Create account</h2>
+
+                    {% for message in app.flashes('success') %}
+                        <div class = "form-alert green">
+                            {{ message|nl2br }}
+                        </div>
+                    {% endfor %}
+
+                    
                     
                     {{ form_row(form.username) }}
                     {{ form_row(form.email) }}

@@ -6,50 +6,64 @@
 {% block spreadsheets %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset("css/quiz.css") }}">
-    <link rel="stylesheet" href="{{ asset("css/registration.css") }}">
+    <link rel="stylesheet" href="{{ asset("css/shadowForm.css") }}">
+    <link rel="stylesheet" href="{{ asset('css/glyphicon.min.css') }}" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 {% endblock %}
 
-{% block title %}Exam - {{ exam.title }}{% endblock %}
+{% block title %}Exam {{ exam.code }} - Paper {{ paper_index }}{% endblock %}
 
 {% block body %}
+
+    {% if _return_route == 'user_certif_select' %}
+        {% set _back_option = {'id': exam.certification.id} %}
+    {% elseif _return_route == 'user_exam_select' %}
+        {% set _back_option = {'id': exam.id} %}
+    {% elseif _return_route == 'exam_view' %}
+        {% set _back_option = {'id': exam.code} %}
+    {% elseif _return_route == 'paper_edit' %}
+        {% set _back_option = {'id': paper.id} %}
+    {% else %}
+        {% set _return_route, _back_option = 'index', {'page': 1} %}
+    {% endif %}
+
+    {% set _back_path = path(_return_route, _back_option) %}
+
 <!-- start Quiz button -->
-    <div class="start_btn"><button>Start Exam</button></div>
+    <div id="start_btn" class = "container shadow_container"><button>Start Exam</button></div>
     <!-- Info Box -->
-    <div class="info_box shadow_container">
+    <div id = "info_box" class="container shadow_container hiddenBox">
         <div class="info-title"><span>Some Rules of this Exam</span></div>
         <div class="info-list">
-            <div class="info">1. You will have only <span><span class = "info_seconds"></span> seconds</span> per each question.</div>
-            <div class="info">2. Once you select your answer, it can't be undone.</div>
-            <div class="info">3. You can't select any option once time goes off.</div>
-            <div class="info">4. You can't exit from the Quiz while you're playing. If you do, your data will NOT be saved.</div>
-            <div class="info">5. You'll get points on the basis of your correct answers.</div>
+            <div class="info">1. The exam will last only for <span><span class = "info_seconds">{{ paper.minsUntil }}</span> minutes</span>.</div>
+            <div class="info">2. You can't select any option once time goes off.</div>
+            <div class="info">3. If you decide to exit the exam before submitting your answers, your data will NOT be saved.</div>
+            <div class="info">4. You'll get points on the basis of your correct answers.</div>
+            <div class="info">5. No partial correct answers are accepted.</div>
+            <div class="info" style = "margin-top: 15px">Lastly, try not to cheat. It's pointless.</div>
         </div>
         <div class="buttons">
-            <a href = "{{ path('user_attempts', { 'id': exam.certification.id }) }}" onclick="return confirm('Are you sure you want to exit the exam? Your attempt will NOT be saved.')"><button class="quit">Go back</button></a>
-            <button class="restart">Continue</button>
+            <a href = "{{ _back_path }}" onclick="return confirm('Are you sure you want to exit the exam?.')"><button class="quit">Go back</button></a>
+            <button class="continue loading">
+            <div class="spinner-border" role="status"></div> Loading</button>
         </div>
     </div>
     <!-- Quiz Box -->
-    <div class="quiz_box shadow_container">
+    <div id = "quiz_box" class="container shadow_container hiddenBox">
         <header>
-            <h2 class="uk-tab-title uk-link-bright uk-margin-vertical-none">{{ exam.title }}</h2>
+            <h2 class="uk-tab-title uk-link-bright uk-margin-vertical-none"> Exam {{ exam.code }} - Paper {{ paper_index }}</h2>
             <div class = "quiz_header">
-
-                <a href = "{{ path('user_attempts', { 'id': exam.certification.id }) }}" onclick="return confirm('Are you sure you want to exit the exam? Your attempt will NOT be saved.')"><button class="exit_btn hide">Exit</button></a>
-                
-                <button class="signaler_btn hide">Signaler</button>
+                <a href = "{{ _back_path }}"><button class="exit_btn hide">Exit</button></a>
 
                 <div class="timer">
                     <div class="time_left_txt">Time Left</div>
-                    <div class="timer_sec"><span><span class = "info_seconds"></span></div>
+                    <div class="timer_sec"></div>
                 </div>
             </div>
             <div class="time_line"></div>
         </header>
         <section>
-            
             <div class="que_text">
                 <!-- Here I've inserted question from JavaScript -->
             </div>
@@ -64,17 +78,19 @@
         <footer>
             <div class="total_que">
                 <!-- Here I've inserted Question Count Number from JavaScript -->
+                <span><p id = "current_que"></p> of <p id = "count_que"></p> Questions</span>
+
             </div>
             <div class = "navigation_quiz_buttons">
-                <button class="ok_btn show">Ok</button>
+                {# <button class="ok_btn show">Ok</button> #}
                 <button class="prev_btn">&laquo; Previous</button>
-                <button class="next_btn">Next &raquo;</button>
+                <button class="next_btn show">Next &raquo;</button>
                 <button class="finish_btn">Finish</button>
             </div>
         </footer>
     </div>
     <!-- Result Box -->
-    <div class="result_box">
+    <div id = "result_box" class="container shadow_container hiddenBox">
         <div class="icon">
             <i class="fas fa-crown"></i>
         </div>
@@ -85,45 +101,70 @@
         <div class="buttons">
             <button class="check-mistakes">Check Mistakes</button>
             <button class="restart">Try Again</button>
-            <a href = "{{ path('user_attempts', { 'id': exam.certification.id }) }}"><button class="quit">Exit</button></a>
+            <button class="report_btn"><span class="glyphicon glyphicon-send"></span> Report</button>
+            <a href = "{{ _back_path }}"><button class="quit">Exit</button></a>
         </div>
     </div>
     <!-- Inside this JavaScript file I've inserted Questions and Options only -->
     <!-- Inside this JavaScript file I've coded all Quiz Codes -->
 
     <script>
-    // creating an array and passing the number, questions, options, and answers
-let questions = {{ questions|json_encode()|raw }};
+
+
+const info_box = document.getElementById("info_box");
+const continue_btn = info_box.querySelector(".buttons .continue");
+
+var questions;
+$(document).ready(function() {
+    $.post("{{ path('exampaper_get_data') }}", function(data) {
+        questions = JSON.parse(JSON.stringify(data));
+        document.getElementById("count_que").innerHTML = Object.keys(questions).length;
+        continue_btn.classList.remove("loading");
+        continue_btn.textContent = "Continue";
+    });
+});
+// creating an array and passing the number, questions, options, and answers
+
+// let questions =  questions|json_encode()|raw ;
+
 let userData = []; // saving user input, counter, counterLine, widthValue, timeValue
 let userScore = 0;
+let answers = [];
 
 //selecting all required elements
-const start_btn = document.querySelector(".start_btn button");
-const info_box = document.querySelector(".info_box");
-const continue_btn = info_box.querySelector(".buttons .restart");
-const quiz_box = document.querySelector(".quiz_box");
-const signaler_btn = quiz_box.querySelector(".signaler_btn");
+const start_box = document.querySelector("#start_btn");
+const start_btn = start_box.querySelector("button");
+
+const quiz_box = document.getElementById("quiz_box");
+const que_title = quiz_box.querySelector(".que_text");
+const que_task = quiz_box.querySelector(".que_task");
+const current_que = document.getElementById("current_que");
+
+const option_list = quiz_box.querySelector(".option_list");
+const prev_btn = quiz_box.querySelector("footer .prev_btn");
+const next_btn = quiz_box.querySelector("footer .next_btn");
+// const ok_btn = quiz_box.querySelector("footer .ok_btn");
+const finish_btn = quiz_box.querySelector("footer .finish_btn");
 const exit_btn = quiz_box.querySelector(".exit_btn");
-const result_box = document.querySelector(".result_box");
+
+const time_line = quiz_box.querySelector("header .time_line");
+const timeText = quiz_box.querySelector(".timer .time_left_txt");
+const timeCount = quiz_box.querySelector(".timer .timer_sec");
+
+const result_box = document.getElementById("result_box");
 const check_mistakes_btn = result_box.querySelector(".buttons .check-mistakes");
-const option_list = document.querySelector(".option_list");
-const time_line = document.querySelector("header .time_line");
-const timeText = document.querySelector(".timer .time_left_txt");
-const timeCount = document.querySelector(".timer .timer_sec");
+const restart_btn = result_box.querySelector(".buttons .restart");
+const quit_btn = result_box.querySelector(".buttons .quit");
+const report_btn = result_box.querySelector(".report_btn");
 
 // if startQuiz button clicked
 start_btn.onclick = ()=>{
-    info_box.classList.add("activeInfo"); //show info box
-    start_btn.classList.add("hide");
+    info_box.classList.remove("hiddenBox"); //show info box
+    start_box.classList.add("hiddenBox");
 }
 
 const widthValue = 720;
-const timeValue = 15;
-
-let info_seconds = document.querySelectorAll(".info_seconds");
-for(i=0; i < info_seconds.length; i++) {
-    info_seconds[i].textContent = timeValue;
-}
+const timeValue = '{{ paper.minsUntil*60 }}';
 
 let que_count = 0;
 let examFinished = false;
@@ -134,28 +175,27 @@ let counterLine;
 let timeLeft;
 let widthLeft;
 
-const restart_quiz = result_box.querySelector(".buttons .restart");
-const quit_quiz = result_box.querySelector(".buttons .quit");
-
 // if continueQuiz button clicked
 continue_btn.onclick = ()=>{
-    $(document).ready(function() {
-        $.post("{{ path('try_start') }}");
-    });
+    $.post("{{ path('try_start') }}");
 
-    info_box.classList.remove("activeInfo"); //hide info box
-    quiz_box.classList.add("activeQuiz"); //show quiz box
+    info_box.classList.add("hiddenBox"); //hide info box
+    quiz_box.classList.remove("hiddenBox"); //show quiz box
     showQuestions(0); //calling showQestions function
     startTimer(); //calling startTimer function
+
+    if (que_count == questions.length-1) {
+        next_btn.classList.remove("show");
+        finish_btn.classList.add("show");
+    }
 }
 
-// if continueQuiz button clicked
-signaler_btn.onclick = ()=>{
-    var msg = window.prompt("What's your reason?"); 
 
+report_btn.onclick = ()=>{
+    var msg = window.prompt("What's your reason?"); 
     if (msg != "") {
         $(document).ready(function() {
-            $.post("{{ path('user_exam_signaler') }}", {msg: msg}, function( data ) {
+            $.post("{{ path('user_exampaper_report') }}", {report: msg}, function( data ) {
                 alert(data); 
             });
         });
@@ -165,116 +205,67 @@ signaler_btn.onclick = ()=>{
 }
 
 // if restartQuiz button clicked
-restart_quiz.onclick = ()=>{
+restart_btn.onclick = ()=>{
     window.location.reload();
-}
-
-const ok_btn = document.querySelector("footer .ok_btn");
-const prev_btn = document.querySelector("footer .prev_btn");
-const next_btn = document.querySelector("footer .next_btn");
-const finish_btn = document.querySelector("footer .finish_btn");
-const bottom_ques_counter = document.querySelector("footer .total_que");
-
-// if Ok Button clicked
-ok_btn.onclick = ()=> {
-    clearInterval(counter); //clear counter
-    clearInterval(counterLine); //clear counterLine
-    
-    saveData();
-
-    if (que_count > 0) {
-        prev_btn.classList.add("show");
-    }
-    
-    if (que_count < questions.length - 1) {
-       next_btn.classList.add("show"); //show the next button if user selected any option
-    } else {
-        finish_btn.classList.add("show"); //show the next button if user selected any option
-    }
-
-    ok_btn.classList.remove("show");
-
-    exit_btn.classList.remove("hide");
-    signaler_btn.classList.remove("hide");
-}
-
-
-// if Next Que button clicked
-prev_btn.onclick = ()=>{
-    if(que_count > 0){ //if question count is less than total question length
-        showQuestions(--que_count); //calling showQestions function // next question
-        loadData();
-
-        if (que_count == 0) {
-            prev_btn.classList.remove("show");
-        }
-
-        if (que_count+1 == questions.length-1) {
-            next_btn.classList.add("show"); //show the next button if user selected any option
-            finish_btn.classList.remove("show"); //show the next button if user selected any option
-        }
-
-        if (examFinished) {
-            checkAnswers();
-        }
-        
-        next_btn.classList.add("fnext_btn");
-    }
 }
 
 // if Next Que button clicked
 next_btn.onclick = ()=>{
-    if (userData[++que_count] == null) {
-        exit_btn.classList.add("hide");
-        signaler_btn.classList.add("hide");
+    showQuestions(++que_count);
 
-        clearInterval(counter); //clear counter
-        clearInterval(counterLine); //clear counterLine
+    if (que_count == questions.length-1) {
+        next_btn.classList.remove("show");
+        finish_btn.classList.add("show");
+    }
 
-        // user input, counter, counterLine, widthValue, timeValue
-        showQuestions(que_count); //calling showQestions function // next question
-
-        startTimer(); //calling startTimer function
-        timeText.textContent = "Time Left"; //change the timeText to Time Left
-
-        prev_btn.classList.remove("show"); //hide the prev button
-        next_btn.classList.remove("show"); //hide the next button
-        ok_btn.classList.add("show"); //hide the next button
-
-    } else {
-        showQuestions(que_count); //calling showQestions function // next question
-        loadData();
-
-        if (que_count == 1) {
-            prev_btn.classList.add("show");
-        }
-
-        if (userData[que_count+1] == null) {
-            next_btn.classList.remove("fnext_btn");
-
-            if(que_count == questions.length - 1){
-                next_btn.classList.remove("show");
-                finish_btn.classList.add("show");
-            }
-        }
-
-        if (examFinished) {
-            checkAnswers();
-        }
+    if (que_count == 1) {
+        prev_btn.classList.add("show");
     }
 }
 
-// if Finish Que button clicked
+// if Previous Que button clicked
+prev_btn.onclick = ()=>{
+    showQuestions(--que_count);
+
+    if (que_count+1 == questions.length-1) {
+        next_btn.classList.add("show");
+        finish_btn.classList.remove("show");
+    }
+
+    if (que_count == 0) {
+        prev_btn.classList.remove("show");
+    }
+}
+
 finish_btn.onclick = ()=>{
-    showResult(); //calling showResult function
+    if (!examFinished) {
+        var confirm = window.confirm('Are you sure you want to submit your answers?');
+
+        if (confirm) {
+            calculateScore();
+            $(document).ready(function() {
+                $.post("{{ path('answers_submit') }}", {score: userScore}, function( data ) {  
+                    alert(data); 
+                });
+            });
+            // clearInterval(counterLine);
+            clearInterval(counter); // stopping counter
+            examFinished = true;
+
+            finish_btn.textContent = "Result";
+            showResult(); // showing the results box
+        }
+    } else {
+        showResult(); // showing the results box
+    }
 }
 
 check_mistakes_btn.onclick = ()=>{
-    result_box.classList.remove("activeResult"); //show result box
-    info_box.classList.add("activeInfo"); //hide info box
-    quiz_box.classList.add("activeQuiz"); //hide quiz box
-
-    que_count = 0;
+    result_box.classList.add("hiddenBox"); //show result box
+    quiz_box.classList.remove("hiddenBox"); //hide quiz box
+    exit_btn.classList.remove("hide");
+    
+    que_count = 0; // starting from the first question
 
     prev_btn.classList.remove("show");
     if(que_count < questions.length - 1){
@@ -283,71 +274,75 @@ check_mistakes_btn.onclick = ()=>{
         next_btn.classList.add("show");
     }
 
-    showQuestions(que_count); //calling showQestions function // next question
-    loadData();
-    checkAnswers();
+    showQuestions(que_count);
 }
+
+
+
 
 // getting questions and options from array
 function showQuestions(index){
-    const que_title = document.querySelector(".que_text");
-    const que_task = document.querySelector(".que_task");
-    //creating a new span and div tag for question and option and passing the value using array index
-    let que_tag = '<span>' + questions[index].title +'</span>';
-    let que_info = '<span>' + questions[index].task + '</span>';
+    // Question Title
+    que_title.innerHTML = '<span>'+ (que_count+1) + ' - ' + questions[index].title +'</span>'; 
+    // Question Info
+    que_task.innerHTML = '<span>' + questions[index].task + '</span>';
+
     let option_tag = "";
     for(i=0; i < questions[index].options.length; i++){
         option_tag += '<div class="option"><span>'+ questions[index].options[i].proposition +'</span><div class="icons"></div></div>';
     }
-
-    que_title.innerHTML = que_tag; //adding new span tag inside que_tag
-    que_task.innerHTML = que_info; //adding new span tag inside que_tag
-    option_list.innerHTML = option_tag; //adding new div tag inside option_tag
+    // Question Options
+    option_list.innerHTML = option_tag;
     
-    const option = option_list.querySelectorAll(".option");
-
     // set onclick attribute to all available options
+    const option = option_list.querySelectorAll(".option");
     for(i=0; i < option.length; i++){
-        option[i].setAttribute("onclick", "optionSelected(this)");
+        option[i].setAttribute("onclick", "optionSelected("+i+", this)");
     }
 
-    //creating a new span tag and passing the question number and total question
-    let totalQueCounTag = '<span><p>'+ (que_count+1) +'</p> of <p>'+ questions.length +'</p> Questions</span>';
-    bottom_ques_counter.innerHTML = totalQueCounTag;  //adding new span tag inside bottom_ques_counter
+    // Showing the current question number
+    current_que.innerHTML = (que_count+1);
+
+    if (userData[que_count] != null) { // loading saved data
+        loadData();
+        if (examFinished) { // showing correct answers if finished
+            checkAnswers();
+        }
+    } else {
+        userData[que_count] = [];
+    }
 }
 
-// creating the new div tags which for icons
-let selectedIconTag = '<div class="icon pencil"><i class="fa fa-pencil"></i></div>';
-let tickIconTag = '<div class="icon tick"><i class="fa fa-check"></i></div>';
-let crossIconTag = '<div class="icon cross"><i class="fa fa-times"></i></div>';
-let selected_options = 0;
-
 //if user clicked on option
-function optionSelected(prop) {
-    if (prop.classList.contains("selected")) {
+function optionSelected(index, prop) { 
+    var wasSelected = prop.classList.contains("selected");
+
+    if (wasSelected) {
         prop.classList.remove("selected");
         prop.lastElementChild.removeChild(prop.lastElementChild.firstElementChild);
-        selected_options--;
-        
-
     } else {
         prop.classList.add("selected");
         prop.lastElementChild.insertAdjacentHTML("beforeend", selectedIconTag); //adding selected icon to correct selected option
-        selected_options++;
-
     }
+
+    userData[que_count][index] = !wasSelected
 }
 
+
+// creating the new div tags which for icons
+const selectedIconTag = '<div class="icon pencil"><span class="glyphicon glyphicon-pencil"></span></div>';
+const tickIconTag = '<div class="icon tick"><span class="glyphicon glyphicon-ok"></span></div>';
+const crossIconTag = '<div class="icon cross"><span class="glyphicon glyphicon-remove"></span></i></div>';
+
 function checkAnswers() {
-    selected_options = 0;
     let current_question = questions[que_count];
-    
-    let correcAnswers = questions[que_count].answers; //getting correct answer from array
+    let correctAnswers = questions[que_count].answers; //getting correct answer from array
+
     const allOptions = option_list.children.length; //getting all option items
     for(i=0; i < allOptions; i++) {
         let option = option_list.children[i];
 
-        if(correcAnswers.includes(option.textContent)) { //if there is an option which is matched to an array answer
+        if(correctAnswers[i] == true) { //if there is an option which is matched to an array answer
             // TODO: add correct
             option.classList.add("correct"); //adding green color to correct selected option
             option.lastElementChild.insertAdjacentHTML("beforeend", tickIconTag); //adding tick icon to correct selected option
@@ -366,119 +361,39 @@ function checkAnswers() {
 }
 
 function showResult() {
-
-    info_box.classList.remove("activeInfo"); //hide info box
-    quiz_box.classList.remove("activeQuiz"); //hide quiz box
-    result_box.classList.add("activeResult"); //show result box
+    quiz_box.classList.add("hiddenBox"); //hide quiz box
+    result_box.classList.remove("hiddenBox"); //show result box
     const scoreText = result_box.querySelector(".score_text");
 
     if(userScore > 0){ // if user scored more than 0
         let reward = "";
 
         if (userScore == questions.length) {
-            reward = "Congratulations &#129395; ! ";
+            reward = "Congratulations &#129395;!";
         }
         scoreText.innerHTML = '<span>' + reward + 'You got <span>'+ userScore +'</span> out of <span>'+ questions.length +'</span> questions right.</span>';
     } else {
 
         scoreText.innerHTML = '<span>Sorry! You got <span>'+ userScore +'</span> out of <span>'+ questions.length +'</span> questions right. It\'s okay, try harder next time &#128521;.</span>';
     }
-
-    if (!examFinished) {
-        $(document).ready(function() {
-            $.post("{{ path('answers_submit') }}", {score: userScore}, function( data ) {  
-                alert(data); 
-            })
-            examFinished = true;
-        });
-    }
-}
-
-function startTimer(){
-    time_line.style.width = "0px";
-
-    timeLeft = timeValue;
-    timeCount.textContent = timeLeft;
-    
-    countdownTask();
-
-    counter = setInterval(countdownTask, 1000);
-
-    function countdownTask(){
-
-        if(timeLeft <= 9){
-            timeCount.textContent = "0" + timeLeft; //add a 0 before time value
-
-            if(timeLeft == 0){ //if timer is less than 0
-                timeText.textContent = "Time Off"; //change the time text to time off
-
-               // clearInterval(counterLine);
-                clearInterval(counter); //clear counter
-                // checkAnswers();
-                ok_btn.click();
-            }
-        } else {
-            timeCount.textContent = timeLeft;
-        }
-
-        time_line.style.width = ((widthValue/timeValue)*(timeValue-(timeLeft--))) + "px";
-    }
-    
-}
-
-function startTimerLine() {
-
-    var perMs = Math.floor((timeValue*1000) / widthValue);
-    time_line.style.width = 0;
-    widthLeft = 0;
-
-    var counterLine = setInterval(timerLine, perMs);
-
-    function timerLine() {
-        time_line.style.width = (++widthLeft) + "px"; //increasing width of time_line with px by time value
-
-        if(widthLeft == widthValue){ //if time value is greater than 'widthValue'
-            clearInterval(counterLine); //clear counterLine
-        }
-
-        console.log(widthLeft);
-    }
 }
 
 
-// saving user data on Next, maybe using it on previous later.
-function saveData() {
-    let answers = [];
-    let correctAnswers = questions[que_count].answers; //getting correct answer from array
-    let win = correctAnswers.length;
+// // saving user data on Next, maybe using it on previous later.
+// function saveData() {
+//     let answers = [];
 
-    const allOptions = option_list.children.length; //getting all option items
-    for(i=0; i < allOptions; i++) {
-        var option = option_list.children[i]; 
-        answers[i] = option.classList.contains("selected");
+//     const allOptions = option_list.children.length; //getting all option items
+//     for(i=0; i < allOptions; i++) {
+//         var option = option_list.children[i]; 
+//         answers[i] = option.classList.contains("selected");
+//     }
 
-        // if selected wrong answer OR not selected correct answer
-        var isCorrect = correctAnswers.includes(option.textContent);
-        if((answers[i] && !isCorrect) || (!answers[i] && isCorrect)) {
-            win--;
-        }
-        option.classList.add("disabled"); // disable all options
-    }
-    
-    if (win == correctAnswers.length) {
-        userScore += 1; //upgrading score value with 1
-    }
-
-    userData[que_count] = {timeLeft: timeLeft, widthLeft: widthLeft, answers: answers};
-}
+//     userData[que_count] = answers;
+// }
 
 function loadData() {
-    var userD = userData[que_count];
-
-    timeLeft = userD.timeLeft;
-    widthLeft = userD.widthLeft;
-
-    const allOptions = userD.answers; //getting all option items
+    const allOptions = userData[que_count]; //getting all option items
     for (i = 0; i < allOptions.length; i++) {
 
         var option = option_list.children[i];
@@ -487,26 +402,68 @@ function loadData() {
             option.classList.add("selected");
             option.lastElementChild.insertAdjacentHTML("beforeend", selectedIconTag);
         }
-
-        option.classList.add("disabled"); // disable all options
     }
+}
 
-    if (timeLeft <= 9){
-        timeCount.textContent = "0" + timeLeft; //add a 0 before time value
-    } else {
-        timeCount.textContent = timeLeft;
-    }
+function calculateScore() {
+    for(qc = 0; qc < userData.length; qc++) {
+        const myAnswers = userData[qc];
+        const correctAnswers = questions[qc].answers;
+        let win = 0;
 
-    if (timeLeft == 0){ //if timer is less than 0
-        timeText.textContent = "Time Off"; //change the time text to time off
-    } else {
-        timeText.textContent = "Time Left"; //change the time text to time off
+        for(i = 0; i < correctAnswers.length; i++) {
+            if((correctAnswers[i] == false && !myAnswers[i]) 
+            || (correctAnswers[i] == myAnswers[i])) {
+                win++;
+            }
+        }
+        
+        if (win == correctAnswers.length) {
+            userScore++; //upgrading score value with 1
+        }
     }
-    
-    //time_line.style.width = widthLeft + "px";
-    time_line.style.width = ((widthValue/timeValue)*(timeValue-timeLeft)) + "px";
 }
 
 
+function startTimer() {
+    // Starting paramters (don't edit)
+    time_line.style.width = "0px";
+    timeLeft = parseFloat(timeValue);
+    timeCount.textContent = timeLeft;
+    
+    countdownTask();
+    counter = setInterval(countdownTask, 1000);
+
+    function countdownTask(){
+
+        timeCount.textContent = Math.floor(timeLeft / 60) + ':' + ('0' + Math.floor(timeLeft % 60)).slice(-2); //add a 0 before time value
+
+        if(timeLeft == 0){ //if timer is finished
+            timeText.textContent = "Time Off"; //change the time text to time off
+            finish_btn.click();
+        }
+
+        time_line.style.width = ((widthValue/timeValue)*(timeValue-(timeLeft--))) + "px"; // startTimerLine alternative
+    }
+}
+
+// function startTimerLine() {
+
+//     var perMs = Math.floor((timeValue*1000) / widthValue);
+//     time_line.style.width = 0;
+//     widthLeft = 0;
+
+//     var counterLine = setInterval(timerLine, perMs);
+
+//     function timerLine() {
+//         time_line.style.width = (++widthLeft) + "px"; //increasing width of time_line with px by time value
+
+//         if(widthLeft == widthValue){ //if time value is greater than 'widthValue'
+//             clearInterval(counterLine); //clear counterLine
+//         }
+
+//         console.log(widthLeft);
+//     }
+// }
     </script>
 {% endblock %}

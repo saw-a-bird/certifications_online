@@ -320,6 +320,18 @@ li.link-active a, li.link-active a:hover, li.link-active a:focus {
 	font-size:16px
 }
 
+.save_btn {
+	background-color: #d1e7ff;
+}
+
+.normal_btn {
+	background-color: rgb(240, 240, 240);
+}
+
+.back_btn {
+	margin-bottom:25px;
+}
+
 .add_button {
 	color: #fff;
 	background-color: #0069d9;
@@ -338,26 +350,32 @@ input[type=file] {
 
 
 .form_container{
-	margin: 20px 100px 50px;
+	margin: 2% 5% 5%;
 	padding:10px;
 }
 
 .image_container {
 	display:flex;
-	justify-content: center;
-	margin-top:20px;
+	margin:20px 0;
+	flex-wrap: wrap;
 }
 
 .image_container > img {
 	border: 1px solid rgba(179, 193, 204, 0.965);
 	padding:5px;
 	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-	height: 400px;
+	width: 100%;
+	max-width: 400px;
+	height: auto;
 }
 
 .right_wrapper {
 	display: flex;
 	justify-content: right;
+}
+
+.spaced_btn_wrapper > .btn {
+	margin: 0 5px
 }
 
 .between_wrapper {
@@ -436,3 +454,15 @@ input[type=file] {
 	margin-top: 20px;
 }
 
+
+.action_row > * {
+	display: block
+}
+
+.form-alert {
+	font-weight: bold;
+}
+
+.status-dropdown {
+	padding-right: 20px;
+}

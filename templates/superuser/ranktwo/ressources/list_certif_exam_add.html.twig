@@ -1,0 +1,44 @@
+{% extends "@backend_root/base.html.twig" %}
+
+{% block title %}Certification '{{certification.title}}' - Add Exam{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("ressources_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div class = "form_container">
+        <a href="{{ path('certif_exams_list', {'id': certification.id}) }}"><button class="btn back_button">Go Back</button></a>
+        <h1>Available exams:</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Code</th>
+                    <th>Title</th>
+                    <th>Papiers</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for exam in available_exams %}
+                <tr>
+                    <td>{{ exam.id }}</td>
+                    <td>{{ exam.code }}</td>
+                    <td>{{ exam.title }}</td>
+                    <td>{{ exam.getExamPapers().count() }}</td>
+                    <td> 
+                        <a href="{{ path('certif_add_exam', {'certif_id': certification.id, 'exam_id': exam.id}) }}">add</a>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

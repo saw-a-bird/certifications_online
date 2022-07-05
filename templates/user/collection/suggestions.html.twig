@@ -1,0 +1,70 @@
+
+{% extends "@user/list_items.html.twig" %}
+
+{% block spreadsheets %}
+	{{ parent() }}
+    <link rel="stylesheet" href="{{ asset("css/examTable.css")}}" />
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+	<li class="uk-disabled uk-disabled-color"><a>Suggestions</a></li>
+{% endblock %}
+
+{% block page %}
+<nav class="uk-navbar-nocolor uk-navbar-container">
+    <div class="uk-container uk-navbar-transparent">
+        <div data-uk-navbar>
+
+            <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas" data-uk-toggle><span
+            data-uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Menu</span></a>
+            <ul class="uk-navbar-nav uk-visible@m">
+                <li><a href="{{ path("user_certifs")}}">Certifications</a></li>
+                <li><a href="{{ path("user_favs")}}">Favourites</a></li>
+                <li class = "uk-disabled-whiter-color uk-disabled"><a>Suggestions</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<hr class = "uk-hr uk-margin-horizontal-none" style = "border-color: #b1b1b1;">
+
+<h5><b>Here's all the exam papers you've suggested:</b></h5>
+
+<div style = "padding: 10px 20px;">
+    <div class="uk-width-1-1">
+        <table class="uk-table uk-table-hover uk-table-striped dataTable uk-full-width">
+            <thead>
+                <tr>
+                    <th>Created At</th>
+                    <th>Exam Provider</th>
+                    <th>Exam Code</th>
+                    <th>Exam Title</th>
+                    <th>Questions</th>
+                    <th>Time</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sugg in app.user.suggestions %}
+                    <tr>
+                        <td>{{ sugg.getCreatedAt()|date('Y-m-d H:i:s') }}</td>
+                        <td>{{ sugg.eProvider }}</td>
+                        <td>{{ sugg.examCode }}</td>
+                        <td>{{ sugg.examTitle }}</td>
+                        <td>{{ sugg.questionsCount }}</td>
+                        <td>{{ sugg.minsUntil }}</td>
+                        <td>
+                            <a class = "uk-button uk-button-default uk-full-width" href="{{ path('user_sugg_edit', {'id': sugg.id}) }}">Edit</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class = "uk-table-empty">no records found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock page %}

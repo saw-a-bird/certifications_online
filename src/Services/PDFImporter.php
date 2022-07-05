@@ -3,114 +3,144 @@
 namespace App\Services;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Wbrframe\PdfToHtml\Converter\ConverterFactory;
-use App\Entity\Questions;
-use App\Entity\Propositions;
-use App\Entity\Exams;
+use App\Entity\Question;
+use App\Entity\Proposition;
+use App\Entity\ExamPaper;
 
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\HttpFoundation\File\File;
 
 class PDFImporter
 {
     private $documentsDirectory;
+    private $fullPath;
 
-    public function __construct($documentsDirectory) {
-        $this->documentsDirectory = $documentsDirectory;
+    public function __construct($docsDirectory) {
+        $this->documentsDirectory = $docsDirectory;
     }
     
-    public function import(Exams $exam, UploadedFile $file) {
-        $_return_msg = "";
-        $_invalid_fonts = "";
+    public function extract() {
         $_questions = array();
         $_status = false;
 
         // Parse PDF file and build necessary objects.
         $parser = new \Smalot\PdfParser\Parser();
-        $fileName = md5(uniqid()).'.'.$file->guessExtension();
-        $file->move($this->getTargetDirectory(), $fileName);
+        $pdf = $parser->parseFile($this->fullPath);
 
-        $pdf = $parser->parseFile($this->getTargetDirectory()."\\$fileName");
+        $text = $pdf->getText();
+        $text = str_replace('\\r\\n', ' ', $text);
 
-        foreach($pdf->getFonts() as $font) {
-            if (substr($font->getName(), 0, 9) != "Helvetica") {
-                $_invalid_fonts .= "'".$font->getName()."' ";
+        $questionArray = preg_split("/QUESTION \d*/", $text, -1);
+        array_splice($questionArray, 0, 1);
+        
+        $remove = false;
+        foreach ($questionArray as $key => $questionFull) {
+            $question = new Question();
+            $question->setTitle("QUESTION");
+
+            $propositions =  preg_split("/\s\w?\./m", $questionFull, -1);
+            if (count($propositions) > 1) {
+                $question->setTask($propositions[0]);
+                array_splice($propositions, 0, 1);  // remove task 
+
+                $last_answer = $propositions[count($propositions)-1];
+    
+                preg_match("/^.*$/m", $last_answer, $getLast); // get last
+                array_splice($propositions, count($propositions)-1, 1, $getLast);  // put last 
+                
+                preg_match("/Correct Answer:\s*(?P<word>\w+)$/m", $last_answer, $correct_answers_full);
+                
+                $correct_answers = array();
+                if (isset($correct_answers_full["word"])) {
+                    $word = $correct_answers_full["word"];
+                    
+                    $strlen = strlen($word);
+                    for($i = 0; $i < $strlen; ++$i) {
+                        $correct_answers[$this->toNum($word[$i])] = true;
+                    }
+                }
+    
+                foreach ($propositions as $kA => $propositionFull) {
+                    $propositionFull = substr_replace($propositionFull, "", -1);
+    
+                    if (strlen($propositionFull) != 0) {
+                        $proposition = new Proposition();
+                        $proposition->setProposition($propositionFull);
+                        $question->addProposition($proposition);
+    
+                        if (isset($correct_answers[$kA])) {
+                            $proposition->setisCorrect(true);
+                        }
+                    } else if ($kA == 0) {
+                        $remove = true;
+                    }
+                }
+            } else {
+                $remove = true;
             }
-        }
-
-        if (empty($_invalid_fonts)) {
-            $text = $pdf->getText();
-
-            $questionArray = preg_split("/QUESTION \d*/", $text, -1);
-            array_splice($questionArray, 0, 1);
             
-            $counter = 0;
-            $remove = false;
-            foreach ($questionArray as $kQ => $questionFull) {
-                $question = new Questions();
-                $question->setTitle("QUESTION ".(++$counter));
-                $question->setExam($exam);
-
-                $propositions =  preg_split("/^\s*\w\./m", $questionFull, -1);
-
-                if (count($propositions) > 1) {
-                    $question->setTask($propositions[0]);
-                    array_splice($propositions, 0, 1);  // remove task 
-
-                    $last_answer = $propositions[count($propositions)-1];
-        
-                    preg_match("/^.*$/m", $last_answer, $getLast); // get last
-                    array_splice($propositions, count($propositions)-1, 1, $getLast);  // put last 
-                    
-                    preg_match("/Correct Answer:\s*(?P<word>\w+)$/m", $last_answer, $correct_answers_full);
-                    
-                    $correct_answers = array();
-                    if (isset($correct_answers_full["word"])) {
-                        $word = $correct_answers_full["word"];
-                        
-                        $strlen = strlen($word);
-                        for($i = 0; $i < $strlen; ++$i) {
-                            $correct_answers[$this->toNum($word[$i])] = true;
-                        }
-                    }
-        
-                    foreach ($propositions as $kA => $propositionFull) {
-                        $propositionFull = substr_replace($propositionFull, "", -1);
-        
-                        if (strlen($propositionFull) != 0) {
-                            $proposition = new Propositions();
-                            $proposition->setProposition($propositionFull);
-                            $question->addProposition($proposition);
-        
-                            if (isset($correct_answers[$kA])) {
-                                $proposition->setisCorrect(true);
-                            }
-                        } else if ($kA == 0) {
-                            $counter--;
-                            $remove = true;
-                        }
-                    }
-                } else {
-                    $remove = true;
-                }
-                
-                
-                if ($remove == false) {
-                    array_push($_questions, $question);
-                } else {
-                    $remove = false;
-                }
+            
+            if ($remove == false) {
+                array_push($_questions, $question);
+            } else {
+                $remove = false;
             }
-            $_return_msg = "Import PDF Success";
-            $_status = true;
-        } else {
-            $_return_msg = "Invalid fonts: ".$_invalid_fonts;
         }
 
-        return array("message" => $_return_msg, "questions" => $_questions, "status" => $_status);
+        $count = count($_questions);
+        if ($count == 0) {
+            $_status = false;
+            unlink($this->fullPath);
+        } else {
+            $_status = true;
+        }
+
+        return array("questions" => $_questions, "status" => $_status, "count" => $count);
     }
 
-    function toNum($data) {
+    public function import($entityManager, ExamPaper $examPaper, ?UploadedFile $fileInput, ?string $filePath) {
+
+        if ($fileInput != null) {
+            $this->upload($fileInput, "imports");
+        } else {
+            $file = new File($this->documentsDirectory."/".$filePath);
+            $file->move($this->documentsDirectory."/imports");
+            $this->fullPath = $this->documentsDirectory.'//imports/'.$file->getFilename(); // new path
+        }
+
+        $_return = $this->extract();
+
+        if ($_return["status"] == true) {
+            $_questions = $_return["questions"];
+            foreach ($_questions as $question) {
+                $question->setExamPaper($examPaper);
+
+                foreach ($question->getPropositions() as $proposition) {
+                    $entityManager->persist($proposition);
+                }
+                $entityManager->persist($question);
+            }
+
+            $entityManager->flush();
+
+            $_return["message"] = "Successfully imported file. Found ". $_return["count"]." questions.";
+        } else {
+            $_return["message"] = "File importing failed. Found 0 questions.";
+        }
+
+        return array($_return["message"], $_return["status"]);
+    }
+
+    public function upload(UploadedFile $file, $directory) {
+        $fileName = md5(uniqid()).'.'.$file->guessExtension();
+        $filePath = $directory."/".$fileName;
+
+        $file->move($this->documentsDirectory."/".$directory, $fileName);
+        $this->fullPath = $this->documentsDirectory."/".$filePath;
+
+        return $filePath;
+    }
+
+    private function toNum($data) {
         $alphabet = array( 
             'A', 'B', 'C', 'D', 'E',
             'F', 'G', 'H', 'I', 'J',
@@ -127,9 +157,5 @@ class PDFImporter
                 ($alpha_flip[$data[$i]] + 1) * pow(26, ($length - $i - 1));
         }
         return $return_value;
-    }
-
-    public function getTargetDirectory() {
-        return $this->documentsDirectory;
     }
 }

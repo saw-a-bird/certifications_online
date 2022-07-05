@@ -1,0 +1,35 @@
+<a href="{{ path('provider_exams_list', {'id': exam.eProvider.id}) }}"  class = "btn normal_btn back_btn"><span class="glyphicon glyphicon-arrow-left"></span> Go Back</a>
+
+{{ form_start(form) }}
+    {% for message in app.flashes('success') %}
+        <div class = "form-alert green">
+            <span class = ''>
+                {{ message }}
+            </span>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class = "form-alert red">
+            <span class = ''>
+                {{ message }}
+            </span>
+        </div>
+    {% endfor %}
+    
+    {{ form_widget(form) }}
+    {% if exam is defined %}
+        <div class = "between_wrapper">
+            <i class = "updated_at"> {% if exam.getUpdatedAt() != null %} Last updated at {{ exam.getUpdatedAt()|date('Y-m-d H:i:s') }} {% endif %}</i>
+
+            <div class = "spaced_btn_wrapper">
+                <a class="btn" href="{{ path('exam_papers_list', {'id': exam.id}) }}">Papers</a>
+                <button class="btn form-submit save_button">{{ button_label|default('Save') }}</button>
+            </div>
+        </div>
+    {% else %}
+        <div class = "right_wrapper">
+            <button class="btn form-submit save_button">Save</button>
+        </div>
+    {% endif %}
+{{ form_end(form) }}

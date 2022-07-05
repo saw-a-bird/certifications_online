@@ -1,0 +1,55 @@
+{% extends "@backend_root/base.html.twig" %}
+
+{% block title %} User Suggestions - Exam List{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("suggestions_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div style = "margin: 40px 20px 50px; padding: 10px;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Created At</th>
+                    <th>Created by</th>
+                    <th>Exam Provider</th>
+                    <th>Exam Code</th>
+                    <th>Exam Title</th>
+                    <th>Questions</th>
+                    <th>PDF</th>
+                    <th>Questions Provider</th>
+                    <th>Certification</th>
+                    <th>Time</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for sugg in suggestions %}
+                <tr>
+                    <td>{{ sugg.getCreatedAt()|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ sugg.createdBy.username }}</td>
+                    <td>{{ sugg.eProvider }}</td>
+                    <td>{{ sugg.examCode }}</td>
+                    <td>{{ sugg.examTitle }}</td>
+                    <td>{{ sugg.questionsCount }}</td>
+                    <td><a href = "{{ asset(sugg.getPdfFile()) }}">Link</a></td>
+                    <td>{{ sugg.qProvider }}</td>
+                    <td>{{ sugg.certificationTitle }}</td>
+                    <td>{{ sugg.minsUntil }}</td>
+                    <td class = "action_row">
+                        <a href="{{ path('sugg_edit', {'id': sugg.id}) }}">Review <span class="glyphicon glyphicon-search"></span></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+

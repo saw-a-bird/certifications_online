@@ -1,0 +1,35 @@
+
+{% extends "@user/list_items.html.twig" %}
+
+{% block spreadsheets %}
+	{{ parent() }}
+    <link rel="stylesheet" href="{{ asset("css/examTable.css")}}" />
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li><a href="{{path("user_favs")}}">Favourites</a></li>
+    <li class="uk-disabled"><a>{{ exam.code }}</a> <span>({{ exam.title }})</span></li>
+{% endblock %}
+
+{% block page %}
+<nav class="uk-navbar-nocolor uk-navbar-container">
+    <div class="uk-container uk-navbar-transparent">
+        <div data-uk-navbar>
+
+            <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas" data-uk-toggle><span
+            data-uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Menu</span></a>
+            <ul class="uk-navbar-nav uk-visible@m">
+                <li><a href="{{ path("user_certifs")}}">Certifications</a></li>
+                <li class = "uk-disabled-whiter-color uk-disabled"><a>Favourites</a></li>
+                <li><a href="{{ path("user_suggs")}}">Suggestions</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<hr class = "uk-hr uk-margin-horizontal-none" style = "border-color: #b1b1b1;">
+
+{% include '@user/collection/one_exam.html.twig' with {'userId': app.user.id, 'exam': exam, 'attemptsRepository': attemptsRepository} only %}
+
+{% endblock page %}

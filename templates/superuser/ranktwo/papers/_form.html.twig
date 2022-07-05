@@ -1,0 +1,40 @@
+<a href="{{ path('exam_papers_list', {'id': paper.exam.id}) }}"  class = "btn normal_btn back_btn"><span class="glyphicon glyphicon-arrow-left"></span> Go Back</a>
+
+{{ form_start(form) }}
+    {% for message in app.flashes('success') %}
+        <div class = "form-alert green">
+            <span class = ''>
+                {{ message }}
+            </span>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class = "form-alert red">
+            <span class = ''>
+                {{ message }}
+            </span>
+        </div>
+    {% endfor %}
+    
+    {{ form_widget(form) }}
+    <div class = "between_wrapper">
+        {% if (paper is defined) and (paper.getUpdatedAt() != null) %}
+            <i class = "updated_at"> Last updated at {{ paper.getUpdatedAt()|date('Y-m-d H:i:s') }}</i>
+        {% else %}
+            <i class = "updated_at"></i>
+        {% endif %}
+        
+        <div>
+        
+            {% set questionsCount = paper.getQuestions().count %}
+            {% if (paper is defined) and questionsCount > 0 %}
+                <a class = "btn normal_btn" href="{{ path('try_exam', {'id': paper.id, '_return_route': app.request.get('_route')}) }}">Attempt</a>
+                
+                <a href = "{{ path('paper_reset', {'id': paper.id}) }}" onclick="return confirm('Are you sure you want to reset this exam paper? {{ questionsCount }} question(s) WILL be deleted from the database.');" class = "btn normal_btn">Reset</a>
+            {% endif %}
+
+            <button class="btn save_btn">{{ button_label|default('Save') }}</button>
+        </div>
+    </div>
+{{ form_end(form) }}

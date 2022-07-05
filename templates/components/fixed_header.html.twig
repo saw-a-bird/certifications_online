@@ -1,6 +1,6 @@
 <header id="header" class="uk-background-primary uk-background-norepeat uk-background-cover 
 	uk-background-center-center" 
-	style="box-shadow: rgb(141 141 141 / 30%) 0px 12px 38px, rgb(0 0 0 / 22%) 0px 7px 12px; background-image: url({{ asset("imgs/home.jpg") }});">
+	style="position:relative; box-shadow: rgb(141 141 141 / 30%) 0px 12px 38px, rgb(0 0 0 / 22%) 0px 7px 12px; background-image: url({{ asset("imgs/home.jpg") }});">
 	<div class="uk-navbar-wrapper" data-uk-sticky="animation: uk-animation-slide-top; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; cls-inactive: uk-navbar-transparent; top: #header; media: @m">
 		{% include 'components/navigation.html.twig' %}
 	</div>
@@ -8,26 +8,5 @@
 	<div>
         <div class="uk-section uk-section-small uk-section-hero uk-position-relative uk-light"  
         data-uk-scrollspy="cls: uk-animation-slide-bottom-medium"></div>
-
-	{# <div>
-		<div class="uk-section uk-section-large uk-section-hero uk-position-relative uk-light"  
-			data-uk-scrollspy="cls: uk-animation-slide-bottom-medium">
-			<div class="uk-container uk-margin-large-top uk-margin-small-bottom">
-				<div class="uk-child-width-1-2@m uk-grid-large" data-uk-grid>
-					<div class="uk-flex uk-flex-bottom">
-						<h1 class="uk-heading-medium">How can we help you today?</h1>
-					</div>
-					<div class="uk-flex uk-flex-bottom">
-						<div class="uk-position-relative uk-width-1-1">
-							<form class="uk-search uk-search-default uk-width-1-1" name="search-hero" onsubmit="return false;">
-								<span class="uk-search-icon-flip" data-uk-search-icon="ratio: 1.6"></span>
-								<input id="search-hero" class="uk-search-input uk-form-large" type="search"
-									placeholder="Search for answers" autocomplete="off" data-minchars="1" data-maxitems="30">
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div> #}
+	</div>
 </header>

@@ -17,7 +17,7 @@
  * @author Artem Zabelin <artjomzabelin@gmail.com>
  */
 #}
-{% if pageCount > 1 %}
+{% if pageCount >= 1 %}
     <ul class="pagination">
         {% if previous is defined %}
                  <li class="arrow">
@@ -31,7 +31,7 @@
             </li>
         {% endif %}
 
-        {% if startPage > 1 %}
+        {% if startPage >= 1 %}
             <li>
                 <a href="{{ path(route, query|merge({(pageParameterName): 1})) }}">1</a>
             </li>

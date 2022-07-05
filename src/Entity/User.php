@@ -10,8 +10,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use DateTime;
 
+
+//https://symfonycasts.com/screencast/symfony-security/verify-email
+
+
 /**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\UsersRepository")
  * @ORM\Table(name="user")
  * @UniqueEntity(fields="email", message="This email is already taken.")
  * @UniqueEntity(fields="username", message="This username is already taken.")
@@ -83,29 +87,47 @@ class User implements UserInterface, \Serializable
     private $avatar_path = "default1.png";
 
     /**
-     * @ORM\Column(type="string", length=125)
-     */
-    private $biography = "";
-
-    /**
      * @ORM\Column(type="string", length=50)
      */
     private $specialty = "";
 
     /**
-     * @ORM\ManyToMany(targetEntity=Certifications::class, mappedBy="users")
+     * @ORM\ManyToMany(targetEntity=Certification::class, fetch="EXTRA_LAZY"))
      */
     private $certifications;
 
     /**
-     * @ORM\OneToMany(targetEntity=Certifications::class, mappedBy="createdBy")
+     * @ORM\ManyToMany(targetEntity=Exam::class, fetch="EXTRA_LAZY"))
      */
-    private $creations;
+    private $exams;
+
+    /**
+     * @ORM\OneToMany(targetEntity=eSuggestion::class, mappedBy="createdBy")
+     */
+    private $suggestions;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $acceptedSugg = 0;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified = false;
 
     public function __construct()
     {
         $this->certifications = new ArrayCollection();
-        $this->creations = new ArrayCollection();
+        $this->exams = new ArrayCollection();
+        $this->suggestions = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function onPrePersist(){
+        $this->created_at = new Datetime();
     }
 
     public function getId(): int
@@ -229,18 +251,6 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    public function getBiography(): ?string
-    {
-        return $this->biography;
-    }
-
-    public function setBiography(string $biography): self
-    {
-        $this->biography = $biography;
-
-        return $this;
-    }
-
     public function getSpecialty(): ?string
     {
         return $this->specialty;
@@ -254,69 +264,111 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * @ORM\PrePersist
+     * @return Collection|Certification[]
      */
-    public function onPrePersist(){
-        $this->created_at = new Datetime();
-    }
-
-    /**
-     * @return Collection|Certifications[]
-     */
-    public function getCertifications(): Collection
+    public function getCertifCollection(): Collection
     {
         return $this->certifications;
     }
 
-    public function isEnrolled(Certifications $certification): bool {
+    public function isAddedCertif(Certification $certification): bool {
         return $this->certifications->contains($certification);
     }
 
-    public function addCertification(Certifications $certification): self
+    public function addCertification(Certification $certification): self
     {
         if (!$this->certifications->contains($certification)) {
             $this->certifications[] = $certification;
-            $certification->addUser($this);
         }
 
         return $this;
     }
 
-    public function removeCertification(Certifications $certification): self
+    public function removeCertification(Certification $certification): self
     {
-        if ($this->certifications->removeElement($certification)) {
-            $certification->removeUser($this);
-        }
+        $this->certifications->removeElement($certification);
 
         return $this;
     }
-
+    
     /**
-     * @return Collection<int, Certifications>
+     * @return Collection|Exam[]
      */
-    public function getCreations(): Collection
+    public function getExamCollection(): Collection
     {
-        return $this->creations;
+        return $this->exams;
     }
 
-    public function addCreation(Certifications $creation): self
+    public function isAddedExam(Exam $exam): bool {
+        return $this->exams->contains($exam);
+    }
+
+    public function addExam(Exam $exam): self
     {
-        if (!$this->creations->contains($creation)) {
-            $this->creations[] = $creation;
-            $creation->setCreatedBy($this);
+        if (!$this->exams->contains($exam)) {
+            $this->exams[] = $exam;
         }
 
         return $this;
     }
 
-    public function removeCreation(Certifications $creation): self
+    public function removeExam(Exam $exam): self
     {
-        if ($this->creations->removeElement($creation)) {
+        $this->exams->removeElement($exam);
+
+        return $this;
+    }
+
+ /**
+     * @return Collection<int, eSuggestion>
+     */
+    public function getSuggestions(): Collection
+    {
+        return $this->suggestions;
+    }
+
+    public function addSuggestion(eSuggestion $suggestion): self
+    {
+        if (!$this->suggestions->contains($suggestion)) {
+            $this->suggestions[] = $suggestion;
+            $suggestion->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSuggestion(eSuggestion $suggestion): self
+    {
+        if ($this->suggestions->removeElement($suggestion)) {
             // set the owning side to null (unless already changed)
-            if ($creation->getCreatedBy() === $this) {
-                $creation->setCreatedBy(null);
+            if ($suggestion->getCreatedBy() === $this) {
+                $suggestion->setCreatedBy(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAcceptedSugg(): ?int
+    {
+        return $this->acceptedSugg;
+    }
+
+    public function addAcceptedSugg(): self
+    {
+        $this->acceptedSugg++;
+
+        return $this;
+    }
+
+    public function getIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }

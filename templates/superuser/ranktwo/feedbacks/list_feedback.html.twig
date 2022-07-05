@@ -1,0 +1,56 @@
+{% extends "@backend_root/base.html.twig" %}
+
+{% block title %} User Feedback - List{% endblock %}
+
+{% block scriptsheet %}
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css" />
+
+    <script>
+        document.getElementById("feedbacks_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div style = "margin: 40px 20px 50px; padding: 10px;">
+		<table id="example" class="table dataTable" style="width: 100%;" aria-describedby="example_info">
+            <thead>
+                <tr>
+                    <th>Created At</th>
+                    <th>Created by</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for feedback in feedbacks %}
+                <tr>
+                    <td>{{ feedback.getCreatedAt()|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ feedback.createdBy.username }}</td>
+                
+                    <td>{{ feedback.title }}</td>
+                    <td>{{ feedback.status }}</td>
+
+                    <td class = "action_row">
+                        <a href="{{ path('feedback_view', {'id': feedback.id}) }}">View</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({"aoColumns": [ {"bSearchable": false}, {"bSearchable": false}, {"bSearchable": false}, {"bSearchable": true}, {"bSearchable": false}]});
+
+        $(".dataTables_filter input").attr("placeholder", "Status...").blur();
+    });
+</script>
+{% endblock %}
+

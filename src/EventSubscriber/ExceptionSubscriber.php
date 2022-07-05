@@ -21,28 +21,33 @@ class ExceptionSubscriber implements EventSubscriberInterface
     }
 
     public function onKernelException(ExceptionEvent $event): void{
-        $code = null;
-        $exception = $event->getException();
+        // $code = null;
+        // $message = null;
 
-        $request = $event->getRequest();
-        $route = $request->get('_route');
+        // $exception = $event->getThrowable();
 
-        if ($route == '_error') {
-            $code = 999;
-        } else {
-            if ($route == 'try_exam') {
-                $code = 100;
-            } else {
-                $code = $this->getStatusCodeFromException($exception);
-            }
+        // $request = $event->getRequest();
+        // $route = $request->get('_route');
 
-            $session = $request->getSession();
-            $session->set('error_code', $code);
-            $session->set('error_message', $exception->getMessage());
-            $session->set('error_route', $route);
+        // if ($route == 'try_exam') {
+        //     $code = 100;
+        // } else {
+        //     $code = $this->getStatusCodeFromException($exception);
+        //     $message = $exception->getMessage();
+        // }
 
-            $event->setResponse(new RedirectResponse($this->router->generate('_error')));
-        }
+        // // $session = $request->getSession();
+        // // $session->set('error_code', );
+        // // $session->set('error_message', $exception->getMessage());
+        // // $session->set('error_route', );
+
+        // $event->setResponse(new RedirectResponse(
+        //     $this->router->generate('_error', array(
+        //         'error_code' => $code, 
+        //         'error_message' => $message,
+        //         'error_route' => $route
+        //     )
+        // )));
     }
 
     private function getStatusCodeFromException(Exception $exception): int

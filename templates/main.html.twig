@@ -1,0 +1,36 @@
+
+
+{% set page = "main page" %}
+{% extends "base.html.twig" %}
+
+{% block spreadsheets %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/uikit@3.13.1/dist/js/uikit-icons.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/uikit@3.13.1/dist/js/uikit.min.js"></script>
+	<link rel="stylesheet" href="{{ asset('css/footer-services.css') }}" />
+	<link rel="stylesheet" href="{{ asset('css/glyphicon.min.css') }}" />
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+{% include "components/fixed_header.html.twig" %}
+
+
+<div class = "uk-section-transparent uk-margin-horizontal-10 uk-margin-bottom-small uk-box-shadow-78-tobottom">
+
+	<div class="uk-container uk-section-small">
+		<ul class="uk-breadcrumb uk-margin-top-none">
+			{% block breadcrumb %}
+			{% endblock %}
+		</ul>
+
+		{% block content %}
+		{% endblock %}
+	</div>
+</div>
+
+{% include "components/footer.html.twig" %}
+
+{% endblock %}

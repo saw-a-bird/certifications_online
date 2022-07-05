@@ -10,14 +10,14 @@ use Symfony\UX\Chartjs\Model\Chart;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
- * @Route("/admin/rankthree")
+ * @Route("/moderator")
  * @IsGranted("ROLE_MODERATOR")
  */
 class ModeratorController extends AbstractController
 {
 
     /**
-     * @Route("/dashboard", name="admin_dashboard", methods={"GET"})
+     * @Route("/dashboard", name="moderator_dashboard", methods={"GET"})
      */
     public function index(ChartBuilderInterface $chartBuilder): Response
     {

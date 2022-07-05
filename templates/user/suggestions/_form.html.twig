@@ -1,0 +1,17 @@
+    
+    <div class="form-group" style = "margin: 5px 0 30px">
+        <div>
+            <label class="control-label" for="certifications_thumbnail_path">PDF File :</label>
+            {% if path is defined %}
+                 <a href= "{{ asset(suggestion.getPdfFile()) }}" style = "margin-right: 10px"> View </a>
+            {% endif %}
+            {{ form_widget(form.upload_pdf) }}
+        </div>
+        <div style = "margin: 10px 0">
+            <i> - Pdf must follow the following question format: <a href = "{{asset("imgs/format_pdf.png") }}"> View </a></i>
+            <i style = "display:block"> - Any image will be ignored. <span style = "font-size:13px">(May be supported in the future though.)</span></i>
+        </div>
+    </div>
+
+    {{ form_widget(form) }}
+

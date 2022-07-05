@@ -5,7 +5,8 @@
 
 {% block spreadsheets %}
     <link rel="stylesheet" href="{{ asset('css/form.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/registration.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/shadowForm.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/formAlert.css') }}" />
 {% endblock %}
 
 {% block title %}Login{% endblock %}
@@ -21,7 +22,7 @@
 
                     {% if error %}
                         <span class = 'form-alert-red'>
-                            {{ error.messageKey }}
+                            {{ error.messageKey|nl2br }}
                         </span><br>
                     {% endif %}
                     

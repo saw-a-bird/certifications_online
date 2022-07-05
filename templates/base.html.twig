@@ -4,24 +4,24 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/png" href="https://via.placeholder.com/16x16/c50000/c50000/" >
+    <link rel="shortcut icon" type="image/png" href="/shortcut_logo.png" >
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css" />
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    {# <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"> #}
 
 		
-        {% block spreadsheets %}
-            <script src = "{{ asset('js/awesomplete.js') }}"></script>
-            <script src = "{{ asset('js/uikit.js') }}"></script>
-        {% endblock spreadsheets %}
+    {% block spreadsheets %}
+        <script src = "{{ asset('js/uikit.js') }}"></script>
+    {% endblock spreadsheets %}
 
-        <title>{% block title %}{% endblock title %}</title>
+    <title>{% block title %}{% endblock title %}</title>
 
-		{% if is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('IS_AUTHENTICATED_FULLY') %}
-			{% set logged_in = true %}
-		{% else %}
-			{% set logged_in = false %}
-		{% endif %}
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') or is_granted('IS_AUTHENTICATED_FULLY') %}
+        {% set logged_in = true %}
+    {% else %}
+        {% set logged_in = false %}
+    {% endif %}
 </head>
 
 <body class = "uk-section-grey">

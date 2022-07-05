@@ -1,0 +1,26 @@
+
+
+<a href="{{ path('ressources_index') }}"  class = "btn normal_btn back_btn"><span class="glyphicon glyphicon-arrow-left"></span> Go Back</a>
+
+{{ form_start(form) }}
+    {% for message in app.flashes('success') %}
+        <div class = "form-alert green">
+            <span class = ''>
+                {{ message }}
+            </span>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class = "form-alert red">
+            <span class = ''>
+                {{ message }}
+            </span>
+        </div>
+    {% endfor %}
+
+    {{ form_widget(form) }}
+    <div class = "right_wrapper spaced_btn_wrapper">
+        <button class="btn form-submit save_button">{{ button_label|default('Save') }}</button>
+    </div>
+{{ form_end(form) }}

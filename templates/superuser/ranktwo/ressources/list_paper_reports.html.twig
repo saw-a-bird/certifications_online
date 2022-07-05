@@ -1,0 +1,58 @@
+{% extends "@backend_root/base.html.twig" %}
+
+{% block title %}Paper #{{paper.id}} - Reports{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("ressources_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div class = "form_container">
+        <a href="{{ path('exam_papers_list', {'id': paper.exam.id}) }}"><button class="btn back_button">Go Back</button></a>
+        <h1>All reports of the Paper#{{paper.id}} :</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Created By</th>
+                    <th>Reason</th>
+                    <th>Created At</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for report in paper.getReports() %}
+                {% set possibleSpam = false %}
+                <tr>
+                    <td>{{ report.createdBy.username }}</td>
+                    <td>{{ report.reason }}</td>
+                    <td>{{ report.getCreatedAt()|date('Y-m-d H:i:s') }}</td>
+                   <td>
+                        <select class = "status-dropdown" id="state-dropdown-{{report.id}}" onchange="changeState(this, {{report.id}})" data-selected = "{{ report.status }}">
+                            <option value="-">-</option>
+                            <option value="Fixed">Fixed</option>
+                            <option value="Spam">Spam</option>
+                        </select>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function changeState(element, paperId) {
+            $.post("{{ path('report_change_status') }}", {id: paperId, status: element.value});
+        }
+
+        document.querySelectorAll('[data-selected]').forEach(e => {
+            e.value = e.dataset.selected
+        });
+    </script>
+{% endblock %}

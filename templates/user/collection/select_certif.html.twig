@@ -1,0 +1,68 @@
+
+{% extends "@user/list_items.html.twig" %}
+
+{% block spreadsheets %}
+	{{ parent() }}
+    <link rel="stylesheet" href="{{ asset("css/examTable.css")}}" />
+	<link rel="stylesheet" href="{{ asset('css/grid_thumbnail.css') }}" />
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li><a href="{{path("user_certifs")}}">Certifications</a></li>
+    <li class="uk-disabled"><a>{{ certif.title }}</a></li>
+{% endblock %}
+
+{% block page %}
+<nav class="uk-navbar-nocolor uk-navbar-container">
+    <div class="uk-container uk-navbar-transparent">
+        <div data-uk-navbar>
+
+            <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas" data-uk-toggle><span
+            data-uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Menu</span></a>
+            <ul class="uk-navbar-nav uk-visible@m">
+                <li class = "uk-disabled-whiter-color uk-disabled"><a>Certifications</a></li>
+                <li><a href="{{ path("user_favs")}}">Favourites</a></li>
+                <li><a href="{{ path("user_suggs")}}">Suggestions</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<hr class = "uk-hr uk-margin-horizontal-none" style = "border-color: #b1b1b1;">
+
+<div class = "uk-grid uk-margin-vertical-medium">
+	<div class = "uk-padding-left-none uk-details-header uk-flex-item-100">
+		<div class="uk-details-thumbnail uk-section-transparent uk-flex-item-100">
+			<div class="uk-grid-shadowing uk-certif-box">
+				<div class = "uk-thumbnail uk-margin-left">
+					<div class="container" style = "max-height:300px; max-width:300px;">
+						<img src="{{ asset(certif.getThumbnailPath()) }}" alt="">
+					</div>
+
+					<div class = "uk-margin-auto-top">
+						<br/>
+						<a href="{{ path('certif_remove_coll', {'id': certif.id}) }}" style = "color: #fff;"><button class="uk-button uk-button-danger">Remove from collection</button></a>
+					</div>
+				</div>
+				<div class="uk-details-description uk-flex-item-60">
+					<h1 class="uk-no-spacing">{{ certif.title }}</h1>
+					<div class="uk-badge">{{ certif.eProvider.name }}</div>
+					<p class = "uk-item-description">
+						{{ certif.description }}
+					</p>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	{% for exam in certif.getExams() %}
+		<div class = "uk-section-transparent uk-container-sud uk-exam-table uk-flex-item-100 uk-margin-top">
+            <h4 class ="uk-margin-bottom-xsmall">Exam {{exam.code}}: </h4>
+			{% include '@user/collection/one_exam.html.twig' with {'userId': app.user.id, 'exam': exam, 'attemptsRepository': attemptsRepository} only %}
+		</div>
+	{% endfor %}
+</div>
+
+{% endblock page %}

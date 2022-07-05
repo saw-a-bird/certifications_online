@@ -1,0 +1,74 @@
+
+{% extends "@user/list_items.html.twig" %}
+
+{% block spreadsheets %}
+	{{ parent() }}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/uikit@3.13.1/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.uikit.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.uikit.min.css" />
+    <link rel="stylesheet" href="{{ asset("css/examTable.css")}}" />
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+	<li class="uk-disabled uk-disabled-color"><a>Favourites</a></li>
+{% endblock %}
+
+{% block page %}
+<nav class="uk-navbar-nocolor uk-navbar-container">
+    <div class="uk-container uk-navbar-transparent">
+        <div data-uk-navbar>
+
+            <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas" data-uk-toggle><span
+            data-uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Menu</span></a>
+            <ul class="uk-navbar-nav uk-visible@m">
+                <li><a href="{{ path("user_certifs")}}">Certifications</a></li>
+                <li class = "uk-disabled-whiter-color uk-disabled"><a>Favourites</a></li>
+                <li><a href="{{ path("user_suggs")}}">Suggestions</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<hr class = "uk-hr uk-margin-horizontal-none" style = "border-color: #b1b1b1;">
+
+<h5><b>Here's all the exams you've favored:</b></h5>
+
+<div style = "padding: 10px 20px;">
+    <div class="uk-width-1-1">
+        <table id="example" class="uk-table uk-table-hover uk-table-striped dataTable uk-full-width" aria-describedby="example_info">
+            <thead>
+                <tr>
+                    <th class = "uk-width-xsmall">Code</th>
+                    <th class = "uk-width-small">Title</th>
+                    <th class = "uk-width-xsmall">Provider</th>
+                    <th>Papers</th>
+                    <th>Last Updated At</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exam in app.user.getExamCollection() %}
+                    <tr>
+                        <td><a href="{{path("exam_view", {"id": exam.code})}}" class = "exam-code"><span class="glyphicon glyphicon-new-window"></span> {{exam.code}}</a></td>
+                        <td>{{exam.title}}</td>
+                        <td>{{exam.eProvider.name}}</td>
+                        <td>{{exam.getExamPapers().count()}}</td>
+                        <td>{{exam.getUpdatedAt()|date('Y-m-d H:i:s')}}</td>
+                        <td>
+                            <a class = "uk-button uk-button-default uk-full-width" href="{{ path('user_exam_select', {'id': exam.id}) }}">Enter</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#example').dataTable({"aoColumns": [ {"bSearchable": true}, {"bSearchable": true}, {"bSearchable": true}, {"bSearchable": false}, {"bSearchable": false}, {"bSearchable": false}]});
+        });
+    </script>
+</div>
+{% endblock page %}

@@ -1,0 +1,55 @@
+<div class='col-md-8'>
+    <div class='media g-mb-30 media-comment'>
+        <div class='media-body u-shadow-v18 g-bg-secondary g-pa-30'>
+            <div class='list-inline g-mb-15'>
+                <img class='d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15' src='{{ asset( comment.createdBy.getAvatarPath()) }}' alt='Image Description'>
+                <div>
+                    <a href = '#'  class='comment-author g-color-gray-dark-v1 mb-0'>{{ comment.createdBy.username }}</a>
+
+                    {% if  comment.createdBy.acceptedSugg > 0 %}
+                        <a class = 'uk-badge uk-badge-smaller-pill uk-badge-color-blue'>Contributor</a>
+                    {% endif %}
+
+                    {% if  comment.isEdited() %}
+                        <a class = 'uk-badge uk-badge-smaller-pill uk-badge-color-light'>Edited</a>
+                    {% endif %}
+
+                    <br>
+                    <span class = 'uk-font-size-12'>{{ comment.createdBy.specialty }}</span>
+                </div>
+                <span class='g-color-gray-dark-v4 g-font-size-12 ml-auto'>
+                    {{ comment.getLastUpdatedAt()|ago}}
+                </span>
+            </div>
+    
+            <p>{{ comment.content }}</p>
+    
+            <ul id = 'capabilities' class='list-inline list-comments'>
+
+                
+                   {% if app.user != null and comment.createdBy.id == app.user.id %}
+                <li class='list-inline-item ml-auto'>
+                    <a class='uk-delete-button u-link-v5 g-color-gray-dark-v4 g-color-primary--hover'>
+                        <i class='fa fa-trash g-pos-rel g-top-1 g-mr-3'></i>
+                        Delete
+                    </a>
+                </li>
+
+                <li class='list-inline-item uk-margin-medium-left'>
+                    <a class='uk-edit-button u-link-v5 g-color-gray-dark-v4 g-color-primary--hover'>
+                        <i class='fa fa-edit g-pos-rel g-top-1 g-mr-3'></i>
+                        Edit
+                    </a>
+                </li>
+                {# <li class='list-inline-item uk-margin-medium-left'> #}
+                {% endif %}
+                    {# <a class='uk-reply-button u-link-v5 g-color-gray-dark-v4 g-color-primary--hover'>
+                        <i class='fa fa-reply g-pos-rel g-top-1 g-mr-3'></i>
+                        Reply
+                    </a> #}
+                {# </li> #}
+            </ul>
+        </div>
+    </div>
+    <div class = 'uk-container uk-reply' style = 'display:none;'></div>
+</div>

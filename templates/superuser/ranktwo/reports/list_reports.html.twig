@@ -1,0 +1,69 @@
+{% extends "@backend_root/base.html.twig" %}
+
+{% block title %} User Reports - List{% endblock %}
+
+{% block scriptsheet %}
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css" />
+
+    <script>
+        document.getElementById("reports_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div style = "margin: 40px 20px 50px; padding: 10px;">
+		<table id="example" class="table dataTable" style="width: 100%;" aria-describedby="example_info">
+            <thead>
+                <tr>
+                    <th>Created At</th>
+                    <th>Created By</th>
+                    <th>Paper</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for report in reports %}
+                {% set possibleSpam = false %}
+                <tr>
+                    <td>{{ report.getCreatedAt()|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ report.createdBy.username }}</td>
+                    <td><a href="{{ path('paper_edit', {'id': report.examPaper.id}) }}">#{{ report.examPaper.id }}</a></td>
+                    <td>{{ report.reason }}</td>
+
+                    <td>
+                        <select class = "status-dropdown" id="state-dropdown-{{report.id}}" onchange="changeState(this, {{report.id}})" data-selected = "{{ report.status }}">
+                            <option value="-">-</option>
+                            <option value="Fixed">Fixed</option>
+                            <option value="Spam">Spam</option>
+                        </select>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+    $(document).ready(function () {
+        $('#example').DataTable({"aoColumns": [ {"bSearchable": false}, {"bSearchable": false}, {"bSearchable": true}, {"bSearchable": false}, {"bSearchable": true}]});
+
+        $(".dataTables_filter input").attr("placeholder", "Paper#, Status...").blur();
+
+        function changeState(element, paperId) {
+            $.post("{{ path('report_change_status') }}", {id: paperId, status: element.value});
+        }
+
+        document.querySelectorAll('[data-selected]').forEach(e => {
+            e.value = e.dataset.selected
+        });
+    });
+    </script>
+{% endblock %}
+

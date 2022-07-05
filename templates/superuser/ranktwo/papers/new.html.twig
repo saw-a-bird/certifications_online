@@ -1,0 +1,16 @@
+{% extends "superuser/base.html.twig" %}
+
+{% block title %}Papers - Add new{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("ressources_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+
+{% block form %}
+    <div class = "form_container">
+        {{ include('@mod_root/papers/_form.html.twig') }}
+    </div>
+{% endblock %}

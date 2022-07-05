@@ -5,7 +5,7 @@
 
     <b><span class = "uk-account-bread">/ Edit Profile</span></b>
     <br> 
-    <i class = "uk-classic-italic">Set up your presence and write a biography</i>
+    <i class = "uk-classic-italic">Set up your presence</i>
     </div>
 </div>
 <div class="uk-grid-large uk-grid uk-grid-stack uk-padding-top-large" data-uk-grid>
@@ -46,13 +46,13 @@
                     <i class = "uk-classic-italic">What do you do? Mention your field of work.</i>
                 </div>
 
-                <div class="uk-margin-bottom">
+                {# <div class="uk-margin-bottom">
                     {{ form_label(form.biography, "Biography", {'label_attr': {'class': 'uk-form-label'}}) }}
                     <div class="uk-form-controls">
                         {{ form_widget(form.biography, {'attr': {'class': 'uk-textarea form-control', 'rows': '5', 'minlength': '10', 'data':  app.user.biography}}) }}
                     </div>
                     <i class = "uk-classic-italic">Brief description for your profile. URLs are hyperlinked.</i>
-                </div>
+                </div> #}
 
                 <div class="uk-margin-medium-top">
                     <input class="uk-button uk-button-secondary uk-button-large" type="submit" value="Save Profile" onclick = "saveButton(this)">

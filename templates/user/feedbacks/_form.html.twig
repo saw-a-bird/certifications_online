@@ -1,0 +1,17 @@
+{{ form_start(form) }}
+    {% for message in app.flashes('success') %}
+        <div class = "form-alert-white-cover">
+            <span class = 'uk-classic-italic form-alert-white'>
+                {{ message }}
+            </span>
+        </div>
+    {% endfor %}
+
+    {{ form_widget(form) }}
+
+{% if new == false %}
+    <div class = "right_wrapper spaced_btn_wrapper">
+        <button class="btn save_btn">{{ button_label|default('Edit') }}</button>
+    </div>
+    {{ form_end(form) }}
+{% endif %}

@@ -1,4 +1,4 @@
-{% extends "@admin_root/base.html.twig" %}
+{% extends "@backend_root/base.html.twig" %}
 
 {% block title %}Users - List{% endblock %}
 
@@ -9,7 +9,8 @@
 {% endblock %}
 
 {% block form %}
-    <table class="table" style = "margin-top: 50px">
+    <div style = "margin: 50px 30px; padding: 10px;">
+    <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
@@ -35,7 +36,6 @@
                 <td>
                     <a href="{{ path('users_able', {'id': user.id}) }}">{% if user.isBanned %}unban{% else %}ban{% endif %}</a>
                     <a href="{{ path('users_mod', {'id': user.id}) }}">{% if user.hasRole("ROLE_MODERATOR") != false %}unmod{% else %}mod{% endif %}</a>
-                    <a href="{{ path('users_collab', {'id': user.id}) }}">{% if user.hasRole("ROLE_COLLABORATOR") != false %}uncollab{% else %}collab{% endif %}</a>
                 </td>
             </tr>
         {% else %}
@@ -45,4 +45,5 @@
         {% endfor %}
         </tbody>
     </table>
+    </div>
 {% endblock %}

@@ -21,9 +21,8 @@
 
         <h1>Oops! Something went wrong!</h1>
         <h4 class = "exception_message">{{ message }}</h4>
-        <h5 class = "exception_message">Error: {{ error }}</h5>
         <h5 class = "exception_message">Route: {{ route }}</h5>
 
-        <div class="btn"><a class = "no-style" href="{{ path('index') }}">Return to Home</a></div>
+        <a class = "no-style" href="{{ path('index') }}"><div class="btn">Return to Home</div></a>
     </body>
 </html>

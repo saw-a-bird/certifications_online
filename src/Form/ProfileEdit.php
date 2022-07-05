@@ -38,10 +38,11 @@ class ProfileEdit extends AbstractType {
                 'empty_data' => ''
             ))
 
-            ->add('biography', TextareaType::class, array(
-                'required' => false,
-                'empty_data' => ''
-            ));
+            // ->add('biography', TextareaType::class, array(
+            //     'required' => false,
+            //     'empty_data' => ''
+            // ))
+            ;
     }
  
     public function configureOptions(OptionsResolver $resolver) {

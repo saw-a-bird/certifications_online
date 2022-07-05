@@ -2,25 +2,47 @@
 
 namespace App\Repository;
 
-use App\Entity\Exams;
+use App\Entity\Exam;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Exams|null find($id, $lockMode = null, $lockVersion = null)
- * @method Exams|null findOneBy(array $criteria, array $orderBy = null)
- * @method Exams[]    findAll()
- * @method Exams[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Exam|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Exam|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Exam[]    findAll()
+ * @method Exam[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ExamsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Exams::class);
+        parent::__construct($registry, Exam::class);
+    }
+
+    public function findAvailable()
+    {
+        return $this->createQueryBuilder('e')
+            ->where('e.certification IS NULL')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function search($code)
+    {
+        return $this->createQueryBuilder('e')
+            ->select("e.id, e.code")
+            ->where('e.code like :code')
+            ->setParameter('code', "%".$code."%")
+            ->orderBy('e.code', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     // /**
-    //  * @return Exams[] Returns an array of Exams objects
+    //  * @return Exam[] Returns an array of Exam objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +59,7 @@ class ExamsRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Exams
+    public function findOneBySomeField($value): ?Exam
     {
         return $this->createQueryBuilder('e')
             ->andWhere('e.exampleField = :val')

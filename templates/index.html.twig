@@ -1,38 +1,51 @@
 
 
-
-{% set page = "main page" %}
-{% extends "base.html.twig" %}
+{% extends "main.html.twig" %}
 
 {% block spreadsheets %}
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/uikit@3.13.1/dist/js/uikit-icons.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/uikit@3.13.1/dist/js/uikit.min.js"></script>	
-	<link rel="stylesheet" href="{{ asset('css/tables.css') }}" />
+	{{ parent() }}
 	<link rel="stylesheet" href="{{ asset('css/grid_thumbnail.css') }}" />
-	
+	<link rel="stylesheet" href="{{ asset('css/tables.css') }}" />
+
 	<script>
-		function navigateTab(evt, identifier) {
-			var i, tabcontent, tablinks;
+		var identifier;
+
+		function validateTab() {
+			document.getElementById("form_text").value = document.getElementById(identifier).value;
+		}
+
+		function navigateTab(evt, tab) {
+			identifier = tab;
 			document.getElementById("form_submit").style.display = "inline-flex";
 			document.getElementById("form_tab").value = identifier;
 
-			tabcontent = document.getElementsByClassName("tab-content");
-			for (i = 0; i < tabcontent.length; i++) {
+			var tabcontent = document.getElementsByClassName("tab-content");
+			for (var i = 0; i < tabcontent.length; i++) {
 				tabcontent[i].style.display = "none";
 			}
 
-			tablinks = document.getElementsByClassName("tabbedAnchor");
-			for (i = 0; i < tablinks.length; i++) {
+			var tablinks = document.getElementsByClassName("tabbedAnchor");
+			for (var i = 0; i < tablinks.length; i++) {
 				tablinks[i].classList.remove("uk-active");
 			}
 
-			document.getElementsByClassName(identifier)[0].style.display = "block";
+			document.getElementById(identifier).style.display = "block";
 			evt.currentTarget.parentElement.classList.add("uk-active");
+		}
+
+		function resetSearch() {
+			window.location = window.location.pathname + window.location.hash;
 		}
 	</script>
 	
 	<style>
+	.uk-grid {
+		list-style: none;
+		justify-content: space-evenly;
+		row-gap: 20px;
+		column-gap: 10px;
+	}
+	
 	.tab-content {
 		display: none;
 	}
@@ -46,103 +59,87 @@
 		text-decoration: underline;
 	}
 	</style>
-
-	{{ parent() }}
 {% endblock %}
 
 {% block title %}CertifiyTN{% endblock %}
 
-{% block body %}
+{% block content %}
+<div class="uk-flex uk-flex-middle uk-flex-column uk-width-1-1 uk-margin-small-bottom filter-options-container">
 
-{% include "components/fixed_header.html.twig" %}
+	{% for message in app.flashes('success') %}
+		<span class = 'uk-classic-italic form-alert-green'>
+			{{ message }}
+		</span><br><br>
+	{% endfor %}
 
+	<div class="uk-flex uk-flex-right uk-flex-last uk-flex-1 uk-margin-medium-bottom filter-search-container">
+		<form action="{{ path('index') }}">
+			<div class = "uk-subnav uk-subnav-pill uk-search uk-search-default uk-width-medium">
 
-<div class = "uk-section-transparent uk-margin-bottom-small uk-margin-top uk-margin-horizontal-10 uk-box-shadow-vertical-small">
-	<div class="uk-container uk-section-small">
+			<input type="hidden" id="form_tab" name="type" />
+			<input type="hidden" id="form_text" name="find" />
 
-		<div class="uk-flex uk-flex-middle uk-flex-column uk-width-1-1 uk-margin-small-bottom filter-options-container">
-					    {% for message in app.flashes('success') %}
-					<span class = 'uk-classic-italic form-alert-green'>
-						{{ message }}
-					</span><br><br>
+			<select class="form-control uk-search-input tab-F tab-content"  id="P">
+				<option value="" disabled selected hidden>Name...</option>
+				{% for provider in providers %}
+					<option value="{{provider.name}}">{{provider.name}}</option>
 				{% endfor %}
-			<div class="uk-flex uk-flex-right uk-flex-last uk-flex-1 uk-margin-medium-bottom filter-search-container">
+			</select>
 
-				{{ form_start(form) }}
-					<div class = "uk-subnav uk-subnav-pill uk-search uk-search-default uk-width-medium">
+			<input type="text" id="C" placeholder = "Title..." class = "form-control uk-search-input tab-F tab-content" />
 
-						{{ form_widget(form.searchF, {'attr': {'placeholder': 'Name...', 'class': 'uk-search-input tab-F tab-content'}}) }}
+			<input type="text" id="E" placeholder = "Code..." class = "form-control uk-search-input tab-F tab-content" />
 
-						{{ form_widget(form.searchC, {'attr': {'placeholder': 'Title...', 'class': 'uk-search-input tab-C tab-content'}}) }}
-
-						{{ form_widget(form.searchE, {'attr': {'placeholder': 'Code...', 'class': 'uk-search-input tab-E tab-content'}}) }}
-
-						<button type="submit" id = "form_submit" name="form_submit" class="uk-search-icon-flip uk-icon uk-search-icon" style = "display:none" uk-search-icon=""><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="search-icon"><circle fill="none" stroke="#000" stroke-width="1.1" cx="9" cy="9" r="7"></circle><path fill="none" stroke="#000" stroke-width="1.1" d="M14,14 L18,18 L14,14 Z"></path></svg></button>
-					</div>
-					
-					{% if search_text != "" %}
-						<div class = "uk-nav-center uk-margin-small-top">
-							<i class = "uk-classic-italic">Current filter: {{ search_type }}</i><br/>
-							<i class = "uk-classic-italic">Search: {{ search_text }}</i>
-							{{ form_widget(form.reset) }}
-						</div>
-					{% else %}
-						{{ form_widget(form.reset, {'attr': {'style': 'display:none;'}}) }}
-					{% endif %}
-
-				{{ form_end(form) }}
-
+				<button type="submit" id = "form_submit" name="" class="uk-search-icon-flip uk-icon uk-search-icon" style = "display:none" uk-search-icon="" onclick="validateTab()">
+				<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="search-icon"><circle fill="none" stroke="#000" stroke-width="1.1" cx="9" cy="9" r="7"></circle><path fill="none" stroke="#000" stroke-width="1.1" d="M14,14 L18,18 L14,14 Z"></path></svg>
+				</button>
 			</div>
 			
-			<div class="uk-flex uk-flex-center uk-flex-left@s uk-grid-small uk-grid-divider uk-child-width-auto uk-margin-small-bottom uk-grid" uk-grid="">
-				<div>
-					<ul class="tab uk-flex uk-flex-center uk-flex-left@s uk-subnav uk-subnav-pill" >
-						<li class = "tabbedAnchor"><a href='javascript:;' onclick="navigateTab(event, 'tab-F')">Providers</a></li>
-						<li class = "tabbedAnchor"><a href='javascript:;' onclick="navigateTab(event, 'tab-C')">Certifications</a></li>
-						<li class = "tabbedAnchor"><a href='javascript:;' onclick="navigateTab(event, 'tab-E')">Examen</a></li>
-					</ul>
+			{% if search_text is defined and search_text != "" %}
+				<div class = "uk-nav-center uk-margin-small-top">
+					<i class = "uk-classic-italic">Current filter: {{ search_type }}</i><br/>
+					<i class = "uk-classic-italic">Search: {{ search_text }}</i>
+				<button type="reset" id = "form_reset" name="" class="form-control"  onclick="resetSearch()">
+					Reset
+				</button>
 				</div>
-			</div>
-		</div>
-
-		<div class="uk-section uk-section-xsmall">
-			<div class = "uk-grid">
-				{% for certif in articles %}
-					<div class="uk-thumbnail uk-thumbnail-box" style = "min-height:500px;">
-						<div class="container" style = "max-height:200px;">
-							<a href="{{ path('certif_view', {'id': certif.id}) }}"><img src="{{ asset(certif.getThumbnailPath()) }}" alt=""></a>
-						</div>
-						<div class="uk-thumbnail-caption">
-							<h5><a href="{{ path('certif_view', {'id': certif.id}) }}">{{ certif.title }}</a></h5>
-							<div class="uk-badge">{{ certif.provider.name }}</div>
-							<p class = "uk-item-description">
-								{{ certif.description }}
-							</p>
-						</div>
-
-						<div class = "uk-margin-auto-top">
-							<div class = "uk-thumbnail-info">
-							<p class = "uk-font-size-12"><i> Users : {{ certif.users|length }} </i></p>
-							<p class = "uk-font-size-12"><i> Last update was at {{ certif.getUpdateDate()|date("m/d/Y") }} </i></p>
-							</div>
-							{% if logged_in and app.user.isEnrolled(certif) %}
-								<a href="{{ path('enroll_remove', {'id': certif.id}) }}"><button class="uk-button uk-button-danger uk-full-width uk-button-disabled">UnEnroll</button></a>
-							{% else %}
-								<a href="{{ path('enroll_add', {'id': certif.id}) }}" style = "color: #fff;"><button class="uk-button uk-button-danger uk-full-width">Enroll</button></a>
-							{% endif %}
-						</div>
-					</div>
-				{% else %}
-					<h5>no records found</h5>
-				{% endfor %}
-			</div>
-		</div>
-		<div class="uk-section uk-section-xsmall">
-			{{ knp_pagination_render(articles) }}
+			{% endif %}
+		</form>
+	</div>
+	
+	<div class="uk-flex uk-flex-center uk-flex-left@s uk-grid-small uk-grid-divider uk-child-width-auto uk-margin-small-bottom uk-grid" uk-grid="">
+		<div>
+			<ul class="tab uk-flex uk-flex-center uk-flex-left@s uk-subnav uk-subnav-pill" >
+				<li class = "tabbedAnchor"><a href='javascript:;' onclick="navigateTab(event, 'P')">Providers</a></li>
+				<li class = "tabbedAnchor"><a href='javascript:;' onclick="navigateTab(event, 'C')">Certifications</a></li>
+				<li class = "tabbedAnchor"><a href='javascript:;' onclick="navigateTab(event, 'E')">Examen</a></li>
+			</ul>
 		</div>
 	</div>
 </div>
 
-{% include "components/footer.html.twig" %}
+<div class="uk-section uk-section-xsmall">
+	<div class = "uk-grid">
+		{% for provider in articles %}
+			<div class="uk-thumbnail uk-thumbnail-box">
+				<div class="container">
+					<a href="{{ path('provider_view', {'pname': provider.name}) }}"><img src="{{ asset(provider.getThumbnailPath()) }}" alt=""></a>
+				</div>
+				<div class="uk-thumbnail-caption">
+					<h5><a href="{{ path('provider_view', {'pname': provider.name}) }}">{{ provider.name }}</a></h5>
+					<div class = "uk-thumbnail-footer">
+						<span> certifications: {{ provider.getCertifications().count() }}</span>
+						<span> exams: {{ provider.getExams().count() }}</span>
+					</div>
+				</div>
+			</div>
+		{% else %}
+			<h5>no records found</h5>
+		{% endfor %}
+	</div>
+</div>
 
+<div class="uk-section uk-section-xsmall">
+	{{ knp_pagination_render(articles) }}
+</div>
 {% endblock %}

@@ -1,0 +1,82 @@
+
+{% extends "@user/list_items.html.twig" %}
+
+{% block spreadsheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/grid_thumbnail.css') }}" />
+
+    <style>
+        .uk-grid {
+            row-gap: 20px;
+            column-gap: 30px;
+        }
+
+        .item-box {
+            padding: 0 !important;
+            max-height:450px;
+        }
+
+        .item-box > .container {
+            height:200px;
+            overflow: hidden;
+        }
+    </style>
+        
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+	<li class="uk-disabled uk-disabled-color"><a>Certifications</a></li>
+    {# <li class="uk-disabled"><a>Disabled Category</a></li>
+    <li><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span></li> #}
+{% endblock %}
+
+{% block page %}
+<nav class="uk-navbar-nocolor uk-navbar-container">
+    <div class="uk-container uk-navbar-transparent">
+        <div data-uk-navbar>
+
+            <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas" data-uk-toggle><span
+            data-uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Menu</span></a>
+            <ul class="uk-navbar-nav uk-visible@m">
+                <li class = "uk-disabled-whiter-color uk-disabled"><a>Certifications</a></li>
+                <li><a href="{{ path("user_favs")}}">Favourites</a></li>
+                <li><a href="{{ path("user_suggs")}}">Suggestions</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<hr class = "uk-hr uk-margin-horizontal-none" style = "border-color: #b1b1b1;">
+
+<h5><b>Here's all the certifications you're enrolled in:</b></h5>
+
+<div class = "uk-grid uk-margin-vertical-medium">
+    {% for certif in certifs %}
+        <div class="uk-thumbnail uk-thumbnail-box item-box">
+            <div class="container">
+                <img src="{{ asset(certif.getThumbnailPath()) }}" alt="">
+            </div>
+            <div class="uk-thumbnail-caption">
+                <h5><a href="{{ path('user_certif_select', {'id': certif.id}) }}">{{ certif.title }}</a></h5>
+                <p><i> Provider: {{ certif.eProvider.name }}</i></p>
+            </div>
+
+            <div class = "uk-margin-auto-top uk-thumbnail-info">
+
+                <a href="{{ path('user_certif_select', {'id': certif.id}) }}"><button class="uk-button uk-button-default">Enter</button></a>
+            </div>
+        </div>
+    {% else %}
+        <h5>no records found</h5>
+    {% endfor %}
+</div>
+
+<div class="uk-section uk-section-small uk-padding-bottom-cancel">
+	{{ knp_pagination_render(certifs) }}
+</div>
+
+
+
+
+{% endblock page %}

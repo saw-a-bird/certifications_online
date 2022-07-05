@@ -1,0 +1,67 @@
+{% extends "@backend_root/base.html.twig" %}
+
+{% block title %} Exam {{exam.code}} - Paper List{% endblock %}
+
+{% block scriptsheet %}
+    <script>
+        document.getElementById("ressources_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div class = "form_container">
+        <a href="{{ path('provider_exams_list', {'id': exam.eProvider.id}) }}"><button class="btn back_button">Go Back</button></a>
+        <div class = "admin_list_header">
+           <h1>All papers of Exam {{exam.code}} :</h1>
+            <div class="buttons_container">
+                <a href="{{ path("paper_new", {'id': exam.id}) }}"><button class="btn add_button">New</button></a>
+            </div>
+        </div>
+        
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Questions Provider</th>
+                    <th>Questions</th>
+                    <th>Reports</th>
+                    <th>Created By</th>
+                    <th>Locked</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for paper in exam.getExamPapers() %}
+                <tr>
+                    {% set countQuestions = paper.getQuestions().count() %}
+                    <td>{{ paper.id }}</td>
+                    <td>{{ paper.qProvider }}</td>
+                    <td>{{ countQuestions }}</td>
+                    <td>{{ paper.getReports().count() }}</td>
+                    <td>{{ paper.suggestedBy.username }}</td>
+                    <td>{{ paper.isLocked ? 'Yes': 'No' }}</td>
+                    <td>
+                        <a href="{{ path('paper_edit', {'id': paper.id}) }}">edit</a>
+                        
+                        <a href="{{ path('paper_questions_list', {'id': paper.id}) }}">questions</a>
+
+                        <a href="{{ path('paper_lock', {'id': paper.id}) }}">{{ paper.isLocked ? 'unlock': 'lock' }}</a>
+
+                        <a href="{{ path('paper_reports_list', {'id': paper.id}) }}">reports</a>
+
+                        <form method="post" action="{{ path('paper_delete', {'id': paper.id}) }}" onsubmit="return confirm('Are you sure you want to delete PAPER#{{ paper.id }}? {{ countQuestions }} question(s) WILL be deleted from the database.');" class = "btn-delete">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ exam.id) }}">
+                            <button class="btn-link">delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

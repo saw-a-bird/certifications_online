@@ -1,9 +1,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    avatars_directory: '%kernel.project_dir%/public/imgs/avatars'
-    thumbnails_directory: '%kernel.project_dir%/public/imgs/thumbnails'
-    documents_directory: '%kernel.project_dir%/public/docs'
+    imgs_directory: '%kernel.project_dir%/public/imgs'
+    docs_directory: '%kernel.project_dir%/public/docs'
 
 services:
     # default configuration for services in *this* file
@@ -30,13 +29,12 @@ services:
     # for FileUploader service
     App\Services\FileUploader:
         arguments:
-            $avatarDirectory: '%avatars_directory%'
-            $thumbnailDirectory: '%thumbnails_directory%'
+            $imgsDirectory: '%imgs_directory%'
 
         # for FileUploader service
     App\Services\PDFImporter:
         arguments:
-            $documentsDirectory: '%documents_directory%'
+            $docsDirectory: '%docs_directory%'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     App\EventListener\RedirectUserListener:

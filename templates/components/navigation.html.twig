@@ -4,13 +4,15 @@
 
         <div class="uk-navbar-right">
             <div>
-            <a id="search-navbar-toggle" class="uk-navbar-toggle" data-uk-search-icon="ratio: 1.1" href="#"></a>
-            <div data-uk-drop="mode: click; pos: left-center; offset: 0">
-                <form class="uk-search uk-search-navbar uk-width-1-1" onsubmit="return false;">
-                <input id="search-navbar" class="uk-search-input" type="search" placeholder="Search for certifications"
-                    autofocus autocomplete="off" data-minchars="1" data-maxitems="30">
-                </form>
-            </div>
+                <a id="search-navbar-toggle" class="uk-navbar-toggle" data-uk-search-icon="ratio: 1.1" href="#"></a>
+                <div data-uk-drop="mode: click; pos: left-center; offset: 0">
+                    <form class="uk-search uk-search-navbar uk-width-1-1 awesomplete" onsubmit="return false;">
+                        <input id="search-navbar" class="uk-search-input" type="search" placeholder="Exam code here..." autofocus>
+                        <ul role="listbox" id="awesomplete_list">
+
+                        </ul>
+                    </form>
+                </div>
             </div>        
             <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas" data-uk-toggle><span
             data-uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Menu</span></a>
@@ -20,8 +22,7 @@
                 <a>Contact</a>
                 <div class="uk-navbar-dropdown">
                     <ul class="uk-navbar-dropdown-nav uk-nav-parent-icon" data-uk-nav>
-                        <li><a href="contact.php">Report an issue</a></li>
-                        <li><a href="contact.php">Suggest an exam</a></li>      
+                        <li><a href="{{ path("feedback_new") }}">Send feedback</a></li>
                     </ul>
                 </div>
             </li>
@@ -44,16 +45,15 @@
                                 {% endif %}
 
                                 {% if is_granted('ROLE_MODERATOR') %}
-                                    <li class = "uk-classic-italic"><a href="{{ path('mod_index') }}"> - Ressources</a></li>
-                                {% endif %}
-
-                                {% if is_granted('ROLE_COLLABORATOR') %}
-                                <li class = "uk-classic-italic"><a href="{{ path('collab_index') }}"> - Your Additions</a></li>
+                                    <li class = "uk-classic-italic"><a href="{{ path('ressources_index') }}"> - Ressources</a></li>
+                                    <li class = "uk-classic-italic"><a href="{{ path('suggestions_index') }}"> - Suggestions</a></li>
+                                    <li class = "uk-classic-italic"><a href="{{ path('feedbacks_index') }}"> - Users Feedback</a></li>
                                 {% endif %}
                             {% endif %}
                             <hr class = "uk-hr">
                             <li><a href="{{ path('account_information') }}">Edit Profile</a></li>
                             <li><a href="{{ path('account_settings') }}">Account Settings</a></li>
+                            <li><a href="{{ path('user_sugg_new') }}">Suggest an exam</a></li>
                             <hr class = "uk-hr">
                             <li><a href="{{ path('security_logout') }}">Sign Out</a></li>
                         </ul>
@@ -68,3 +68,54 @@
         </div>
     </div>
 </nav>
+
+<script>
+    $(document).ready(function () {
+        cache = []
+        search_results = $("#awesomplete_list");
+
+        function addResults(array) {
+            search_results.empty();
+            array.forEach(function(code) {
+                search_results.prepend( 
+                    "<li role='option' aria-selected='true'><a href = '/exam/"+code+"'>"+code+"</a></li>"
+                )
+            });
+
+        }
+
+        $("#search-navbar").autocomplete({
+
+            source: function (request, response) {
+                var term = request.term;
+                if (term in cache) {
+                    addResults(cache[term]);
+                    return;
+                }
+                $.ajax({
+                    crossDomain: true,
+                    type: 'POST',
+                    url: "{{ path('exams_search')}}",
+
+                    dataType: 'json',
+                    data: { "search": request.term },
+                    processdata: true,
+                    success: function (result) {
+                        var examCodes = JSON.parse(JSON.stringify(result));
+                    
+                        cache[term] = $.map(examCodes, function (item) {
+                            return item.code
+                        });
+
+                        addResults(cache[term]);
+                    },
+                    error: function (a, b, c) {
+                        debugger;
+                    }
+                });
+
+            },
+            minLength: 2
+        });
+    });
+</script>
