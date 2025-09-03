@@ -6,19 +6,20 @@ use App\Entity\eAttempt;
 use App\Entity\ExamPaper;
 use App\Entity\eReport;
 use App\Entity\Question;
-use App\Repository\ExamPapersRepository;
+
 use App\Repository\QuestionsRepository;
+use Doctrine\ORM\EntityManagerInterface;
+
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatter;
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * @Route("/attempt")
@@ -26,6 +27,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class TryController extends AbstractController {
 
+    private $user;
+    
     public function __construct(TokenStorageInterface $tokenStorage) {
         $this->user = $tokenStorage->getToken()->getUser();
     }
@@ -33,11 +36,11 @@ class TryController extends AbstractController {
     /**
      * @Route("/timerstart", name="try_start", methods={"POST"})
      */
-    public function start() {
+    public function start(SessionInterface $session) {
         $try = new eAttempt();
         $try->setTriedAt(new \DateTime("now"));
 
-        $this->get('session')->set('current_try', $try);
+        $session->set('current_try', $try);
 
         $output = new ConsoleOutput();
         $output->setFormatter(new OutputFormatter(true));
@@ -50,10 +53,9 @@ class TryController extends AbstractController {
     /**
      * @Route("/report", name="user_exampaper_report", methods={"POST"})
      */
-    public function report(Request $request) {
-        $examPaperId = $this->get('session')->get('current_paper');
+    public function report(SessionInterface $session, Request $request, EntityManagerInterface $entityManager) {
+        $examPaperId = $session->get('current_paper');
 
-        $entityManager = $this->getDoctrine()->getManager();
         $examPaper = $entityManager->getReference(ExamPaper::class, $examPaperId);
 
         if ($examPaper != null) {
@@ -76,15 +78,14 @@ class TryController extends AbstractController {
     /**
      * @Route("/submit", name="answers_submit", methods={"POST"})
      */
-    public function submit(Request $request) {
-        $try  = $this->get('session')->get('current_try');
-        $examPaperId = $this->get('session')->get('current_paper');
+    public function submit(SessionInterface $session, Request $request, EntityManagerInterface $entityManager) {
+        $try  = $session->get('current_try');
+        $examPaperId = $session->get('current_paper');
 
         if ($try->getExamPaper() != null) { // called function more than once
             return new Response();
         }
 
-        $entityManager = $this->getDoctrine()->getManager();
         $examPaper = $entityManager->getReference(ExamPaper::class, $examPaperId);
         
         if ($examPaper != null) {
@@ -110,11 +111,11 @@ class TryController extends AbstractController {
     /**
      * @Route("/start/{id}", name="try_exam")
      */
-    public function try_exam(Request $request, ExamPaper $examPaper): Response {
+    public function try_exam(SessionInterface $session, Request $request, ExamPaper $examPaper): Response {
         if ($this->isGranted('ROLE_MODERATOR')
          || $examPaper->getIsLocked() == false) {
             if (!empty($examPaper->getQuestions())) {
-                $this->get('session')->set('current_paper', $examPaper->getId());
+                $session->set('current_paper', $examPaper->getId());
                 $exam = $examPaper->getExam();
 
                 $papers = $exam->getExamPapers()->toArray();
@@ -138,8 +139,8 @@ class TryController extends AbstractController {
     /**
      * @Route("/get", name="exampaper_get_data", methods={"POST"})
      */
-    public function exampaper_get_data(QuestionsRepository $questionsRepository): Response {
-        $examPaperId = $this->get('session')->get('current_paper');
+    public function exampaper_get_data(SessionInterface $session,QuestionsRepository $questionsRepository): Response {
+        $examPaperId = $session->get('current_paper');
         $questions = $questionsRepository->findByPaperId($examPaperId);
         shuffle($questions);
         

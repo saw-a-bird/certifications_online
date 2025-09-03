@@ -7,9 +7,8 @@ use App\Entity\eProvider;
 use App\Entity\Exam;
 use App\Entity\History;
 use App\Form\ExamsType;
-
-
-
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,8 +22,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class ExamsController extends AbstractController
 {
-    public function __construct(TokenStorageInterface $tokenStorage) {
+
+    private $entityManager;
+
+    public function __construct(TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager) {
         $this->user = $tokenStorage->getToken()->getUser();
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -40,11 +43,10 @@ class ExamsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $history = new History($this->user, "created a new exam (code: ".$exam->getCode().")");
-            $entityManager->persist($exam);
-            $entityManager->persist($history);
-            $entityManager->flush();
+            $history = new History($this->user, "created new exam (code: ".$exam->getCode().")");
+            $this->entityManager->persist($exam);
+            $this->entityManager->persist($history);
+            $this->entityManager->flush();
 
             $this->addFlash('success', 'Successfully created a new exam.');
 
@@ -69,12 +71,10 @@ class ExamsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $entityManager = $this->getDoctrine()->getManager();
-
             $history = new History($this->user, "edited exam (code: ".$exam->getCode().")");
-            $entityManager->persist($exam);
-            $entityManager->persist($history);
-            $entityManager->flush();
+            $this->entityManager->persist($exam);
+            $this->entityManager->persist($history);
+            $this->entityManager->flush();
 
             $this->addFlash('success', 'Successfully edited the exam.');
         }
@@ -90,13 +90,13 @@ class ExamsController extends AbstractController
      * @Route("/{id}/delete", name="exam_delete", methods={"POST"})
      */
     public function delete(Request $request, Exam $exam): Response {
-        
         $providerId = $exam->getEProvider()->getId();
         
         if ($this->isCsrfTokenValid('delete'.$exam->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($exam);
-            $entityManager->flush();
+            $history = new History($this->user, "deleted exam (code: ".$exam->getCode().")");
+            $this->entityManager->persist($history);
+            $this->entityManager->remove($exam);
+            $this->entityManager->flush();
         }
 
         return $this->redirectToRoute('provider_exams_list', ["id" =>$providerId], Response::HTTP_SEE_OTHER);

@@ -39,7 +39,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="6">no records found</td>
+                    <td colspan="5" class = "no-records-found">no records found</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -47,7 +47,7 @@
     </div>
 <script>
     $(document).ready(function () {
-        $('#example').DataTable({"aoColumns": [ {"bSearchable": false}, {"bSearchable": false}, {"bSearchable": false}, {"bSearchable": true}, {"bSearchable": false}]});
+        $('#example').DataTable({"aoColumns": [ {"bSearchable": false}, {"bSearchable": false}, {"bSearchable": false}, {"bSearchable": true}, {"bSearchable": false}], "ordering": false });
 
         $(".dataTables_filter input").attr("placeholder", "Status...").blur();
     });

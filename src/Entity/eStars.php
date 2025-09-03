@@ -4,10 +4,11 @@ namespace App\Entity;
 
 use App\Repository\eStarsRatesRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Onurb\Doctrine\ORMMetadataGrapher\Mapping as Grapher;
+// use Onurb\Doctrine\ORMMetadataGrapher\Mapping as Grapher;
+// @Grapher\CustomEntityName("Exam Stars")
 
 /**
- * @Grapher\CustomEntityName("Exam Stars")
+ * 
  * @ORM\Entity(repositoryClass=eStarsRatesRepository::class)
  */
 class eStars

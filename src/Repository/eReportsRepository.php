@@ -50,6 +50,14 @@ class eReportsRepository extends ServiceEntityRepository
         }
     }
 
+    public function findAll()
+    {
+        return $this->createQueryBuilder('r')
+        ->orderBy('r.createdAt', 'DESC')
+        ->getQuery()
+        ->execute();
+    }
+
     public function countRows()
     {
         return $this->createQueryBuilder('r')

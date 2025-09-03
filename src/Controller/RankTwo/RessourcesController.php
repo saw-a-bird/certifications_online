@@ -11,7 +11,7 @@ use App\Entity\Question;
 use App\Repository\eProvidersRepository;
 use App\Repository\HistoryRepository;
 use App\Repository\ExamsRepository;
-use App\Repository\FeedbackRepository;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,7 +32,7 @@ class RessourcesController extends AbstractController
      /**
      * @Route("/providers", name="ressources_index", methods={"GET"})
      */
-    public function providers_list(eProvidersRepository $providersRepository): Response {
+    public function providers_index(eProvidersRepository $providersRepository): Response {
         return $this->render('@ressources_dir/list_providers.html.twig', [
             'providers' => $providersRepository->findAll(),
         ]);

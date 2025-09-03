@@ -25,7 +25,7 @@ class Certification
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50, unique=true)
+     * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank(message = "This field is required.")
      */
     private $title;
@@ -41,7 +41,7 @@ class Certification
     private $thumbnail_path = "placeholder.png";
 
     /**
-     * @ORM\OneToMany(targetEntity=Exam::class, mappedBy="certification", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity=Exam::class, mappedBy="certification", orphanRemoval=false, fetch="EXTRA_LAZY")
      */
     private $exams;
 
@@ -55,6 +55,12 @@ class Certification
         $this->exams = new ArrayCollection();
     }
 
+    public function setId(int $id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;

@@ -74,6 +74,14 @@ class HistoryRepository extends ServiceEntityRepository
             ->execute();
     }
 
+    public function findAll()
+    {
+        return $this->createQueryBuilder('h')
+        ->orderBy('h.createdAt', 'DESC')
+        ->getQuery()
+        ->execute();
+    }
+
     // /**
     //  * @return History[] Returns an array of History objects
     //  */

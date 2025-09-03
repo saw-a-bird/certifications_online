@@ -4,6 +4,8 @@ namespace App\Controller\RankThree;
 
 use App\Entity\Feedback;
 use App\Form\FeedbackType;
+use Doctrine\ORM\EntityManagerInterface;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,7 +23,7 @@ class FeedbackController extends AbstractController {
     /**
      * @Route("/new", name="feedback_new")
      */
-    public function feedback_new(Request $request) {
+    public function feedback_new(Request $request, EntityManagerInterface $entityManager) {
         $feedback = new Feedback();
 
         $form = $this->createForm(FeedbackType::class, $feedback);
@@ -30,7 +32,6 @@ class FeedbackController extends AbstractController {
         if ($form->isSubmitted() && $form->isValid()) {
             $feedback->setCreatedBy($this->user);
 
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($feedback);
             $entityManager->flush();
 

@@ -466,3 +466,15 @@ input[type=file] {
 .status-dropdown {
 	padding-right: 20px;
 }
+
+
+
+.no-records-found {
+	text-align: center;
+	vertical-align: middle;
+	color: #909090;
+  }
+  
+.no-records-found > * {
+	color: #909090;
+}

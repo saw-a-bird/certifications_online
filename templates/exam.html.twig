@@ -76,7 +76,7 @@
 					<tr>
                         <td>{{ loop.index }}</td>
 						<td>{{paper.qProvider}}</td>
-						<td>{{paper.suggestedBy.username}}</td>
+						<td>{{paper.getCreator()}}</td>
                         {% set questionsCount = paper.getQuestions().count() %}
 						<td>{{ questionsCount }}</td>
                         <td>{{paper.minsUntil}}</td>
@@ -120,7 +120,11 @@
                             {% endif %}
                         </td>
                     </tr>
-                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="8" class = "uk-no-records-found">no records found</td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -137,7 +141,7 @@
                         var parentRate = $(this).parent();
 
                         $.post("{{path("vote_new")}}", {paper: parentRate.attr('id').split("-")[1], stars: $(this).val()}).done(function(response) {
-                            alert(response);
+                            // alert(response);
                             if (response == "accepted") {
                                 var parentTD = parentRate.parent();
                                 var raters_count = parentTD.children('#raters_count');

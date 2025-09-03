@@ -4,6 +4,18 @@
 {% block spreadsheets %}
 	{{ parent() }}
     <link rel="stylesheet" href="{{ asset("css/examTable.css")}}" />
+
+    <style>
+        .sugg-accepted {
+            font-weight: bold;
+            color:green;
+        }
+
+        .sugg-rejected {
+            font-weight: bold;
+            color:#ff5a5a;
+        }
+    </style>
 {% endblock %}
 
 {% block breadcrumb %}
@@ -29,7 +41,11 @@
 
 <hr class = "uk-hr uk-margin-horizontal-none" style = "border-color: #b1b1b1;">
 
-<h5><b>Here's all the exam papers you've suggested:</b></h5>
+<h5 style = "margin-bottom: 10px;"><b>Here's all of your suggestions:</b></h5>
+
+<div style = "padding: 0px 15px 20px;">
+    <i> All approved and rejected suggestions will be deleted from the database after 3 days from their review date.</i>
+</div>
 
 <div style = "padding: 10px 20px;">
     <div class="uk-width-1-1">
@@ -42,6 +58,7 @@
                     <th>Exam Title</th>
                     <th>Questions</th>
                     <th>Time</th>
+                    <th>Status</th>
                     <th></th>
                 </tr>
             </thead>
@@ -54,13 +71,30 @@
                         <td>{{ sugg.examTitle }}</td>
                         <td>{{ sugg.questionsCount }}</td>
                         <td>{{ sugg.minsUntil }}</td>
-                        <td>
-                            <a class = "uk-button uk-button-default uk-full-width" href="{{ path('user_sugg_edit', {'id': sugg.id}) }}">Edit</a>
-                        </td>
+                        {% if sugg.status != null %}
+                            <td>
+                             {% if  sugg.rejectionReason == null %}
+                                 <span class = 'sugg-accepted'>
+                             {% else %}
+                                <span class = 'sugg-rejected'>
+                             {% endif %}
+
+                             {{sugg.status}}
+                             </span>
+                             </td>
+                            <td>
+                                <a class = "uk-button uk-button-default uk-full-width" onclick="alert('Reviewed at: {{ sugg.getDecidedAt()|date('Y-m-d H:i:s') }}{{ ("\\nReason for rejection: "~ sugg.rejectionReason)|default("")}}')">INFO</a>
+                            </td>
+                        {% else %}
+                            <td>-</td>
+                            <td>
+                                <a class = "uk-button uk-button-default uk-full-width" href="{{ path('user_sugg_edit', {'id': sugg.id}) }}">Edit</a>
+                            </td>
+                        {% endif %}
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="7" class = "uk-table-empty">no records found</td>
+                        <td colspan="8" class = "uk-no-records-found">no records found</td>
                     </tr>
                 {% endfor %}
             </tbody>

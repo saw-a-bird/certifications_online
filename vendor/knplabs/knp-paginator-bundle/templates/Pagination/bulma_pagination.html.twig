@@ -10,7 +10,7 @@
 {% if rounded %}{% set classes = classes|merge(['is-rounded']) %}{% endif %}
 {% if size != null %}{% set classes = classes|merge(['is-' ~ size]) %}{% endif %}
 
-{% if pageCount >= 1 %}
+{% if pageCount > 1 %}
     <nav class="{{ classes|join(' ') }}" role="navigation" aria-label="pagination">
         {% if previous is defined %}
             <a rel="prev" class="pagination-previous" href="{{ path(route, query|merge({(pageParameterName): previous})) }}">{{ 'label_previous'|trans({}, 'KnpPaginatorBundle') }}</a>

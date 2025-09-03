@@ -25,13 +25,13 @@ class Exam
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=20, unique=true)
+     * @ORM\Column(type="string", length=20)
      * @Assert\NotBlank(message = "This field is required.")
      */
     private $code;
 
     /**
-     * @ORM\Column(type="string", length=150, unique=true)
+     * @ORM\Column(type="string", length=250)
      * @Assert\NotBlank(message = "This field is required.")
      */
     private $title;
@@ -48,9 +48,10 @@ class Exam
     private $updated_at;
 
     /**
-     * @ORM\ManyToOne(targetEntity=eProvider::class, inversedBy="exams")
+     * @ORM\ManyToOne(targetEntity="App\Entity\eProvider", inversedBy="exams", cascade={"persist"})
      */
     private $eProvider;
+
 
     /**
      * @ORM\OneToMany(targetEntity=ExamPaper::class, mappedBy="exam", fetch="EXTRA_LAZY")
@@ -80,6 +81,12 @@ class Exam
     public function onPreUpdate()
     {
         $this->updated_at = new \DateTime("now");
+    }
+
+    public function setId(int $id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     public function getId(): ?int

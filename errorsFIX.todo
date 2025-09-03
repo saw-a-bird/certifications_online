@@ -1,0 +1,65 @@
+
+
+Later: Test EVERYTHING
+Later: Register (Email Verification) >> Money: SMTP Server # not verified yet ERROR, send msg to Email, success msg in Register Form
+Later: count() alternative, make entity variable instead (shadow? loaded on call).
+
+Now: Entity - Extra Lazy (where needed) XX
+Now: Security Check (Attempt / Comment...)
+Now: *CSS* Change Writings For PRODUCTION + Header
+Now: *CSS* Focus on Responsiveness
+
+
+Done (2022-07-07) : 
+- *CSS* Pagination + User Collection (onEmpty Text + Bigger minimum container size)
+- Used services such as EntityManagerInterface and ManagerRegistry # for better routing speed
+- Implemented Login-Throtting # for better security - Link: https://symfonycasts.com/screencast/symfony-security/login-throttling#play
+- Upgraded to Symfony 5.4
+- Removed deprecated dependencies
+- Understood more about config and dependencies
+- Created TODO file with colors
+
+
+Done (2022-07-09) :
+- ReplaceForm (Regex Checkbox, default: false)
+- History (Admin) - Journal (Certif, Exam, Paper, Provider, Suggestions)
+- Suggestion Accepted and Rejected warning + delete of delay (3days)
+
+Done (2022-07-11) :
+- Comment Spam (checks links and limits comments to 2 per exam)
+
+Done (2022-07-16) : 
+ - Create Crawler
+
+
+/*CONCEPTS:
+
+Responsiveness (per Height and Width)
+Cross-platform (per Platform)
+Application for Phone
+Translations (Per Country)
+
+
+Show potential and Plans
+Inner Competition (and Rewards?)
+Security
+Conveniency
+
+
+3. Use Non-Descriptive Form Names
+
+Good programming requires the use of descriptive names, but in avoiding comment spam, you should stay away from names that describe a form’s fields. Form element names like "Comment" make it too easy for spammers to access your comment system.
+
+4. Use rel="nofollow" for All Links
+If you allow site users to include links in their comments, add rel="nofollow" to the tag, as shown below:
+<a href="https://www.sitepoint.com" rel="nofollow">SitePoint</a>
+This technique allows search engines bots to ignore the link, so the spammer gains no benefit from adding links to your comments.
+
+
+*assertive - Requests you can't reject. (appropriate and polite but firm and emphathizing.)
+
+*aggressive - Requests you don't dare reject. (fear)
+
+
+"onurb/doctrine-yuml-bundle": "^1.1", 
+*/

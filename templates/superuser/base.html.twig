@@ -46,9 +46,7 @@
 
       <li id = "admin_dashboard"><a href="{{ path("admin_dashboard")}}"> <span class="glyphicon glyphicon-stats"></span>Dashboard</a></li>
 
-   {% if is_granted('ROLE_ADMIN') %}
-      <li id = "admin_users"><a href="{{ path("users_index")}}"> <span class="glyphicon glyphicon-user"></span>Users</a></li>
-  {% endif %}
+    <li id = "admin_users"><a href="{{ path("users_index")}}"> <span class="glyphicon glyphicon-user"></span>Users</a></li>
 
      <li id = "ressources_index"><a href="{{ path("ressources_index")}}"> <span class="glyphicon glyphicon-folder-open"></span>Ressources</a></li>
 
@@ -57,6 +55,8 @@
      <li id = "feedbacks_index"><a href="{{ path("feedbacks_index")}}"> <span class="glyphicon glyphicon-send"></span>Users Feedback ({{ render(url('feedback_count')) }})</a></li>
 
      <li id = "reports_index"><a href="{{ path("reports_index")}}"> <span class="glyphicon glyphicon-exclamation-sign"></span>Users Reports ({{ render(url('reports_count')) }})</a></li>
+
+     <li id = "history_index"><a href="{{ path("history_list")}}"> <span class="glyphicon glyphicon-list"></span>History</a></li>
 
       {% block scriptsheet %}{% endblock %}
   </ul>

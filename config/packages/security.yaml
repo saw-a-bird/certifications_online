@@ -1,15 +1,20 @@
 security:
+    enable_authenticator_manager: true
 
     role_hierarchy:
         ROLE_ADMIN:       [ROLE_USER, ROLE_MODERATOR]
         ROLE_MODERATOR:    ROLE_USER
 
-    encoders:
-        App\Entity\User: 'sodium'
+
+    password_hashers:
+        App\Entity\User:
+            algorithm: 'sodium'
 
     providers:
-        database_users:
-            entity: { class: App\Entity\User }
+        app_user_provider:
+           entity:
+             class: App\Entity\User
+             property: email #login methode
 
     firewalls:
         dev:
@@ -18,31 +23,26 @@ security:
 
         main:
             pattern: ^/
-            anonymous: true
-
-            form_login:
-                check_path: security_login
-                login_path: security_login
-                remember_me: true
-                csrf_token_generator: security.csrf.token_manager
-                default_target_path: index
-                # use_referer: true # Redirection to 'target_path' is being managed inside the success handler Listener below
-                success_handler: app.authentication_success_handler
-                
+            lazy: true
+            provider: app_user_provider
             user_checker: App\EventListener\PreAuthListener
+            entry_point: App\Security\LoginFormAuthenticator
+            custom_authenticator: App\Security\LoginFormAuthenticator
+
+            login_throttling:
+                max_attempts: 2
+
+            remember_me:
+                secret:   '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
+                always_remember_me: true
+                remember_me_parameter: _remember_me
+                path: /
 
             logout:
                 path: security_logout
                 target: index
 
-            remember_me:
-                secret:   '%kernel.secret%'
-                lifetime: 604800 # 1 week in seconds
-                path:     /
-                always_remember_me: true
-                remember_me_parameter: _remember_me
-                domain: ~
-
     access_control:
-        - { path: '^/login', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: '^/login', roles: PUBLIC_ACCESS }
         - { path: '^/your', roles: [IS_AUTHENTICATED_FULLY, IS_AUTHENTICATED_REMEMBERED] }

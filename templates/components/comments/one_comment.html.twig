@@ -6,11 +6,11 @@
                 <div>
                     <a href = '#'  class='comment-author g-color-gray-dark-v1 mb-0'>{{ comment.createdBy.username }}</a>
 
-                    {% if  comment.createdBy.acceptedSugg > 0 %}
+                    {% if comment.createdBy.acceptedSugg > 0 %}
                         <a class = 'uk-badge uk-badge-smaller-pill uk-badge-color-blue'>Contributor</a>
                     {% endif %}
 
-                    {% if  comment.isEdited() %}
+                    {% if comment.isEdited == true %}
                         <a class = 'uk-badge uk-badge-smaller-pill uk-badge-color-light'>Edited</a>
                     {% endif %}
 
@@ -18,7 +18,7 @@
                     <span class = 'uk-font-size-12'>{{ comment.createdBy.specialty }}</span>
                 </div>
                 <span class='g-color-gray-dark-v4 g-font-size-12 ml-auto'>
-                    {{ comment.getLastUpdatedAt()|ago}}
+                    {{ comment.createdAt|ago}}
                 </span>
             </div>
     
@@ -27,7 +27,7 @@
             <ul id = 'capabilities' class='list-inline list-comments'>
 
                 
-                   {% if app.user != null and comment.createdBy.id == app.user.id %}
+                {% if app.user != null and comment.createdBy.id == app.user.id %}
                 <li class='list-inline-item ml-auto'>
                     <a class='uk-delete-button u-link-v5 g-color-gray-dark-v4 g-color-primary--hover'>
                         <i class='fa fa-trash g-pos-rel g-top-1 g-mr-3'></i>

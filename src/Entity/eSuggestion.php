@@ -75,6 +75,22 @@ class eSuggestion
     private $questionsCount;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $status;
+
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $decidedAt;
+
+    /**
+     * @ORM\Column(type="string", length=60, nullable=true)
+     */
+    private $rejectionReason;
+
+    /**
      * Gets triggered only on insert
      * @ORM\PrePersist
      */
@@ -172,12 +188,12 @@ class eSuggestion
         return $this;
     }
 
-    public function getPdfFile(): ?string
+    public function getPdfAsset(): ?string
     {
         return "docs/".$this->pdf_file;
     }
 
-    public function getPdfName(): ?string
+    public function getPdfPath(): ?string
     {
         return $this->pdf_file;
     }
@@ -209,6 +225,58 @@ class eSuggestion
     public function setQuestionsCount(int $questionsCount): self
     {
         $this->questionsCount = $questionsCount;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getDecidedAt(): ?\DateTimeInterface
+    {
+        return $this->decidedAt;
+    }
+
+    public function setDecidedAt(\DateTimeInterface $decidedAt): self
+    {
+        $this->decidedAt = $decidedAt;
+
+        return $this;
+    }
+
+    public function setAccepted(): self
+    {
+        $this->status = "Accepted";
+        $this->decidedAt = new \DateTime("now");
+        return $this;
+    }
+
+    public function setRejected(string $reason): self
+    {
+        $this->status = "Rejected";
+        $this->decidedAt = new \DateTime("now");
+        $this->rejectionReason = $reason;
+
+        return $this;
+    }
+
+    public function getRejectionReason(): ?string
+    {
+        return $this->rejectionReason;
+    }
+
+    public function setRejectionReason(?string $rejectionReason): self
+    {
+        $this->rejectionReason = $rejectionReason;
 
         return $this;
     }

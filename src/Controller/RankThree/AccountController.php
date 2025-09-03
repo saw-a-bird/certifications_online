@@ -2,18 +2,20 @@
 
 namespace App\Controller\RankThree;
 
-use App\Services\FileUploader;
+use App\Services\ImageUploader;
+
 use App\Form\ProfileEdit;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 use Symfony\Component\Form\Extension\Core\Type\{PasswordType, TextType, EmailType, SubmitType};
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints\Length;
 
 /**
@@ -21,14 +23,17 @@ use Symfony\Component\Validator\Constraints\Length;
  */
 class AccountController extends AbstractController {
 
-    public function __construct(TokenStorageInterface $tokenStorage) {
+    private $entityManager;
+
+    public function __construct(TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager) {
         $this->user = $tokenStorage->getToken()->getUser();
+        $this->entityManager = $entityManager;
     }
 
     /**
      * @Route("/info", name="account_information")
      */
-    public function account_info(Request $request, FileUploader $fileUploader) {
+    public function account_info(Request $request, ImageUploader $imgUploader) {
         $oldFileName = $this->user->getAvatar();
 
         $form = $this->createForm(ProfileEdit::class, $this->user);
@@ -41,15 +46,14 @@ class AccountController extends AbstractController {
             // this condition is needed because the 'brochure' field is not required
             // so the IMAGE file must be processed only when a file is uploaded
             if ($file != null) {
-                $fileName = $fileUploader->upload($file, "avatar");
+                $fileName = $imgUploader->upload($file, "avatar");
                 $this->user->setAvatarPath($fileName);
             } else {
                 $this->user->setAvatarPath($oldFileName);
             }
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($this->user);
-            $em->flush();
+            $this->entityManager->persist($this->user);
+            $this->entityManager->flush();
 
             $this->addFlash('success', 'You have been successfully changed your information.');
         }
@@ -92,9 +96,8 @@ class AccountController extends AbstractController {
                 // }
 
                 if ($valid) {
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($this->user);
-                    $em->flush();
+                    $this->entityManager->persist($this->user);
+                    $this->entityManager->flush();
 
                     $this->addFlash('success', 'You have been successfully changed your settings.');
                 }
@@ -111,7 +114,7 @@ class AccountController extends AbstractController {
     /**
      * @Route("/password", name="account_password")
      */
-    public function account_password(Request $request, UserPasswordEncoderInterface $passwordEncoder, TokenStorageInterface $tokenStorage) {
+    public function account_password(Request $request, UserPasswordHasherInterface $passwordHasher, TokenStorageInterface $tokenStorage) {
         $form = $this->createFormBuilder()
             ->add('old_password', PasswordType::class)
             ->add('new_password', PasswordType::class, array(
@@ -124,12 +127,11 @@ class AccountController extends AbstractController {
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            if ($passwordEncoder->isPasswordValid($this->user, $data['old_password'])) {
+            if ($passwordHasher->isPasswordValid($this->user, $data['old_password'])) {
 
-                $this->user->setPassword($passwordEncoder->encodePassword($this->user, $data['new_password']));
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($this->user);
-                $em->flush();
+                $this->user->setPassword($passwordHasher->hashPassword($this->user, $data['new_password']));
+                $this->entityManager->persist($this->user);
+                $this->entityManager->flush();
 
                 $token = new UsernamePasswordToken($this->user, $this->user->getPassword(), 'main', $this->user->getRoles());
                 $tokenStorage->setToken($token);
@@ -143,17 +145,5 @@ class AccountController extends AbstractController {
         return $this->render('@user/account/password.html.twig',
             array('form' => $form->createView())
         );
-    }
-
-    public function renderIfPossible($url, $name) {
-        if ($name == $this->user->getUsername()) {
-            return $this->render($url, ["unknown" => $this->user]);
-        } else {
-            $result = $this->getDoctrine()->getRepository(User::class)->loadUserByUsername($name);
-            if (is_null($result)) {
-                return $this->redirectToRoute('index');
-            }
-            return $this->render($url, ["unknown" => $result]);
-        }
     }
 }

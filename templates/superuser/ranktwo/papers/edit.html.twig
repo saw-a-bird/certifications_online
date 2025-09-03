@@ -55,13 +55,13 @@
                     {{ form_row(form_import.FileChooser) }}
                     <i>Note: Must follow the following format <a href = "{{asset("imgs/format_pdf.png") }}"> View </a></i>
                     <i style = "display:block">Note: any image will be ignored. <span style = "font-size:13px">(May be supported in the future though.)</span></i>
-                    {% if import_status is defined %}
+                    {# {% if import_status is defined %}
                         {% if import_status == false %}
                             <i class = "pdf_log pdf_error">{{ import_message }}</i>
                         {% elseif import_status == true %}
                             <i class = "pdf_log pdf_success">{{ import_message }}</i>
                         {% endif %}
-                    {% endif %}
+                    {% endif %} #}
 
                     <div class = "right_wrapper">
                         <button class="btn form-submit save_button">Import PDF</button>

@@ -1,19 +1,47 @@
 
+<style>
+    .new-comment-info {
+        font-size: 13px;
+        display:block
+    }
+
+    .comment-form-error {
+        border: 1.5px solid #ff5454;
+    }
+
+    .comment-form-disabled {
+        background: #ebebeb;
+        border: 1px solid #c6c6c6;
+    }
+
+</style>
+
 <div class = 'uk-comments-container'>
     {% if logged_in %}
         <div> 
             <div class='list-inline comment-new-header'>
                 <h1>New Comment</h1>
+            {% set checkSurplus = render(url('comment_surplus_check', {'exam_id': exam.id, 'user_id': app.user.id})) %}
+            {% if checkSurplus == false %}
                 <button type='submit' class='comment_btn comment_submit_btn btn-normal pull-right' id= 'comment_submit'>Submit</button>
+            {% endif %}
             </div>
+
             <form class = 'uk-container'>
                 <div class='row list-inline'>
-                <div class = 'comment-new-picture'>
-                    <img class='uk-border-rounded img-responsive' src='{{ asset( app.user.getAvatarPath()) }}' alt=''>
-                </div>
-                <div class='comment-form-group col-xs-12 col-sm-9 col-lg-10'>
-                    <textarea class='comment-form-control' id='new_comment' placeholder='Add a public comment' required></textarea>
-                </div>
+                    <div class = 'comment-new-picture'>
+                        <img class='uk-border-rounded img-responsive' src='{{ asset( app.user.getAvatarPath()) }}' alt=''>
+                    </div>
+                    <div class='comment-form-group col-xs-12 col-sm-9 col-lg-10'>
+                        {% if checkSurplus == false %}
+                            <textarea class='comment-form-control' id='new_comment' placeholder='Add a public comment' required></textarea>
+                            <i class = "new-comment-info"> The comment must not contain URL links. </i>
+                            <i class = "new-comment-info"> You cannot comment more than 2 times inside an exam. </i>
+                        {% else %}
+                            <textarea class='comment-form-control comment-form-disabled' id='new_comment' placeholder='Already commented twice.' disabled required></textarea>
+                        {% endif %}
+
+                    </div>
                 </div>
             </form>
         </div>
@@ -63,7 +91,7 @@
     
     var comments_container = $("#comments_container");
     $('#comment_submit').click(function() {
-        var texta = $(this).parent().next().find("textarea#new_comment");
+        var texta = $("textarea#new_comment");
 
         if (texta.val() != "") {
             $.post("{{ path('comment_new', {'id': exam.id}) }}", {content: texta.val()}).done(function(data) {
@@ -73,6 +101,11 @@
                 if (comment_count++ == 0) {
                     comments_header.classList.remove("uk-display-none");
                 }
+                texta.removeClass("comment-form-error");
+
+            }).fail(function(data) {
+                alert(data.responseText);
+                texta.addClass("comment-form-error");
             });
         }
     });
@@ -83,48 +116,55 @@
         if (comment_con.find(".edit-form").length) {
             comment_con.children(":first").show(0, function() {
                 col_con.hide();
+                var form_container = $("#edit_comment"+comment_id);
+                form_container.removeClass("comment-form-error");
             });
         } else {
-            $.post("{{ path('comment_edit_form') }}", {content : old_content}).done(function(data) {
+            $.post("{{ path('comment_edit_form') }}", {content : old_content, comment_id : comment_id}).done(function(data) {
                 col_con.hide();
                 comment_con.prepend(data);
-                var form_edit = comment_con.children(":first"); 
 
-                load_edit_container(form_edit, col_con, comment_con, comment_id);
+                var edit_container = comment_con.children(":first"); 
+                load_edit_container(edit_container, col_con, comment_id);
             }); 
         }
     }
 
-    function load_edit_container(self, col_con, comment_con, comment_id) {
+    function load_edit_container(edit_container, col_con, comment_id) {
 
-        self.find('#cancel').click(function() {
+        var form_container = edit_container.find("#edit_comment"+comment_id);
+
+        edit_container.find('#cancel').click(function() {
             col_con.show(0, function() {
-                self.hide();
+                edit_container.hide();
             });
         });
 
-        var form_content = self.find("#edit_comment");
+        edit_container.find('#edit').click(function() {
+            $.post("{{ path('comment_edit_path') }}", {comment_id: comment_id, content : form_container.val()}).done(function(data) { 
 
-        self.find('#edit').click(function() {
-            $.post("{{ path('comment_edit_path') }}", {comment_id: comment_id, content : form_content.val()}).done(function(data) { 
+                col_con.replaceWith(data);
 
-                col_con.find("p").text($(data).find("p").text());
-
-                self.next().show(0, function() {
-                    self.hide();
+                edit_container.next().show(0, function() {
+                    edit_container.hide();
                 });
-            }); 
+            }).fail(function(data) {
+                alert(data.responseText);
+                form_container.addClass("comment-form-error");
+            });
         });
     }
 
     function delete_button(comment_con, comm_id) {
-        $.post("{{ path('comment_delete_path') }}", {comment_id : comm_id}).done(function(data) {
-            // fetch DOM element and delete it.
-            comment_con.remove();
-            if (--comment_count == 0) {
-                comments_header.classList.add("uk-display-none");
-            }
-        });
+        if (confirm("Are you sure you want to delete this comment?")) {
+            $.post("{{ path('comment_delete_path') }}", {comment_id : comm_id}).done(function(data) {
+                // fetch DOM element and delete it.
+                comment_con.remove();
+                if (--comment_count == 0) {
+                    comments_header.classList.add("uk-display-none");
+                }
+            });
+        }
     } // DONE
     
     function reply_submit(self, comm_container) {
@@ -190,7 +230,7 @@
                 edit_button($(this), ul_con, col_con, comment_con, comment_id);
             });
         } else {
-            alert("error ("+status+"): "+comment_con.prop("outerHTML"));
+            // console.log("error ("+status+"): cannot load comment container.");
         }
     }
 

@@ -6,6 +6,7 @@ use App\Entity\eStars;
 // use App\Entity\ExamPaper;
 use App\Repository\eStarsRepository;
 use App\Repository\ExamPapersRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,12 +27,12 @@ class VoteAPIController extends AbstractController {
     /**
     * @Route("/add", name="vote_new", methods={"GET", "POST"})
     */
-    public function newVote(Request $request, eStarsRepository $starsRepository, ExamPapersRepository $examPaperRepository) {
+    public function newVote(Request $request, eStarsRepository $starsRepository, ExamPapersRepository $examPaperRepository, EntityManagerInterface $entityManager) {
 
         $examPaperId = $request->request->getInt("paper");
         $stars = $request->request->getInt("stars");
         
-        // if ($stars > 0 && $starsRepository->findStar($this->user->getId(), $examPaperId) == null) {
+        if ($stars > 0 && $starsRepository->findStar($this->user->getId(), $examPaperId) == null) {
 
             $examPaper = $examPaperRepository->find($examPaperId);
 
@@ -40,15 +41,14 @@ class VoteAPIController extends AbstractController {
             $eStars->setUser($this->user);
             $examPaper->addEStar($eStars);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($eStars);
-            $em->persist($examPaper);
-            $em->flush();
+            $entityManager->persist($eStars);
+            $entityManager->persist($examPaper);
+            $entityManager->flush();
 
             return new Response("accepted");
 
-        // }
+        }
 
-        // return new Response("rejected");
+        return new Response("rejected");
     }
 }

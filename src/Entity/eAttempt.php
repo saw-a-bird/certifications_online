@@ -45,7 +45,7 @@ class eAttempt
     private $questionCount;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ExamPaper::class, inversedBy="eAttempts")
+     * @ORM\ManyToOne(targetEntity=ExamPaper::class, inversedBy="tries")
      */
     private $examPaper;
 

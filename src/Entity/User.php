@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use DateTime;
-
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 //https://symfonycasts.com/screencast/symfony-security/verify-email
 
@@ -21,7 +21,7 @@ use DateTime;
  * @UniqueEntity(fields="username", message="This username is already taken.")
  * @ORM\HasLifecycleCallbacks()
  */
-class User implements UserInterface, \Serializable
+class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
 {
     /**
      * @var int
@@ -45,7 +45,7 @@ class User implements UserInterface, \Serializable
      *
      * @ORM\Column(type="string", unique=true)
      * @Assert\NotBlank(message = "This field is required.")
-     * @Assert\Email(message = "Choose a valid email.")
+     * @Assert\Email(message = "Choose a valid email.", mode = "strict")
      */
     private $email;
 
@@ -111,10 +111,8 @@ class User implements UserInterface, \Serializable
      */
     private $acceptedSugg = 0;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isVerified = false;
+    // @ORM\Column(type="boolean")
+    // private $isVerified = false;
 
     public function __construct()
     {
@@ -139,10 +137,15 @@ class User implements UserInterface, \Serializable
     {
         return $this->username;
     }
-
+    
     public function setUsername(string $username): void
     {
         $this->username = $username;
+    }
+
+    public function getUserIdentifier(): ?string
+    {
+        return $this->username;
     }
 
     public function getEmail(): ?string
@@ -361,15 +364,15 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    public function getIsVerified(): ?bool
-    {
-        return $this->isVerified;
-    }
+    // public function getIsVerified(): ?bool
+    // {
+    //     return $this->isVerified;
+    // }
 
-    public function setIsVerified(bool $isVerified): self
-    {
-        $this->isVerified = $isVerified;
+    // public function setIsVerified(bool $isVerified): self
+    // {
+    //     $this->isVerified = $isVerified;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 }

@@ -7,7 +7,7 @@
                 <img class='uk-border-rounded img-responsive' src='{{ asset(app.user.getAvatarPath()) }}' alt=''>
             </div>
             <div class='comment-form-group col-xs-12 col-sm-9 col-lg-10'>
-                <textarea class='comment-form-control' id='edit_comment' required>{{ content }}</textarea>
+                <textarea class='comment-form-control' id='edit_comment{{comment_id}}' required>{{ content }}</textarea>
             </div>
         </div>
     </form>

@@ -39,7 +39,7 @@ class eReport
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ExamPaper::class)
+     * @ORM\ManyToOne(targetEntity=ExamPaper::class,inversedBy="reports")
      * @ORM\JoinColumn(nullable=false)
      */
     private $examPaper;

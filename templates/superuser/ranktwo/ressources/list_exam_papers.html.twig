@@ -39,7 +39,7 @@
                     <td>{{ paper.qProvider }}</td>
                     <td>{{ countQuestions }}</td>
                     <td>{{ paper.getReports().count() }}</td>
-                    <td>{{ paper.suggestedBy.username }}</td>
+                    <td>{{ paper.getCreator() }}</td>
                     <td>{{ paper.isLocked ? 'Yes': 'No' }}</td>
                     <td>
                         <a href="{{ path('paper_edit', {'id': paper.id}) }}">edit</a>
@@ -58,7 +58,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="6">no records found</td>
+                    <td colspan="7" class = "no-records-found">no records found</td>
                 </tr>
             {% endfor %}
             </tbody>

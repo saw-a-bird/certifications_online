@@ -98,6 +98,10 @@
                                 </button>
                             </td>
                         </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class = "uk-no-records-found">no records found</td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>

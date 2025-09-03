@@ -34,4 +34,4 @@ $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();
 $kernel->terminate($request, $response);
-
+require_once dirname(__DIR__).'/vendor/autoload.php';

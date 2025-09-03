@@ -1,5 +1,5 @@
 <?php 
-// src/Service/FileUploader.php
+// src/Service/ImageUploader.php
 namespace App\Services;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -11,29 +11,33 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class PDFImporter
 {
-    private $documentsDirectory;
-    private $fullPath;
-
-    public function __construct($docsDirectory) {
-        $this->documentsDirectory = $docsDirectory;
-    }
     
-    public function extract() {
+    public static function extract($fullPath, $io = null) {
         $_questions = array();
         $_status = false;
 
         // Parse PDF file and build necessary objects.
         $parser = new \Smalot\PdfParser\Parser();
-        $pdf = $parser->parseFile($this->fullPath);
+        $pdf = $parser->parseFile($fullPath);
+
+        $images = $pdf->getObjectsByType('XObject');
+
+        // IMAGES IN PDF
+        // $io->info(count($images));
+        // // $io->info(print_r($pdf->getPages()[0]->getDataTm()));
+        // foreach( $images as $image ) {
+        //     $io->info(print_r($image->getDetails()));
+        // }
 
         $text = $pdf->getText();
         $text = str_replace('\\r\\n', ' ', $text);
+        $text = str_replace('https://www.gratisexam.com/', '', $text);
 
         $questionArray = preg_split("/QUESTION \d*/", $text, -1);
         array_splice($questionArray, 0, 1);
         
         $remove = false;
-        foreach ($questionArray as $key => $questionFull) {
+        foreach ($questionArray as $questionFull) {
             $question = new Question();
             $question->setTitle("QUESTION");
 
@@ -55,7 +59,7 @@ class PDFImporter
                     
                     $strlen = strlen($word);
                     for($i = 0; $i < $strlen; ++$i) {
-                        $correct_answers[$this->toNum($word[$i])] = true;
+                        $correct_answers[self::toNum($word[$i])] = true;
                     }
                 }
     
@@ -88,28 +92,19 @@ class PDFImporter
 
         $count = count($_questions);
         if ($count == 0) {
-            $_status = false;
-            unlink($this->fullPath);
+            $_status = "error";
+            unlink($fullPath);
         } else {
-            $_status = true;
+            $_status = "success";
         }
 
         return array("questions" => $_questions, "status" => $_status, "count" => $count);
     }
 
-    public function import($entityManager, ExamPaper $examPaper, ?UploadedFile $fileInput, ?string $filePath) {
+    public static function import($entityManager, ExamPaper $examPaper, string $fullPath, $io = null) {
+        $_return = self::extract($fullPath, $io);
 
-        if ($fileInput != null) {
-            $this->upload($fileInput, "imports");
-        } else {
-            $file = new File($this->documentsDirectory."/".$filePath);
-            $file->move($this->documentsDirectory."/imports");
-            $this->fullPath = $this->documentsDirectory.'//imports/'.$file->getFilename(); // new path
-        }
-
-        $_return = $this->extract();
-
-        if ($_return["status"] == true) {
+        if ($_return["status"] == "success") {
             $_questions = $_return["questions"];
             foreach ($_questions as $question) {
                 $question->setExamPaper($examPaper);
@@ -117,30 +112,19 @@ class PDFImporter
                 foreach ($question->getPropositions() as $proposition) {
                     $entityManager->persist($proposition);
                 }
+
                 $entityManager->persist($question);
             }
 
-            $entityManager->flush();
-
-            $_return["message"] = "Successfully imported file. Found ". $_return["count"]." questions.";
+            $_message = "Successfully imported file. Found ". $_return["count"]." questions. Please check for inconsistencies.";
         } else {
-            $_return["message"] = "File importing failed. Found 0 questions.";
+            $_message = "File importing failed. Found 0 questions.";
         }
 
-        return array($_return["message"], $_return["status"]);
+        return array($_message, $_return["status"]);
     }
 
-    public function upload(UploadedFile $file, $directory) {
-        $fileName = md5(uniqid()).'.'.$file->guessExtension();
-        $filePath = $directory."/".$fileName;
-
-        $file->move($this->documentsDirectory."/".$directory, $fileName);
-        $this->fullPath = $this->documentsDirectory."/".$filePath;
-
-        return $filePath;
-    }
-
-    private function toNum($data) {
+    private static function toNum($data) {
         $alphabet = array( 
             'A', 'B', 'C', 'D', 'E',
             'F', 'G', 'H', 'I', 'J',

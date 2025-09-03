@@ -245,7 +245,7 @@ finish_btn.onclick = ()=>{
             calculateScore();
             $(document).ready(function() {
                 $.post("{{ path('answers_submit') }}", {score: userScore}, function( data ) {  
-                    alert(data); 
+                   // alert(data); 
                 });
             });
             // clearInterval(counterLine);

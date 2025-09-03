@@ -5,8 +5,11 @@ namespace App\Controller\RankThree;
 use App\Entity\Certification;
 use App\Entity\Exam;
 use App\Entity\ExamPaper;
-use App\Repository\ExamsRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\eAttemptsRepository;
+use App\Repository\ExamsRepository;
+
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -70,12 +73,11 @@ class CollectionController extends AbstractController {
      /**
      * @Route("/certifications/add/{id}", name="certif_add_coll", methods={"GET"})
      */
-    public function coll_add_certif(Certification $certification): Response {
+    public function coll_add_certif(Certification $certification, EntityManagerInterface $entityManager): Response {
 
         if (!$this->user->isAddedCertif($certification)) {
             $this->user->addCertification($certification);
 
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($this->user);
             $entityManager->flush();
         }
@@ -86,17 +88,16 @@ class CollectionController extends AbstractController {
     /**
      * @Route("/certifications/remove/{id}", name="certif_remove_coll", methods={"GET"})
      */
-    public function coll_remove_certif(Certification $certification, Request $request): Response {
+    public function coll_remove_certif(Certification $certification, EntityManagerInterface $entityManager): Response {
 
         if ($this->user->isAddedCertif($certification)) {
             $this->user->removeCertification($certification);
 
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($this->user);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('index', ['page' =>  $request->query->getInt('page', 1) ]);
+        return $this->redirectToRoute('user_certifs');
     }
 
     /**
@@ -119,7 +120,7 @@ class CollectionController extends AbstractController {
      /**
      * @Route("/favexams/add", name="exam_add_coll", methods={"POST"})
      */
-    public function coll_add_exam(Request $request, ExamsRepository $examsRepository): Response {
+    public function coll_add_exam(Request $request,  EntityManagerInterface $entityManager, ExamsRepository $examsRepository): Response {
 
         $examId = $request->request->getInt("exam_id");
         $exam = $examsRepository->find($examId);
@@ -127,7 +128,6 @@ class CollectionController extends AbstractController {
         if (!$this->user->isAddedExam($exam)) {
             $this->user->addExam($exam);
 
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($this->user);
             $entityManager->flush();
         }
@@ -138,7 +138,7 @@ class CollectionController extends AbstractController {
     /**
      * @Route("/favexams/remove", name="exam_remove_coll", methods={"GET", "POST"})
      */
-    public function coll_remove_exam(Request $request, ExamsRepository $examsRepository): Response {
+    public function coll_remove_exam(Request $request, EntityManagerInterface $entityManager, ExamsRepository $examsRepository): Response {
 
         $examId = $request->request->getInt("exam_id");
         $exam = $examsRepository->find($examId);
@@ -146,7 +146,6 @@ class CollectionController extends AbstractController {
         if ($this->user->isAddedExam($exam)) {
             $this->user->removeExam($exam);
 
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($this->user);
             $entityManager->flush();
         }

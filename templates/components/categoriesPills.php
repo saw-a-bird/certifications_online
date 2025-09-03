@@ -95,7 +95,6 @@ $(document).ready(function() {
                 if (state != "inactive") {
                     state = change_state(self, state, 'inactive');
                     modified_categ[categ_id] = {state : "inactive", initial : initial_state};
-                    // alert("element, must be first");
                 }
             })
 

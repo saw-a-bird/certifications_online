@@ -19,6 +19,18 @@ class CommentsRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
+    public function check($user_id, $exam_id) {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where("c.createdBy = :user_id")
+            ->andWhere("c.writtenOn = :exam_id")
+            ->setParameter("user_id", $user_id)
+            ->setParameter("exam_id", $exam_id)
+            ->getQuery()
+            ->getSingleScalarResult();
+        ;
+    }
+
     // /**
     //  * @return Comment[] Returns an array of Comment objects
     //  */

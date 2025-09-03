@@ -33,16 +33,25 @@ class ExamPaper
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $suggestedBy;
+
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $importedFrom;
 
     /**
      * @ORM\Column(type="boolean")
      */
     private $isLocked = true;
 
-
+    /**
+     * @ORM\OneToMany(targetEntity=eAttempt::class, mappedBy="examPaper")
+     */
+    private $tries;
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -73,7 +82,6 @@ class ExamPaper
      */
     private $minsUntil = 30;
 
-
     public function __construct()
     {
         $this->questions = new ArrayCollection();
@@ -89,6 +97,12 @@ class ExamPaper
     public function onPreUpdate()
     {
         $this->updated_at = new \DateTime("now");
+    }
+    
+    public function setId(int $id)
+    {
+        $this->id = $id;
+        return $this;
     }
     
     public function getId(): ?int
@@ -249,6 +263,27 @@ class ExamPaper
         $this->suggestedBy = $suggestedBy;
 
         return $this;
+    }
+
+    public function getImportedFrom(): ?string
+    {
+        return $this->importedFrom;
+    }
+
+    public function setImportedFrom(?string $importedFrom): self
+    {
+        $this->importedFrom = $importedFrom;
+
+        return $this;
+    }
+
+    public function getCreator(): ?string
+    {
+        if (isset($this->suggestedBy)) {
+            return $this->suggestedBy->getUsername();
+        } else {
+            return $this->importedFrom;
+        }
     }
 
     public function getIsLocked(): ?bool

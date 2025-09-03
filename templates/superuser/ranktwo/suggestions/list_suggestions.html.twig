@@ -3,6 +3,11 @@
 {% block title %} User Suggestions - Exam List{% endblock %}
 
 {% block scriptsheet %}
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css" />
+
     <script>
         document.getElementById("suggestions_index").classList.add("link-active");
     </script>
@@ -10,7 +15,7 @@
 
 {% block form %}
     <div style = "margin: 40px 20px 50px; padding: 10px;">
-        <table class="table">
+		<table id="example" class="table dataTable" style="width: 100%;" aria-describedby="example_info">
             <thead>
                 <tr>
                     <th>Created At</th>
@@ -35,21 +40,30 @@
                     <td>{{ sugg.examCode }}</td>
                     <td>{{ sugg.examTitle }}</td>
                     <td>{{ sugg.questionsCount }}</td>
-                    <td><a href = "{{ asset(sugg.getPdfFile()) }}">Link</a></td>
+                    <td><a href = "{{ asset(sugg.getPdfAsset()) }}">Link</a></td>
                     <td>{{ sugg.qProvider }}</td>
                     <td>{{ sugg.certificationTitle }}</td>
                     <td>{{ sugg.minsUntil }}</td>
                     <td class = "action_row">
-                        <a href="{{ path('sugg_edit', {'id': sugg.id}) }}">Review <span class="glyphicon glyphicon-search"></span></a>
+                        <a href="{{ path('sugg_review', {'id': sugg.id}) }}">Review <span class="glyphicon glyphicon-search"></span></a>
                     </td>
                 </tr>
-            {% else %}
-                <tr>
-                    <td colspan="6">no records found</td>
-                </tr>
-            {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="11" class = "no-records-found">no records found</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
+
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable( {
+            "searching": false, 
+            "ordering": false 
+        });
+    });
+</script>
 {% endblock %}
 

@@ -2,10 +2,12 @@
 
 namespace App\Controller\RankThree;
 
-use App\Services\FileUploader;
 use App\Form\SuggestionType;
 use App\Entity\eSuggestion;
 use App\Services\PDFImporter;
+use App\Services\PDFManager;
+use Doctrine\ORM\EntityManagerInterface;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,37 +18,36 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class SuggestionController extends AbstractController {
 
-    public function __construct(TokenStorageInterface $tokenStorage) {
+    private $entityManager;
+
+    public function __construct(TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager) {
         $this->user = $tokenStorage->getToken()->getUser();
+        $this->entityManager = $entityManager;
     }
 
     /**
      * @Route("/new", name="user_sugg_new")
      */
-    public function sugg_new(Request $request, PDFImporter $PDFImporter) {
+    public function sugg_new(Request $request, PDFManager $pdfManager) {
         $suggestion = new eSuggestion();
-
+        
         $form = $this->createForm(SuggestionType::class, $suggestion, ["pdf_required" => true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $fileData = $form->get('upload_pdf')->getData();
-            $filePath = $PDFImporter->upload($fileData, "suggestions");
-            $_return = $PDFImporter->extract();
+            $file = $form->get('upload_pdf')->getData();
+            $filePath = $pdfManager->upload($file, true);
+            $_return = PDFImporter::extract($filePath);
 
             if ($_return["status"] == true) {
                 $suggestion->setPdfFile($filePath);
                 $suggestion->setCreatedBy($this->user);
                 $suggestion->setQuestionsCount($_return["count"]);
                 
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($suggestion);
-                $entityManager->flush();
+                $this->entityManager->persist($suggestion);
+                $this->entityManager->flush();
     
                 $this->addFlash('success',  'Success. Found '.$_return["count"].' questions. Your suggestion was sent to our moderators to make the final decision. If you forgot something, you may edit it in your personal space.');
-    
-                return $this->redirectToRoute('sugg_edit', ['id' =>  $suggestion->getId() ]);
-
             } else {
                 $this->addFlash('error', $_return["message"]);
             }
@@ -60,33 +61,32 @@ class SuggestionController extends AbstractController {
     /**
      * @Route("/edit/{id}", name="user_sugg_edit")
      */
-    public function sugg_edit(Request $request, eSuggestion $suggestion, PDFImporter $PDFImporter) {
-        if ($suggestion->getCreatedBy()->getId() == $this->user->getId()) {
+    public function user_sugg_edit(Request $request, eSuggestion $suggestion, PDFManager $PDFManager) {
+        if ($suggestion->getStatus() == null && $suggestion->getCreatedBy()->getId() == $this->user->getId()) {
             $form = $this->createForm(SuggestionType::class, $suggestion, ["pdf_required" => false]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
 
-                $fileData = $form->get('upload_pdf')->getData();
-                if ($fileData != null) {
-                    $filePath = $PDFImporter->upload($fileData, "suggestions");
-                    $_return = $PDFImporter->extract();
+                $file = $form->get('upload_pdf')->getData();
+                if ($file != null) {
+                    $filePath = $PDFManager->upload($file, true);
+                    $_return = PDFImporter::extract($filePath);
 
                     if ($_return["status"] == true) {
                         $suggestion->setPdfFile($filePath);
                         $suggestion->setQuestionsCount($_return["count"]);
 
                         $this->addFlash('success', 'Found '.$_return["count"].' questions. You have been successfully edited your Suggestion.');
-                        $em->persist($suggestion);
-                        $em->flush();
+                        $this->entityManager->persist($suggestion);
+                        $this->entityManager->flush();
                     } else {
                         $this->addFlash('error', "Edit failed. Found 0 questions in PDF. Check your format.");
                     }
                 } else {
                     $this->addFlash('success', 'You have been successfully edited your Suggestion.');
-                    $em->persist($suggestion);
-                    $em->flush();
+                    $this->entityManager->persist($suggestion);
+                    $this->entityManager->flush();
                 }
             }
 
@@ -95,7 +95,7 @@ class SuggestionController extends AbstractController {
             );
         }
 
-        return $this->redirectToRoute('index', ['page' =>  $request->query->getInt('page', 1) ]);
+        return $this->redirectToRoute('user_suggs');
     }
 
     /**
@@ -103,9 +103,8 @@ class SuggestionController extends AbstractController {
      */
     public function sugg_delete(Request $request, eSuggestion $suggestion) {
         if ($this->isCsrfTokenValid('delete'.$suggestion->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($suggestion);
-            $entityManager->flush();
+            $this->entityManager->remove($suggestion);
+            $this->entityManager->flush();
         }
         
         return $this->redirectToRoute('user_suggs');

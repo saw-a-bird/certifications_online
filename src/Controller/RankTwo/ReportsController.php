@@ -3,7 +3,7 @@
 namespace App\Controller\RankTwo;
 
 use App\Repository\eReportsRepository;
-
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,13 +36,13 @@ class ReportsController extends AbstractController
     /**
      * @Route("/change/status", name="report_change_status", methods={"POST"})
      */
-    public function report_change_status(eReportsRepository $reportsRepository, Request $request): Response {
-        $report = $reportsRepository->find($request->request->get("id"));
+    public function report_change_status(Request $request, ManagerRegistry $doctrine): Response {
+        $report = $doctrine->getRepository(Report::class)->find($request->request->get("id"));
         $status = $request->request->get("status");
 
         if ($status == "-" || $status == "Fixed"|| $status == "Spam") {
             $report->setStatus($status);
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $doctrine->getManager();
             $entityManager->persist($report);
             $entityManager->flush();
             return new Response("Success");

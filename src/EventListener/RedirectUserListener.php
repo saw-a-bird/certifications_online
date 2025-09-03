@@ -22,7 +22,7 @@ class RedirectUserListener
 
     public function onKernelRequest(RequestEvent $event)
     {
-        if($this->isUserLogged() && $event->isMasterRequest()) {
+        if($this->isUserLogged() && $event->isMainRequest()) {
             $currentRoute = $event->getRequest()->attributes->get('_route');
             if($this->isAuthenticatedUserOnAnonymousPage($currentRoute)) {
                 $response = new RedirectResponse($this->router->generate('index'));

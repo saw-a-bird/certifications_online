@@ -5,6 +5,8 @@ namespace App\Controller\RankTwo;
 use App\Entity\Feedback;
 use App\Form\FeedbackType;
 use App\Repository\FeedbackRepository;
+use Doctrine\ORM\EntityManagerInterface;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,7 +41,7 @@ class FeedbackController extends AbstractController
     /**
      * @Route("/view/{id}", name="feedback_view", methods={"GET","POST"})
      */
-    public function view(Feedback $feedback, Request $request): Response {
+    public function view(Feedback $feedback, Request $request, EntityManagerInterface $entityManager): Response {
         $feedbackClone = clone($feedback);
         $form = $this->createForm(FeedbackType::class, $feedback, ["readOnly" => true]);
         $form->handleRequest($request);
@@ -50,9 +52,8 @@ class FeedbackController extends AbstractController
                 $feedback->setTitle($feedbackClone->getTitle());
                 $feedback->setDescription($feedbackClone->getDescription());
 
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($feedback);
-                $em->flush();
+                $entityManager->persist($feedback);
+                $entityManager->flush();
                 $this->addFlash('success', 'Successfully edited status.');
             }
         }

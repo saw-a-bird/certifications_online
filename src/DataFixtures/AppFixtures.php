@@ -5,21 +5,21 @@ namespace App\DataFixtures;
 use App\Entity\User;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Doctrine\Persistence\ObjectManager;
 
 use Faker\Generator;
 use Faker\Provider\en_US\Person;
 use Faker\Provider\Internet;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
-    private $passwordEncoder;
+    private $passwordHasher;
     private $faker;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder, Generator $faker)
+    public function __construct(UserPasswordHasherInterface $passwordHasher, Generator $faker)
     {
-        $this->passwordEncoder = $passwordEncoder;
+        $this->passwordHasher = $passwordHasher;
         $this->faker = $faker;
     }
 
@@ -34,7 +34,7 @@ class AppFixtures extends Fixture
             $user = new User();
             $user->setFullName($fullname);
             $user->setUsername($username);
-            $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
+            $user->setPassword($this->passwordHasher->hashPassword($user, $password));
             $user->setEmail($email);
             $user->setRoles($roles);
             $manager->persist($user);

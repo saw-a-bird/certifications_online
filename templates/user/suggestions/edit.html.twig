@@ -29,7 +29,7 @@
                             </div>
                         {% endfor %}
 
-                        {{ include('@user/suggestions/_form.html.twig', {'path': asset(suggestion.getPdfFile())}) }}
+                        {{ include('@user/suggestions/_form.html.twig', {'path': asset(suggestion.getPdfAsset())}) }}
                         <div class = "right_wrapper">
                             <button class="form-submit full_red_shade">Edit</button>
                         </div>

@@ -4,6 +4,10 @@
 	margin: -5px auto 30px;
 }
 
+.form-alert .small-alert-text {
+	
+}
+
 .form-alert.green {
 	background-color: #c1f5c1;
     padding: 10px 20px;

@@ -1,0 +1,64 @@
+{% extends "@backend_root/base.html.twig" %}
+
+{% block title %}Users - List{% endblock %}
+
+{% block scriptsheet %}
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css" />
+
+    <script>
+        document.getElementById("admin_users").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div style = "margin: 50px 30px; padding: 10px;">
+		<table id="example" class="table dataTable" style="width: 100%;" aria-describedby="example_info">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Created At</th>
+                <th>Last Login At</th>
+                <th>Banned</th>
+                {% if is_granted("USER_ADMIN") %}
+                    <th>actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.roles|join(', ') }}</td>
+                <td>{{ user.getCreatedAt()|date('Y-m-d H:i:s') }}</td>
+                <td>{{ user.getLastLogin()|date('Y-m-d H:i:s') }}</td>
+                <td>{% if user.isBanned %}true{% else %}false{% endif %}</td>
+                {% if is_granted("USER_ADMIN") %}
+                <td>
+                    <a href="{{ path('users_able', {'id': user.id}) }}">{% if user.isBanned %}unban{% else %}ban{% endif %}</a>
+                    <a href="{{ path('users_mod', {'id': user.id}) }}">{% if user.hasRole("ROLE_MODERATOR") != false %}unmod{% else %}mod{% endif %}</a>
+                </td>
+                {% endif %}
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8" class = "no-records-found">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({"aoColumns": [ {"bSearchable": false}, {"bSearchable": true}, {"bSearchable": true}, {"bSearchable": true}, {"bSearchable": false}, {"bSearchable": false}, {"bSearchable": false}, {"bSearchable": false}]});
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "@backend_root/base.html.twig" %}
+
+{% block title %} CertifyTN Backend - History{% endblock %}
+
+{% block scriptsheet %}
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css" />
+
+    <script>
+        document.getElementById("history_index").classList.add("link-active");
+    </script>
+{% endblock %}
+
+{% block form %}
+    <div style = "margin: 40px 20px 50px; padding: 10px;">
+		<table id="example" class="table dataTable" style="width: 100%;" aria-describedby="example_info">
+            <thead>
+                <tr>
+                    <th>Created At</th>
+                    <th>User</th>
+                    <th>Did and Done</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for record in history %}
+                <tr>
+                    <td>{{ record.getCreatedAt()|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ record.user.username }}</td>
+                    <td>{{ record.action }}</td>
+                </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class = "no-records-found">no records found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({"aoColumns": [ {"bSearchable": true}, {"bSearchable": true}, {"bSearchable": true}], "ordering": false });
+    });
+</script>
+{% endblock %}
+

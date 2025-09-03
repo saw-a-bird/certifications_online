@@ -2,13 +2,14 @@
 
 namespace App\Controller\RankTwo;
 
-use App\Services\FileUploader;
+use App\Services\ImageUploader;
 
 use App\Entity\eProvider;
 use App\Entity\Certification;
 use App\Entity\Exam;
-
+use App\Entity\History;
 use App\Form\CertificationsType;
+use Doctrine\ORM\EntityManagerInterface;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,14 +25,18 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
  */
 class CertificationsController extends AbstractController
 {
-    public function __construct(TokenStorageInterface $tokenStorage) {
+    private $entityManager;
+    private $user;
+
+    public function __construct(TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager) {
         $this->user = $tokenStorage->getToken()->getUser();
+        $this->entityManager = $entityManager;
     }
 
     /**
      * @Route("/new/to/{id}", name="certif_new", methods={"GET","POST"})
      */
-    public function new(eProvider $eProvider, Request $request, FileUploader $fileUploader): Response {
+    public function new(eProvider $eProvider, Request $request, ImageUploader $imgUploader): Response {
         $certification = new Certification();
         $certification->setEProvider($eProvider);
 
@@ -43,13 +48,13 @@ class CertificationsController extends AbstractController
             $file = $form->get('thumbnail_path')->getData();
 
             if ($file != null) {
-                $fileName = $fileUploader->upload($file, "thumbnail_certif");
+                $fileName = $imgUploader->upload($file, "thumbnail_certif");
                 $certification->setThumbnailPath($fileName);
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($certification);
-            $entityManager->flush();
+            $this->entityManager->persist($certification);
+            $this->entityManager->persist(new History($this->user, "created new certification#".$certification->getId()." (title: '".$certification->getTitle()."')"));
+            $this->entityManager->flush();
 
             $this->addFlash('success', 'Successfully created a new certification.');
 
@@ -66,7 +71,7 @@ class CertificationsController extends AbstractController
     /**
      * @Route("/{id}/edit", name="certif_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Certification $certification, FileUploader $fileUploader): Response {
+    public function edit(Request $request, Certification $certification, ImageUploader $imgUploader): Response {
 
         $form = $this->createForm(CertificationsType::class, $certification);
         $form->handleRequest($request);
@@ -75,14 +80,15 @@ class CertificationsController extends AbstractController
 
             $file = $form->get('thumbnail_path')->getData();
 
-            // this condition is needed because the 'brochure' field is not required
-            // so the IMAGE file must be processed only when a file is uploaded
             if ($file != null) {
-                $fileName = $fileUploader->upload($file, "thumbnail_certif");
+                $fileName = $imgUploader->upload($file, "thumbnail_certif");
                 $certification->setThumbnailPath($fileName);
             }
 
-            $this->getDoctrine()->getManager()->flush();
+            $this->entityManager->persist($certification);
+            $this->entityManager->persist(new History($this->user, "modified certification#".$certification->getId()." (title: '".$certification->getTitle()."')"));
+            $this->entityManager->flush();
+
             $this->addFlash('success', 'Successfully edited certification.');
         }
 
@@ -100,9 +106,9 @@ class CertificationsController extends AbstractController
         
         $providerId = $certification->getEProvider()->getId();
         if ($this->isCsrfTokenValid('delete'.$certification->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($certification);
-            $entityManager->flush();
+            $this->entityManager->persist(new History($this->user, "removed certification#".$certification->getId()." (title: '".$certification->getTitle()."')"));
+            $this->entityManager->remove($certification);
+            $this->entityManager->flush();
         }
 
         return $this->redirectToRoute('provider_certifs_list', ["id" =>$providerId], Response::HTTP_SEE_OTHER);
@@ -114,10 +120,9 @@ class CertificationsController extends AbstractController
      */
     public function add_exam($certif_id, Exam $exam): Response {
         
-        $entityManager = $this->getDoctrine()->getManager();
-        $exam->setCertification($entityManager->getReference(Certification::class, $certif_id));
-        $entityManager->persist($exam);
-        $entityManager->flush();
+        $exam->setCertification($this->entityManager->getReference(Certification::class, $certif_id));
+        $this->entityManager->persist($exam);
+        $this->entityManager->flush();
 
         return $this->redirectToRoute('certif_available_exams_list', ["id" => $certif_id], Response::HTTP_SEE_OTHER);
     }
@@ -128,10 +133,9 @@ class CertificationsController extends AbstractController
      */
     public function remove_exam($certif_id, Exam $exam): Response {
         
-        $entityManager = $this->getDoctrine()->getManager();
         $exam->setCertification(null);
-        $entityManager->persist($exam);
-        $entityManager->flush();
+        $this->entityManager->persist($exam);
+        $this->entityManager->flush();
 
         return $this->redirectToRoute('certif_exams_list', ["id" => $certif_id], Response::HTTP_SEE_OTHER);
     }

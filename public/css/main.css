@@ -1071,9 +1071,14 @@ a.uk-link-reset,
   vertical-align: middle;
 }
 
-.uk-table-empty {
+.uk-no-records-found {
   text-align: center;
   vertical-align: middle;
+  color: #909090;
+}
+
+.uk-no-records-found > * {
+  color: #909090;
 }
 
 /* Header cell
@@ -8641,8 +8646,9 @@ ul.uk-nav-sub {
 /* Weight modifier
  ========================================================================== */
 
- .uk-text-align-center {
-  text-align:center;
+
+.uk-text-align-center {
+  text-align: center;
 }
 
 .uk-text-light {

@@ -50,6 +50,14 @@ class FeedbackRepository extends ServiceEntityRepository
         }
     }
 
+    public function findAll()
+    {
+        return $this->createQueryBuilder('f')
+        ->orderBy('f.createdAt', 'DESC')
+        ->getQuery()
+        ->execute();
+    }
+
     public function countRows()
     {
         return $this->createQueryBuilder('f')

@@ -39,7 +39,7 @@ class Question
     private $propositions;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ExamPaper::class, inversedBy="d")
+     * @ORM\ManyToOne(targetEntity=ExamPaper::class, inversedBy="questions")
      * @ORM\JoinColumn(nullable=false)
      */
     private $examPaper;
@@ -50,6 +50,12 @@ class Question
         $this->propositions = new ArrayCollection();
     }
 
+    public function setId(int $id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;

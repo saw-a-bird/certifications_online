@@ -18,6 +18,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class eSuggestionsRepository extends ServiceEntityRepository
 {
+
+    private const DAYS_BEFORE_DUE_REMOVAL = 3;
+
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ESuggestion::class);
@@ -47,12 +51,47 @@ class eSuggestionsRepository extends ServiceEntityRepository
         }
     }
 
+
+    public function findAll()
+    {
+        return $this->createQueryBuilder('s')
+        ->where("s.status IS NULL")
+        ->orderBy('s.createdAt', 'DESC')
+        ->getQuery()
+        ->execute();
+    }
+
     public function countRows()
     {
         return $this->createQueryBuilder('s')
             ->select('count(s.id)')
+            ->where("s.status IS NULL")
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function DueQueryBuilder() {
+        return $this->createQueryBuilder('s')
+            ->andWhere("DATE_DIFF(CURRENT_DATE(), s.decidedAt) >= :days_old_removal")
+            ->setParameters([
+                'days_old_removal' => self::DAYS_BEFORE_DUE_REMOVAL
+            ]);
+    }
+
+    public function countDue()
+    {
+        return $this->DueQueryBuilder()
+            ->select('COUNT(s.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function deleteDue()
+    {
+        return $this->DueQueryBuilder()
+            ->delete()
+            ->getQuery()
+            ->execute();
     }
     // /**
     //  * @return ESuggestion[] Returns an array of ESuggestion objects

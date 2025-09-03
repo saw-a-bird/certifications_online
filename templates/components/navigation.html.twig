@@ -36,7 +36,7 @@
                             <hr class = "uk-hr">
                             {# <li><a href="article.php?page=new">Write a new certification</a></li> #}
                             <li><a href="{{ path('user_certifs') }}">Personal Space</a></li>
-                            {% if app.user.roles|length > 1 %}
+                            {% if is_granted('ROLE_MODERATOR') %}
                                 <hr class = "uk-hr">
                                 <u><i class = "uk-classic-italic"> SuperUser Space: </i></u>
                                 <li class = "uk-classic-italic"><a href="{{ path('admin_dashboard') }}"> - Dashboard</a></li>
@@ -45,9 +45,9 @@
                                 {% endif %}
 
                                 {% if is_granted('ROLE_MODERATOR') %}
-                                    <li class = "uk-classic-italic"><a href="{{ path('ressources_index') }}"> - Ressources</a></li>
                                     <li class = "uk-classic-italic"><a href="{{ path('suggestions_index') }}"> - Suggestions</a></li>
                                     <li class = "uk-classic-italic"><a href="{{ path('feedbacks_index') }}"> - Users Feedback</a></li>
+                                    <li class = "uk-classic-italic"><a href="{{ path('ressources_index') }}"> - Ressources</a></li>
                                 {% endif %}
                             {% endif %}
                             <hr class = "uk-hr">
@@ -55,6 +55,13 @@
                             <li><a href="{{ path('account_settings') }}">Account Settings</a></li>
                             <li><a href="{{ path('user_sugg_new') }}">Suggest an exam</a></li>
                             <hr class = "uk-hr">
+                            <li style = "color: #aaa9a9;"> Remember me: 
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                <span style = "color: #8ecf8e; font-weight:bold">ON</span>
+                            {% else %}
+                                <span style = "color:#cfaa8e; font-weight:bold">OFF</span>
+                            {% endif %}
+                            </li>
                             <li><a href="{{ path('security_logout') }}">Sign Out</a></li>
                         </ul>
                     </div>

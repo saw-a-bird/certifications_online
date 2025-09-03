@@ -29,7 +29,7 @@ class Comment
     /**
      * @ORM\Column(type="datetime")
      */
-    private $last_updated_at;
+    private $createdAt;
 
     /**
      * @ORM\Column(type="boolean")
@@ -47,23 +47,14 @@ class Comment
      */
     private $writtenOn;
 
+
     /**
      * Gets triggered only on insert
      * @ORM\PrePersist
      */
     public function onPrePersist()
     {
-        $this->last_updated_at = new \DateTime("now");
-    }
-
-    /**
-     * Gets triggered every time on update
-     * @ORM\PreUpdate
-     */
-    public function onPreUpdate()
-    {
-        $this->last_updated_at = new \DateTime("now");
-        $this->isEdited = true;
+        $this->createdAt = new \DateTime("now");
     }
 
     public function getId(): ?int
@@ -83,14 +74,14 @@ class Comment
         return $this;
     }
 
-    public function getLastUpdatedAt(): ?\DateTime
+    public function getCreatedAt(): ?\DateTime
     {
-        return $this->last_updated_at;
+        return $this->createdAt;
     }
 
-    public function setLastUpdatedAt(\DateTime $last_updated_at): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
-        $this->last_updated_at = $last_updated_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }

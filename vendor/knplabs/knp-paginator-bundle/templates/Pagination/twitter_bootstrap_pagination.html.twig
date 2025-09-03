@@ -16,7 +16,7 @@
  * @author Artem Ponomarenko <imenem@inbox.ru>
  */
 #}
-{% if pageCount >= 1 %}
+{% if pageCount > 1 %}
 <div class="pagination">
     <ul>
 
@@ -30,7 +30,7 @@
         </li>
     {% endif %}
 
-    {% if startPage >= 1 %}
+    {% if startPage > 1 %}
         <li>
             <a href="{{ path(route, query|merge({(pageParameterName): 1})) }}">1</a>
         </li>
